@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+
+.container-snap::-webkit-scrollbar {
+    display: none;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
