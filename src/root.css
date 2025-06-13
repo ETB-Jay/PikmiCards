@@ -1,8 +1,84 @@
 @import "tailwindcss";
 
+body {
+    background-color: rgb(147,116,96);
+    padding: 2.5vh;
+}
+
+/* Hide scrollbars for all elements */
+* {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
 
 .container-snap::-webkit-scrollbar {
     display: none;
+}
+
+@theme {
+    --color-brown-50: #faf9ec;
+    --color-brown-100: #f4f2cd;
+    --color-brown-200: #ebe49d;
+    --color-brown-300: #e0cf64;
+    --color-brown-400: #d5ba3a;
+    --color-brown-500: #c6a42c;
+    --color-brown-600: #aa8224;
+    --color-brown-700: #885f20;
+    --color-brown-800: #785223;
+    --color-brown-900: #624221;
+    --color-brown-950: #382210;
+
+    --color-silver-50: #f7f7f7;
+    --color-silver-100: #f0f0f0;
+    --color-silver-200: #e3e3e3;
+    --color-silver-300: #d1d1d1;
+    --color-silver-400: #c0c0c0;
+    --color-silver-500: #aaaaaa;
+    --color-silver-600: #969696;
+    --color-silver-700: #818181;
+    --color-silver-800: #6a6a6a;
+    --color-silver-900: #585858;
+    --color-silver-950: #333333;
+
+    --color-black-olive-50: #f8f7ed;
+    --color-black-olive-100: #efedd8;
+    --color-black-olive-200: #e1dfb5;
+    --color-black-olive-300: #cdcc89;
+    --color-black-olive-400: #b8b763;
+    --color-black-olive-500: #9c9d45;
+    --color-black-olive-600: #7a7c34;
+    --color-black-olive-700: #5d602b;
+    --color-black-olive-800: #4b4d27;
+    --color-black-olive-900: #414324;
+    --color-black-olive-950: #313417;
+
+    --color-green-smoke-50: #f7f7ee;
+    --color-green-smoke-100: #ededda;
+    --color-green-smoke-200: #dcddb9;
+    --color-green-smoke-300: #c3c690;
+    --color-green-smoke-400: #a6aa62;
+    --color-green-smoke-500: #8f944e;
+    --color-green-smoke-600: #70753b;
+    --color-green-smoke-700: #555a31;
+    --color-green-smoke-800: #46492b;
+    --color-green-smoke-900: #3c4027;
+    --color-green-smoke-950: #1f2112;
+
+    --color-sandy-brown-50: #fef6ee;
+    --color-sandy-brown-100: #fdebd7;
+    --color-sandy-brown-200: #fad3ae;
+    --color-sandy-brown-300: #f4a460;
+    --color-sandy-brown-400: #f18a46;
+    --color-sandy-brown-500: #ed6b22;
+    --color-sandy-brown-600: #de5218;
+    --color-sandy-brown-700: #b93d15;
+    --color-sandy-brown-800: #933219;
+    --color-sandy-brown-900: #762b18;
+    --color-sandy-brown-950: #40130a;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

@@ -1,25 +1,29 @@
 import Header from './header/Header'
 import CardPicker from './body/CardPicker'
-import handleShopifyQuery from './server/getQuery'
 import { useEffect } from 'react'
+import getOrders from './shopifyQuery'
+import { useOrders } from './context/useContext'
 
 function App() {
+  const { setOrders } = useOrders()
+
+
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const data = await handleShopifyQuery();
+        const data = await getOrders()
         console.log(data)
+        setOrders(data)
       } catch (err) {
-        console.log(err)
+        console.error('Error loading orders:', err)
       }
     }
     loadData();
   }, []);
 
-
   return (
-    <div className="flex flex-col h-screen w-screen bg-amber-100 dark:bg-blue-100 p-5 gap-5 select-none">
+    <div className="flex flex-col md:h-[88vh] h-full w-full dark:bg-blue-100 gap-4 select-none">
       <Header />
       <CardPicker />
     </div>

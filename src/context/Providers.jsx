@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react'
-import { LocationContext, DisplayContext } from './Context'
+import { useMemo, useState, useCallback } from 'react'
+import { LocationContext, DisplayContext, OrdersContext, FullscreenContext } from './Context'
+import { FullscreenModal } from '../body/components'
 
 const LocationProvider = ({ children }) => {
     const [location, setLocation] = useState("Oakville");
@@ -13,11 +14,45 @@ const DisplayProvider = ({ children }) => {
     return <DisplayContext.Provider value={value}>{children}</DisplayContext.Provider>
 }
 
+const OrdersProvider = ({ children }) => {
+    const [orders, setOrders] = useState(null);
+    const value = useMemo(() => ({ orders, setOrders }), [orders])
+    return <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>
+}
+
+const FullscreenProvider = ({ children }) => {
+    const [fullScreen, setFullScreen] = useState(null)
+
+    const openFullscreen = useCallback((imageUrl) => {
+        setFullScreen(imageUrl)
+    }, [])
+
+    const closeFullscreen = useCallback(() => {
+        setFullScreen(null)
+    }, [])
+
+    return (
+        <FullscreenContext.Provider value={{ openFullscreen, closeFullscreen }}>
+            {children}
+            {fullScreen && (
+                <FullscreenModal
+                    image={fullScreen}
+                    onClose={closeFullscreen}
+                />
+            )}
+        </FullscreenContext.Provider>
+    )
+}
+
 const Providers = ({ children }) => {
     return (
         <LocationProvider>
             <DisplayProvider>
-                {children}
+                <OrdersProvider>
+                    <FullscreenProvider>
+                        {children}
+                    </FullscreenProvider>
+                </OrdersProvider>
             </DisplayProvider>
         </LocationProvider>
     )

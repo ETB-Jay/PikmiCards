@@ -1,35 +1,28 @@
-import { useDisplay, useLocation } from "../context/useContext"
 
-const PromptContainer = ({position, children}) => {
+
+const PromptContainer = ({ position, children }) => {
     return (
-        <div className={`absolute flex flex-col bg-orange-200 py-1 px-2 border-1 rounded shadow-xl z-100 ${position}`}>
+        <div className={`absolute flex flex-col bg-silver-300 border-1 py-1 rounded z-100 ${position}`}>
             {children}
         </div>
     )
 }
 
-const LocationOption = ({newLocation}) => {
-    const {location, setLocation} = useLocation()
-    const { setDisplay } = useDisplay()
+const PromptText = ({ label }) => {
     return (
-        <div 
-            className="hover:bg-orange-300 px-1.5 rounded transition-colors cursor-pointer"
-            onClick={() => {
-                if (location !== newLocation) {
-                    setLocation(newLocation)
-                }
-                setDisplay("default")
-            }}
+        <p className="font-semibold text-sm">{label}</p>
+    )
+}
+
+const Button = ({ children, onClick }) => {
+    return (
+        <button
+            className="flex items-center px-1 gap-1 bg-green-smoke-300 rounded shadow-[-4px_2px_4.099999904632568px_2px_rgba(0,0,0,0.30)] border border-black hover:bg-green-smoke-400 transition-colors cursor-pointer"
+            onClick={onClick}
         >
-        <PromptText label={newLocation} />
-        </div>
+            <>{children}</>
+        </button>
     )
 }
 
-const PromptText = ({label}) => {
-    return (
-        <p className="font-bold text-xs">{label}</p>
-    )
-}
-
-export { PromptContainer, LocationOption, PromptText }
+export { PromptContainer, PromptText, Button }

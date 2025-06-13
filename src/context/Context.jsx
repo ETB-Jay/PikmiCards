@@ -10,6 +10,8 @@ import { createContext } from 'react'
  * There are currently 2 available locations:
  * - Oakville
  * - Newmarket
+ * 
+ * @type string
  */
 const LocationContext = createContext()
 LocationContext.displayName = "LocationContext"
@@ -20,11 +22,31 @@ LocationContext.displayName = "LocationContext"
  * These are the currently displays
  * - default
  * - location
+ * 
+ * @type string
  */
 const DisplayContext = createContext()
 DisplayContext.displayName = "DisplayContext"
 
+/**
+ * @description Context for storing order data on the website. 
+ * 
+ * @type object
+ */
+const OrdersContext = createContext()
+OrdersContext.displayName = "OrdersContext"
+
+/**
+ * @description Context for a fullscreened image
+ * 
+ * @type object
+ */
+const FullscreenContext = createContext(null)
+FullscreenContext.displayName = "FullscreenContext"
+
 export {
     LocationContext, 
-    DisplayContext
+    DisplayContext,
+    OrdersContext,
+    FullscreenContext
 }

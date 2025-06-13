@@ -1,5 +1,5 @@
-import { useDisplay, useLocation } from '../context/useContext'
-import { Button } from '../components'
+import { useDisplay, useLocation } from '../../context/useContext'
+import { Button, PromptText } from '../components'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 
 function LocationButton() {
@@ -8,8 +8,6 @@ function LocationButton() {
 
     return (
         <Button
-            label={location}
-            icon={<KeyboardArrowDownIcon />}
             onClick={() => {
                 if (display !== "location") {
                     setDisplay("location")
@@ -17,7 +15,10 @@ function LocationButton() {
                     setDisplay("default")
                 }
             }}
-        />
+        >
+        <KeyboardArrowDownIcon />
+        <PromptText label={location}/>
+        </Button>
     )
 }
 
