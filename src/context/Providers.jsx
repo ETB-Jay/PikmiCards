@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from 'react'
-import { LocationContext, DisplayContext, OrdersContext, FullscreenContext } from './Context'
+import { LocationContext, DisplayContext, OrdersContext, FullscreenContext, OrderDisplayContext } from './Context'
 import { FullscreenModal } from '../body/components'
 
 const LocationProvider = ({ children }) => {
@@ -18,6 +18,12 @@ const OrdersProvider = ({ children }) => {
     const [orders, setOrders] = useState(null);
     const value = useMemo(() => ({ orders, setOrders }), [orders])
     return <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>
+}
+
+const OrderDisplayProvider = ({ children }) => {
+    const [orderDisplay, setOrderDisplay] = useState(null);
+    const value = useMemo(() => ({ orderDisplay, setOrderDisplay }), [orderDisplay])
+    return <OrderDisplayContext.Provider value={value}>{children}</OrderDisplayContext.Provider>
 }
 
 const FullscreenProvider = ({ children }) => {
@@ -49,9 +55,11 @@ const Providers = ({ children }) => {
         <LocationProvider>
             <DisplayProvider>
                 <OrdersProvider>
-                    <FullscreenProvider>
-                        {children}
-                    </FullscreenProvider>
+                    <OrderDisplayProvider>
+                        <FullscreenProvider>
+                            {children}
+                        </FullscreenProvider>
+                    </OrderDisplayProvider>
                 </OrdersProvider>
             </DisplayProvider>
         </LocationProvider>

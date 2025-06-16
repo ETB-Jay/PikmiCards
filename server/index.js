@@ -37,7 +37,7 @@ const getOrders = async (client) => {
     while (hasNextPage) {
         const query = `
         {
-            orders(first: 250, 
+            orders(first: 50, 
                 after: ${cursor ? `"${cursor}"` : 'null'}, 
                 query: "created_at:>${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled", 
                 reverse: true) {
@@ -48,19 +48,33 @@ const getOrders = async (client) => {
                         name
                         customer {displayName}
                         shippingLines(first: 1) {edges {node {title}}}
-                        lineItems(first: 50) {
-                            edges {node {
-                                name
-                                quantity 
-                                variant {
-                                    title
-                                    image {url}
+                        fulfillmentOrders(first: 5) {
+                            edges {
+                                node {
+                                    assignedLocation {location {name}}
+                                    lineItems(first: 10) {
+                                        edges {
+                                            node {
+                                                lineItem {
+                                                    name
+                                                    quantity
+                                                    variant {
+                                                        title
+                                                        image {
+                                                            url
+                                                        }
+                                                    }
+                                                    product {
+                                                        featuredImage {
+                                                            url
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
-                                product {
-                                    featuredImage {url}
-                                    tags
-                                }
-                            }}
+                            }
                         }
                     }
                 }
@@ -74,7 +88,7 @@ const getOrders = async (client) => {
             throw new Error('Invalid response from Shopify API')
         }
 
-        const temp = response.data.orders.edges.map((edge, index) => {
+        const temp = response.data.orders.edges.map((edge) => {
             const order = edge.node
             if (!order) {
                 console.error(`Invalid Order Data: ${edge}`)
@@ -84,21 +98,27 @@ const getOrders = async (client) => {
                 orderId: order.id,
                 orderNumber: order.name,
                 customerName: order.customer?.displayName || null,
-                boxNumber: index + 1,
                 deliveryMethod: order.shippingLines?.edges?.[0]?.node?.title,
-                items: order.lineItems?.edges?.map((edge) => {
+                items: order.fulfillmentOrders?.edges?.flatMap((edge) => {
                     if (!edge?.node) {
                         console.error('Invalid line item data:', edge)
                         return null
                     }
-                    const item = edge.node
-                    return {
-                        itemName: item.name?.split(' - ').slice(0, -1).join(' - ') || item.name,
-                        itemQuantity: item.quantity,
-                        itemStatus: item.variant?.title !== "Default Title" ? item.variant?.title : null,
-                        imageUrl: item.variant?.image?.url || item.product?.featuredImage?.url || 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png',
-                        tags: item.product?.tags || []
-                    }
+                    const locationName = edge.node?.assignedLocation?.location?.name
+                    return edge.node?.lineItems?.edges?.map((edge) => {
+                        const item = edge.node?.lineItem
+                        if (!item) {
+                            console.error('Invalid line item:', edge)
+                            return null
+                        }
+                        return {
+                            itemName: item.name?.split(' - ').slice(0, -1).join(' - ') || item.name,
+                            itemQuantity: item.quantity,
+                            itemLocation: locationName,
+                            itemStatus: item.variant?.title !== "Default Title" ? item.variant?.title : null,
+                            imageUrl: item.variant?.image?.url || item.product?.featuredImage?.url || 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png'
+                        }
+                    }) || []
                 }).filter(Boolean) || []
             }
         }).filter(Boolean) || []

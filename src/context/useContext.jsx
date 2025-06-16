@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { LocationContext, DisplayContext, OrdersContext, FullscreenContext } from './Context'
+import { LocationContext, DisplayContext, OrdersContext, FullscreenContext, OrderDisplayContext } from './Context'
 
 const useLocation = () => {
     const context = useContext(LocationContext)
@@ -25,6 +25,14 @@ const useOrders = () => {
     return context
 }
 
+const useOrderDisplay = () => {
+    const context = useContext(OrderDisplayContext)
+    if (!context) {
+        throw new Error("useOrderDisplay must be used in the OrderDisplayProvider")
+    }
+    return context
+}
+
 const useFullscreen = () => {
     const context = useContext(FullscreenContext)
     if (!context) {
@@ -33,4 +41,4 @@ const useFullscreen = () => {
     return context
 } 
 
-export { useLocation, useDisplay, useOrders, useFullscreen }
+export { useLocation, useDisplay, useOrders, useFullscreen, useOrderDisplay}

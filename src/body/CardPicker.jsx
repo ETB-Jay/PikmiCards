@@ -1,21 +1,18 @@
 import CardGridDisplay from './sections/CardGridDisplay'
 import ToPick from './sections/ToPick'
-import { Container } from './components'
+import { Container, LoadingSpinner } from './components'
 import QueuePile from './sections/QueuePile'
-import { useOrders } from '../context/useContext'
+import { useOrderDisplay } from '../context/useContext'
 
 function CardPicker() {
-    const { orders } = useOrders()
+    const { orderDisplay } = useOrderDisplay()
 
     return (
-        <div className="flex flex-col h-full md:grid md:grid-cols-[45%_54%] lg:grid-cols-[40%_59%] md:grid-rows-[79%_20%] gap-5 md:gap-[1%] p-2
+        <div className="flex flex-col h-full md:grid md:grid-cols-[45%_53%] md:grid-rows-[78%_20%] gap-5 md:gap-[2%] p-2
                       bg-brown-900 rounded-2xl border-2 border-brown-950 shadow-brown-950 shadow-sm">
-            {!orders ?
-                <div className="col-span-full row-span-full flex items-center justify-center">
-                    <div className="flex flex-col items-center gap-4">
-                        <div className="w-16 h-16 border-4 border-silver-300 border-t-transparent rounded-full animate-[spin_1s_linear_infinite]"></div>
-                        <p className="text-silver-300 font-semibold">Loading Orders...</p>
-                    </div>
+            {!orderDisplay ?
+                <div className="col-span-full row-span-full flex items-center justify-center py-10">
+                    <LoadingSpinner />
                 </div>
                 :
                 <>
@@ -25,7 +22,7 @@ function CardPicker() {
                     <Container className="relative z-10 overflow-y-scroll">
                         <CardGridDisplay />
                     </Container>
-                    <Container className="relative z-10 rounded-2xl h-fit overflow-x-scroll">
+                    <Container className="relative z-10 rounded-2xl h-full overflow-x-scroll">
                         <QueuePile />
                     </Container>
                 </>

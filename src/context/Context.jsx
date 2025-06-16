@@ -37,6 +37,14 @@ const OrdersContext = createContext()
 OrdersContext.displayName = "OrdersContext"
 
 /**
+ * @description Context for storing order data for a specific location
+ * 
+ * @type object
+ */
+const OrderDisplayContext = createContext()
+OrderDisplayContext.displayName = "OrderDisplayContext"
+
+/**
  * @description Context for a fullscreened image
  * 
  * @type object
@@ -48,5 +56,6 @@ export {
     LocationContext, 
     DisplayContext,
     OrdersContext,
-    FullscreenContext
+    FullscreenContext,
+    OrderDisplayContext
 }
