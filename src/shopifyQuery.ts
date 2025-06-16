@@ -6,10 +6,10 @@ const getOrders = async () => {
         }
         const orders = await response.json();
         return orders;
-    } catch (error) {
-        console.error('Error fetching orders:', error.message);
+    } catch (error: unknown) {
+        console.error('Error fetching orders:', error instanceof Error ? error.message : String(error));
         throw error;
     }
 };
 
-export default getOrders; 
+export default getOrders;

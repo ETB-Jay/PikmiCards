@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
-body {
-    background-color: rgb(147,116,96);
-    padding: 2.5vh;
-}
-
 /* Hide scrollbars for all elements */
 * {
     -ms-overflow-style: none;

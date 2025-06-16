@@ -16,6 +16,10 @@ const {
     PORT = 3001
 } = process.env
 
+if (!VITE_SHOPIFY_API_KEY || !VITE_SHOPIFY_API_SECRET || !VITE_SHOPIFY_STORE_DOMAIN || !VITE_SHOPIFY_ACCESS_TOKEN) {
+    throw new Error('Missing required environment variables')
+}
+
 const app = express()
 app.use(cors())
 app.use(express.json())

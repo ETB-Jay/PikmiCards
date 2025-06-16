@@ -1,35 +1,40 @@
-import { useMemo, useState, useCallback } from 'react'
+import React, { useMemo, useState, useCallback } from 'react'
 import { LocationContext, DisplayContext, OrdersContext, FullscreenContext, OrderDisplayContext } from './Context'
 import { FullscreenModal } from '../body/components'
+import { Order, FullscreenModalProps } from '../types'
 
-const LocationProvider = ({ children }) => {
+interface ProviderProps {
+    children: React.ReactNode;
+}
+
+const LocationProvider: React.FC<ProviderProps> = ({ children }) => {
     const [location, setLocation] = useState("Oakville");
     const value = useMemo(() => ({ location, setLocation }), [location])
     return <LocationContext.Provider value={value}>{children}</LocationContext.Provider>
 }
 
-const DisplayProvider = ({ children }) => {
-    const [display, setDisplay] = useState("default");
+const DisplayProvider: React.FC<ProviderProps> = ({ children }) => {
+    const [display, setDisplay] = useState<"default" | "location">("default");
     const value = useMemo(() => ({ display, setDisplay }), [display])
     return <DisplayContext.Provider value={value}>{children}</DisplayContext.Provider>
 }
 
-const OrdersProvider = ({ children }) => {
-    const [orders, setOrders] = useState(null);
+const OrdersProvider: React.FC<ProviderProps> = ({ children }) => {
+    const [orders, setOrders] = useState<Order[] | null>(null);
     const value = useMemo(() => ({ orders, setOrders }), [orders])
     return <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>
 }
 
-const OrderDisplayProvider = ({ children }) => {
-    const [orderDisplay, setOrderDisplay] = useState(null);
+const OrderDisplayProvider: React.FC<ProviderProps> = ({ children }) => {
+    const [orderDisplay, setOrderDisplay] = useState<Order[] | null>(null);
     const value = useMemo(() => ({ orderDisplay, setOrderDisplay }), [orderDisplay])
     return <OrderDisplayContext.Provider value={value}>{children}</OrderDisplayContext.Provider>
 }
 
-const FullscreenProvider = ({ children }) => {
-    const [fullScreen, setFullScreen] = useState(null)
+const FullscreenProvider: React.FC<ProviderProps> = ({ children }) => {
+    const [fullScreen, setFullScreen] = useState<string | null>(null)
 
-    const openFullscreen = useCallback((imageUrl) => {
+    const openFullscreen = useCallback((imageUrl: string) => {
         setFullScreen(imageUrl)
     }, [])
 
@@ -37,20 +42,20 @@ const FullscreenProvider = ({ children }) => {
         setFullScreen(null)
     }, [])
 
+    const modalProps: FullscreenModalProps = {
+        image: fullScreen!,
+        onClose: closeFullscreen
+    }
+
     return (
         <FullscreenContext.Provider value={{ openFullscreen, closeFullscreen }}>
             {children}
-            {fullScreen && (
-                <FullscreenModal
-                    image={fullScreen}
-                    onClose={closeFullscreen}
-                />
-            )}
+            {fullScreen && <FullscreenModal {...modalProps} />}
         </FullscreenContext.Provider>
     )
 }
 
-const Providers = ({ children }) => {
+const Providers: React.FC<ProviderProps> = ({ children }) => {
     return (
         <LocationProvider>
             <DisplayProvider>

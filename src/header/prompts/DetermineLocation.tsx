@@ -5,7 +5,7 @@ function DetermineLocation() {
     const { location, setLocation } = useLocation()
     const { setDisplay } = useDisplay()
 
-    const LocationOption = ({ newLocation }) => {
+    const LocationOption = ({ newLocation }: {newLocation: string}) => {
         return (
             <div
                 className="hover:bg-silver-200 px-3 rounded transition-colors cursor-pointer"

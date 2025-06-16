@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import getOrders from './shopifyQuery'
 import { useLocation, useOrders, useOrderDisplay } from './context/useContext'
 
-function App() {
+const App: React.FC = () => {
   const { orders, setOrders } = useOrders()
   const { location } = useLocation()
   const { setOrderDisplay } = useOrderDisplay()
@@ -25,9 +25,9 @@ function App() {
   // Filter orders when location changes
   useEffect(() => {
     if (!orders) return;
-    
-    const filteredOrders = orders.filter(order => 
-      order.items?.some(item => 
+
+    const filteredOrders = orders.filter(order =>
+      order.items?.some(item =>
         item.itemLocation?.toLowerCase().includes(location.toLowerCase())
       )
     ) || []
@@ -35,9 +35,11 @@ function App() {
   }, [location, orders, setOrderDisplay]);
 
   return (
-    <div className="flex flex-col md:h-[88vh] h-full w-full dark:bg-blue-100 gap-4 select-none">
-      <Header />
-      <CardPicker />
+    <div className='min-h-screen bg-gradient-to-br from-teal-600 via-cyan-500 to-sky-400'>
+      <div className="flex flex-col p-5 md:h-[calc(100vh-2.5rem)] w-full gap-4 select-none">
+        <Header />
+        <CardPicker />
+      </div>
     </div>
   )
 }
