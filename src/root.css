@@ -1,17 +1,25 @@
 @import "tailwindcss";
 
-/* Hide scrollbars for all elements */
-* {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
 *::-webkit-scrollbar {
-    display: none;
+    width: 8px;
+    height: 8px;
 }
 
-.container-snap::-webkit-scrollbar {
-    display: none;
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+*::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 @theme {
@@ -76,4 +84,33 @@
     --color-sandy-brown-950: #40130a;
 }
 
-@custom-variant dark (&:where(.dark, .dark *));
+@keyframes waterFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.bg-water-flow {
+  background: linear-gradient(120deg, #a7e8f1 0%, #22d3ee 30%, #0284c7 60%, #0e7490 80%, #155e75 100%);
+  background-size: 200% 200%;
+  animation: waterFlow 50s linear infinite, bgPulse 10s ease-in-out infinite;
+}
+
+/* Prompt animation for enhanced display */
+@keyframes prompt-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.prompt-animate {
+  animation: prompt-fade-in 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+}

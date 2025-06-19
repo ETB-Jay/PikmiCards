@@ -1,25 +1,37 @@
-import { useDisplay, useLocation } from '../../context/useContext'
-import { Button, PromptText } from '../components'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import DetermineLocation from "../../prompts/DetermineLocation";
+import { Button, PromptText } from "../components";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { memo, useCallback, useState } from "react";
 
-function LocationButton() {
-    const { display, setDisplay } = useDisplay()
-    const { location } = useLocation()
-
-    return (
-        <Button
-            onClick={() => {
-                if (display !== "location") {
-                    setDisplay("location")
-                } else {
-                    setDisplay("default")
-                }
-            }}
-        >
-        <KeyboardArrowDownIcon />
-        <PromptText label={location}/>
-        </Button>
-    )
+interface LocationButtonProps {
+    location: string;
+    setLocation: (location: string) => void;
 }
 
-export default LocationButton
+const LocationButton = memo(({ location, setLocation }: LocationButtonProps) => {
+    const [locationPrompt, setLocationPrompt] = useState<boolean>(false);
+
+    const handleLocationSelect = useCallback((newLocation: string) => {
+        setLocation(newLocation);
+        setLocationPrompt(false);
+    }, [setLocation]);
+
+    return (
+        <>
+            <Button onClick={() => setLocationPrompt((prev) => !prev)}>
+                <KeyboardArrowDownIcon />
+                <PromptText label={location} />
+            </Button>
+            {locationPrompt && (
+                <DetermineLocation 
+                    location={location} 
+                    setLocation={handleLocationSelect} 
+                />
+            )}
+        </>
+    );
+});
+
+LocationButton.displayName = "LocationButton";
+
+export default LocationButton;

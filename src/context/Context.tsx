@@ -1,57 +1,72 @@
-import { createContext } from 'react'
-import { 
-    LocationContextType, 
-    DisplayContextType, 
-    OrdersContextType, 
-    OrderDisplayContextType, 
-    FullscreenContextType 
-} from '../types'
-
-/**
- * @description Context for the current location. This is used to control 
- * the current orders and allows the website to be used dynamically for both locations.
- * 
- * The context is an object that contains two fields: location, and background color. This 
- * allows different color schemes to be added for each location for better visual responses. 
- */
-const LocationContext = createContext<LocationContextType>({ location: "Oakville", setLocation: () => {} })
-LocationContext.displayName = "LocationContext"
-
-
-/**
- * @description Context for the display on the website. This is used to control what prompts are displayed on the website
- * 
- * These are the current displays
- * - default
- * - location
- */
-const DisplayContext = createContext<DisplayContextType>({ display: "default", setDisplay: () => {} })
-DisplayContext.displayName = "DisplayContext"
+import { createContext } from "react";
+import { Order, Item } from "../types";
 
 /**
  * @description Context for storing order data on the website. 
  */
-const OrdersContext = createContext<OrdersContextType>({ orders: null, setOrders: () => {} })
-OrdersContext.displayName = "OrdersContext"
-
+interface OrdersContextType {
+    orders: Order[] | null;
+    setOrders: (orders: Order[] | null) => void;
+}
+const OrdersContext = createContext<OrdersContextType>({ orders: null, setOrders: () => {} });
+OrdersContext.displayName = "OrdersContext";
 
 /**
  * @description Context for storing order data for a specific location
  */
-const OrderDisplayContext = createContext<OrderDisplayContextType>({ orderDisplay: null, setOrderDisplay: () => {} })
-OrderDisplayContext.displayName = "OrderDisplayContext"
+interface OrderDisplayContextType {
+    orderDisplay: Order[] | null;
+    setOrderDisplay: (orders: Order[] | null) => void;
+    selectedItems: Set<Item>;
+    setSelectedItems: (items: Set<Item>) => void;
+    handleSelect: (item: Item) => void;
+    handleConfirm: () => void;
+}
+const OrderDisplayContext = createContext<OrderDisplayContextType>({ 
+    orderDisplay: null, 
+    setOrderDisplay: () => {},
+    selectedItems: new Set(),
+    setSelectedItems: () => {},
+    handleSelect: () => {},
+    handleConfirm: () => {}
+});
+OrderDisplayContext.displayName = "OrderDisplayContext";
 
+/**
+ * @description Context for storing orders currently being boxed
+ */
+interface BoxOrdersContextType {
+    boxOrders: string[] | null;
+    setBoxOrders: (boxOrders: string[]) => void;
+}
+const BoxOrdersContext = createContext<BoxOrdersContextType>({
+    boxOrders: [],
+    setBoxOrders: () => {}
+});
+BoxOrdersContext.displayName = "BoxOrdersContext";
 
 /**
  * @description Context for a fullscreened image
  */
-const FullscreenContext = createContext<FullscreenContextType>({ openFullscreen: () => {}, closeFullscreen: () => {} })
-FullscreenContext.displayName = "FullscreenContext"
+interface FullscreenContextType {
+    openFullscreen: (imageUrl: string) => void;
+    closeFullscreen: () => void;
+}
+const FullscreenContext = createContext<FullscreenContextType>({ openFullscreen: () => {}, closeFullscreen: () => {} });
+FullscreenContext.displayName = "FullscreenContext";
+
+interface ConfirmContextType {
+    confirm: Order | null;
+    openConfirm: (order: Order) => void;
+    closeConfirm: () => void;
+}
+const ConfirmContext = createContext<ConfirmContextType>({ confirm: null, openConfirm: () => {}, closeConfirm: () => {} });
+ConfirmContext.displayName = "ConfirmContext";
 
 export {
-    LocationContext, 
-    DisplayContext,
     OrdersContext,
     FullscreenContext,
-    OrderDisplayContext
-}
+    OrderDisplayContext,
+    BoxOrdersContext,
+    ConfirmContext,
+};

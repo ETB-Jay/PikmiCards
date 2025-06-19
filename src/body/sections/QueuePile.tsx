@@ -1,40 +1,54 @@
-import { useOrderDisplay, useFullscreen } from '../../context/useContext'
-import { ScrollContainer, ImageDisplay } from '../components'
-import { useMemo } from 'react'
+import { useOrderDisplay } from "../../context/useContext";
+import { ScrollContainer } from "../components/Container";
+import { OrderCard, getItemKey } from "../components/OrderCard";
+import { useMemo, memo, useCallback } from "react";
 
-function QueuePile() {
-    const { orderDisplay } = useOrderDisplay()
-    const { openFullscreen } = useFullscreen()
+const QueuePile = () => {
+    const { orderDisplay, selectedItems, handleSelect } = useOrderDisplay();
 
     const remainingOrders = useMemo(() => 
-        orderDisplay?.slice(21) || [],
+        orderDisplay?.slice(-1) || null,
         [orderDisplay]
-    )
+    );
 
     const queueItems = useMemo(() => 
-        remainingOrders.flatMap(order => 
+        remainingOrders?.flatMap(order => 
             order.items?.map(item => ({
                 ...item,
                 orderNumber: order.orderNumber
             })) || []
         ),
         [remainingOrders]
-    )
+    );
+
+    const renderItem = useCallback((item: any, index: number) => {
+        const itemKey = getItemKey(item, index);
+        return (
+            <OrderCard
+                key={itemKey}
+                item={item}
+                itemKey={itemKey}
+                selectedItems={selectedItems}
+                onSelect={handleSelect}
+                label={false}
+            />
+        );
+    }, [selectedItems, handleSelect]);
+
+    const items = useMemo(() => 
+        queueItems?.map(renderItem),
+        [queueItems, renderItem]
+    );
 
     return (
-        <ScrollContainer className='flex-row'>
-            {queueItems.map((item) => (
-                <div key={`${item.orderNumber}-${item.itemName}`} className="relative flex-shrink-0">
-                    <ImageDisplay
-                        imageUrl={item.imageUrl}
-                        alt={item.itemName}
-                        onClick={() => openFullscreen(item.imageUrl)}
-                        className="w-full object-contain rounded"
-                    />
-                </div>
-            ))}
-        </ScrollContainer>
-    )
-}
+        <div className="flex flex-col h-full">
+            <ScrollContainer className='flex-row flex-1'>
+                {items}
+            </ScrollContainer>
+        </div>
+    );
+};
 
-export default QueuePile
+QueuePile.displayName = "QueuePile";
+
+export default memo(QueuePile);
