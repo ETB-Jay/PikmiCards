@@ -1,25 +1,11 @@
-import { useOrderDisplay } from "../../context/useContext";
+import { useOrderDisplay, useQueuePile } from "../../context/useContext";
 import { ScrollContainer } from "../components/Container";
 import { OrderCard, getItemKey } from "../components/OrderCard";
-import { useMemo, memo, useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 
 const QueuePile = () => {
-    const { orderDisplay, selectedItems, handleSelect } = useOrderDisplay();
-
-    const remainingOrders = useMemo(() => 
-        orderDisplay?.slice(-1) || null,
-        [orderDisplay]
-    );
-
-    const queueItems = useMemo(() => 
-        remainingOrders?.flatMap(order => 
-            order.items?.map(item => ({
-                ...item,
-                orderNumber: order.orderNumber
-            })) || []
-        ),
-        [remainingOrders]
-    );
+    const { selectedItems, handleSelect } = useOrderDisplay();
+    const { queuePile } = useQueuePile();
 
     const renderItem = useCallback((item: any, index: number) => {
         const itemKey = getItemKey(item, index);
@@ -35,10 +21,7 @@ const QueuePile = () => {
         );
     }, [selectedItems, handleSelect]);
 
-    const items = useMemo(() => 
-        queueItems?.map(renderItem),
-        [queueItems, renderItem]
-    );
+    const items = useMemo(() => queuePile.map(renderItem), [queuePile, renderItem]);
 
     return (
         <div className="flex flex-col h-full">

@@ -4,7 +4,7 @@ import { ScrollContainer } from "../components/Container";
 import { OrderCard, getItemKey } from "../components/OrderCard";
 
 const ToPick = () => {
-    const { orderDisplay, selectedItems, handleSelect, handleConfirm } = useOrderDisplay();
+    const { orderDisplay, selectedItems, handleSelect, handleConfirm, handleClear } = useOrderDisplay();
 
     const allItems = useMemo(() =>
         orderDisplay?.flatMap(order =>
@@ -30,23 +30,31 @@ const ToPick = () => {
         );
     }, [selectedItems, handleSelect]);
 
-    const items = useMemo(() => 
+    const items = useMemo(() =>
         allItems.map(renderItem),
         [allItems, renderItem]
     );
 
     const confirmButton = useMemo(() => {
         if (selectedItems.size === 0) return null;
-        
+
         return (
-            <button
-                onClick={handleConfirm}
-                className="w-full py-2 bg-black-olive-900 hover:bg-black-olive-900/90 cursor-pointer text-white rounded-b-lg transition-colors"
-            >
-                Confirm {selectedItems.size} {selectedItems.size === 1 ? "Item" : "Items"}
-            </button>
+            <div className="flex flex-row gap-2 p-2 rounded-b-2xl bg-black-olive-800 justify-center items-center">
+                <button
+                    onClick={handleConfirm}
+                    className="py-1.5 px-3 w-fit rounded-full bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-medium text-xs shadow transition-all duration-150 cursor-pointer"
+                >
+                    Confirm {selectedItems.size} {selectedItems.size === 1 ? "Item" : "Items"}
+                </button>
+                <button
+                    onClick={handleClear}
+                    className="py-1.5 px-3 w-fit rounded-full bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-medium text-xs shadow transition-all duration-150 cursor-pointer"
+                >
+                    Clear Items
+                </button>
+            </div>
         );
-    }, [selectedItems.size, handleConfirm]);
+    }, [selectedItems.size, handleConfirm, handleClear]);
 
     return (
         <div className="flex flex-col h-full">

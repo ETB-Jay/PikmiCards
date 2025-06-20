@@ -1,5 +1,5 @@
 import { memo, useCallback } from "react";
-import { PromptContainer } from "./components";
+import { ModalContainer } from "../components";
 
 interface DetermineLocationProps {
     location: string;
@@ -35,7 +35,7 @@ const DetermineLocation = memo(({ location, setLocation }: DetermineLocationProp
     }, [setLocation]);
 
     return (
-        <PromptContainer className="mt-8 py-1 text-sm font-semibold">
+        <ModalContainer position="mt-1 w-fit text-sm font-semibold p-0">
             <LocationOption 
                 newLocation="Oakville" 
                 currentLocation={location}
@@ -46,7 +46,7 @@ const DetermineLocation = memo(({ location, setLocation }: DetermineLocationProp
                 currentLocation={location}
                 onSelect={handleLocationSelect}
             />
-        </PromptContainer>
+        </ModalContainer>
     );
 });
 

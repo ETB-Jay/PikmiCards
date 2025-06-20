@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 
-interface PromptContainerProps extends PropsWithChildren<{}> {
+interface ModalContainerProps extends PropsWithChildren<{}> {
     className?: string;
     onClick?: React.MouseEventHandler<HTMLDivElement>;
     title?: string;
@@ -8,10 +8,10 @@ interface PromptContainerProps extends PropsWithChildren<{}> {
     role?: string;
 }
 
-const PromptContainer: React.FC<PromptContainerProps> = ({ className = '', children, onClick, title, icon, role = "dialog" }) => {
+const ModalContainer: React.FC<ModalContainerProps> = ({ className = '', children, onClick, title, icon, role = "dialog" }) => {
     return (
         <div
-            className={`${className} absolute z-20 bg-green-smoke-400 rounded-lg ring-2 ring-black shadow-2xl border border-green-800/30 `}
+            className={`relative rounded-lg bg-green-smoke-400 shadow-2xl border border-green-800/30 p-4 z-60 flex flex-col items-center justify-center gap-2 h-fit w-fit max-h-[90vh] max-w-[80vw] cursor-default prompt-animate ${className}`}
             onClick={onClick}
             role={role}
             aria-modal="true"
@@ -28,14 +28,14 @@ const PromptContainer: React.FC<PromptContainerProps> = ({ className = '', child
     );
 };
 
-interface PromptButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ModalButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ReactNode;
     icon?: React.ReactNode;
     className?: string;
     type?: 'button' | 'submit' | 'reset';
 }
 
-const PromptButton: React.FC<PromptButtonProps> = ({ children, icon, className = '', type = 'button', ...props }) => {
+const ModalButton: React.FC<ModalButtonProps> = ({ children, icon, className = '', type = 'button', ...props }) => {
     return (
         <button
             type={type}
@@ -48,4 +48,18 @@ const PromptButton: React.FC<PromptButtonProps> = ({ children, icon, className =
     );
 };
 
-export { PromptContainer, PromptButton }
+interface ModalOverlayProps extends React.PropsWithChildren<{}> {
+    onClose: () => void;
+    className?: string;
+}
+
+const ModalOverlay: React.FC<ModalOverlayProps> = ({ children, onClose, className = "" }) => (
+    <div
+        className={`fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center w-screen h-screen cursor-pointer select-none ${className}`}
+        onClick={onClose}
+    >
+        {children}
+    </div>
+);
+
+export { ModalContainer, ModalButton, ModalOverlay }

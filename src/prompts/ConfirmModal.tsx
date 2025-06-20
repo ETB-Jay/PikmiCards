@@ -3,8 +3,7 @@ import { Order, Item } from "../types";
 import { ScrollContainer } from "../body/components/Container";
 import { getItemKey, OrderCard } from "../body/components/OrderCard";
 import { useCallback } from "react";
-import { PromptContainer } from "./components";
-import { PromptButton } from "./components";
+import { ModalContainer, ModalButton, ModalOverlay } from "./components";
 
 interface ConfirmModalProps {
     order: Order;
@@ -28,12 +27,9 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
     }, []);
 
     return (
-        <div
-            className="fixed top-0 left-0 w-screen h-screen z-20 bg-black/50 flex flex-col items-center justify-center cursor-pointer backdrop-blur-sm select-none"
-            onClick={onClose}
-        >
-            <PromptContainer
-                className={"flex flex-col items-center justify-center w-fit z-100 cursor-default prompt-animate min-w-[260px] max-w-[90vw] gap-2 p-3"}
+        <ModalOverlay onClose={onClose}>
+            <ModalContainer
+                className={""}
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
                 <span className="text-lg font-bold text-center">{order.customerName}</span>
@@ -44,9 +40,9 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
                 <ScrollContainer className="p-3 flex-row max-w-full">
                     {order.items.map(renderItem)}
                 </ScrollContainer>
-                <PromptButton>Confirm</PromptButton>
-            </PromptContainer >
-        </div>
+                <ModalButton>Confirm</ModalButton>
+            </ModalContainer>
+        </ModalOverlay>
     );
 })
 

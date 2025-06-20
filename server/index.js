@@ -50,6 +50,7 @@ const getOrders = async (client) => {
                     node {
                         id
                         name
+                        currentSubtotalLineItemsQuantity
                         customer {displayName}
                         shippingLines(first: 1) {edges {node {title}}}
                         fulfillmentOrders(first: 1) {
@@ -103,6 +104,7 @@ const getOrders = async (client) => {
                 orderID: order.id,
                 orderNumber: order.name,
                 customerName: order.customer?.displayName || null,
+                numberItems: order.currentSubtotalLineItemsQuantity,
                 deliveryMethod: order.shippingLines?.edges?.[0]?.node?.title,
                 items: order.fulfillmentOrders?.edges?.flatMap((edge) => {
                     if (!edge?.node) {

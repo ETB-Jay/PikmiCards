@@ -1,15 +1,10 @@
+import { useOrderDisplay, useOrders } from "../../context/useContext";
+import { memo, useCallback } from "react";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { Button, PromptText } from "../components";
-import { useOrderDisplay, useOrders } from "../../context/useContext";
 import { getOrders } from "../../shopifyQuery";
-import { Order, Item } from "../../types";
-import { memo, useCallback } from "react";
 
-interface RefreshButtonProps {
-    location: string;
-}
-
-const RefreshButton = memo(({ location }: RefreshButtonProps) => {
+const RefreshButton = memo(() => {
     const { setOrders } = useOrders();
     const { setOrderDisplay } = useOrderDisplay();
 
@@ -19,19 +14,11 @@ const RefreshButton = memo(({ location }: RefreshButtonProps) => {
             setOrderDisplay(null);
             const data = await getOrders();
             setOrders(data);
-            
-            const filteredOrders = data?.map((order: Order) => ({
-                ...order,
-                items: order.items?.filter((item: Item) =>
-                    item.itemLocation?.toLowerCase().includes(location.toLowerCase())
-                )
-            })).filter((order: Order) => order.items && order.items.length > 0) || [];
-            
-            setOrderDisplay(filteredOrders);
+            setOrderDisplay(data);
         } catch (err) {
-            console.error("Error loading orders:", err);
+            return
         }
-    }, [setOrders, setOrderDisplay, location]);
+    }, [setOrders, setOrderDisplay]);
 
     return (
         <Button onClick={refresh}>

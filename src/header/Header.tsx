@@ -17,8 +17,7 @@ const Header = memo(({ location, setLocation }: HeaderProps) => {
                     location={location}
                     setLocation={setLocation}
                 />
-                
-                <RefreshButton location={location} />
+                <RefreshButton />
             </div>
             <img className="relative h-14 w-auto" src={icon} alt="pikmicard" />
         </div>

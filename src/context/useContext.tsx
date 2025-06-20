@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext, ConfirmContext } from "./Context";
+import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext, ConfirmContext, QueuePileContext } from "./Context";
 
 const useOrders = () => {
     const context = useContext(OrdersContext);
@@ -41,4 +41,12 @@ const useConfirm = () => {
     return context;
 };
 
-export { useOrders, useFullscreen, useOrderDisplay, useBoxOrders, useConfirm };
+const useQueuePile = () => {
+    const context = useContext(QueuePileContext);
+    if (!context) {
+        throw new Error("useQueuePile must be used in the QueuePileProvider");
+    }
+    return context;
+};
+
+export { useOrders, useFullscreen, useOrderDisplay, useBoxOrders, useConfirm, useQueuePile };

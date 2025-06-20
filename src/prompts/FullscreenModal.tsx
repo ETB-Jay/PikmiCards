@@ -1,4 +1,5 @@
 import React, { memo, useCallback, PropsWithChildren, ReactNode } from "react";
+import { ModalContainer, ModalOverlay } from "./components";
 
 interface FullscreenModalProps extends PropsWithChildren<{}> {
     image?: string;
@@ -16,22 +17,22 @@ const FullscreenModal = memo(({ image, onClose, children }: FullscreenModalProps
     }, []);
 
     return (
-        <div
-            className="fixed top-0 left-0 w-screen h-screen z-100 bg-black/50 flex items-center justify-center cursor-pointer backdrop-blur-sm select-none"
-            onClick={handleModalClick}
-        >
-            <div className="prompt-animate flex flex-col gap-4 items-center justify-center">
+        <ModalOverlay onClose={handleModalClick}>
+            <ModalContainer
+                className="flex flex-col gap-4 items-center justify-center"
+                onClick={e => e.stopPropagation()}
+            >
                 {image && (
                     <img
                         src={image}
-                        className="h-4/5 w-auto object-contain max-w-[90vw] max-h-[90vh]"
+                        className="max-h-[70vh] w-auto object-contain rounded-3xl ring-2 ring-offset-2 shadow-[0_0_30px_4px_black]"
                         onClick={handleImageClick}
                         alt="Fullscreen view"
                     />
                 )}
                 {children}
-            </div>
-        </div>
+            </ModalContainer>
+        </ModalOverlay>
     );
 });
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { memo, useMemo, useCallback } from "react";
-import { useFullscreen } from "../../context/useContext";
+import { useBoxOrders, useFullscreen } from "../../context/useContext";
 import { Item } from "../../types";
 import { ImageDisplay } from "./ImageDisplay";
 import { Tags } from "./Tags";
@@ -39,6 +39,7 @@ const getItemKey = (item: Item, index: number) =>
  */
 const OrderCard = memo(({ item, className = "", selectedItems, onSelect, label }: CardProps) => {
     const { openFullscreen } = useFullscreen();
+    const { boxOrders } = useBoxOrders()
 
     const handleImageClick = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
@@ -66,10 +67,10 @@ const OrderCard = memo(({ item, className = "", selectedItems, onSelect, label }
     const tags = useMemo(() => [
         `🛒 ${item.itemQuantity}`,
         `${item.itemPrinting}`,
-        `${item.orderNumber}`,
+        `${boxOrders !== null && boxOrders.findIndex(i => i === item.orderNumber) !== -1 ? `📦 ${1 + boxOrders.findIndex(i => i === item.orderNumber)}` : ""}`,
         `${item.itemRarity}`,
         `${item.itemSet}`
-    ].filter(Boolean), [item.itemQuantity]);
+    ].filter(Boolean), [item.itemQuantity, item.itemPrinting, boxOrders, item.orderNumber, item.itemRarity, item.itemSet]);
 
     const baseClass = useMemo(() => 
         `flex flex-row gap-3 items-start ${isSelected ? "bg-black-olive-800 hover:bg-black-olive-900" : "bg-green-smoke-600/70 hover:bg-green-smoke-600/90"} border-brown-950 border shadow-[0px_0px_3px_2px_rgba(0,0,0,0.25)] p-2 rounded-lg cursor-pointer transition-all`,
@@ -89,7 +90,7 @@ const OrderCard = memo(({ item, className = "", selectedItems, onSelect, label }
                     alt={itemName}
                     onClick={handleImageClick}
                     onError={handleImageError}
-                    className="h-full object-contain rounded-lg w-fit"
+                    className="h-full object-contain rounded w-fit"
                 />
             </div>
             <div className="flex flex-col justify-between h-full max-w-[calc(100%-6.5rem)]">

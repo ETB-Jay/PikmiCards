@@ -21,6 +21,7 @@ interface OrderDisplayContextType {
     setSelectedItems: (items: Set<Item>) => void;
     handleSelect: (item: Item) => void;
     handleConfirm: () => void;
+    handleClear: () => void;
 }
 const OrderDisplayContext = createContext<OrderDisplayContextType>({ 
     orderDisplay: null, 
@@ -28,7 +29,8 @@ const OrderDisplayContext = createContext<OrderDisplayContextType>({
     selectedItems: new Set(),
     setSelectedItems: () => {},
     handleSelect: () => {},
-    handleConfirm: () => {}
+    handleConfirm: () => {},
+    handleClear: () => {}
 });
 OrderDisplayContext.displayName = "OrderDisplayContext";
 
@@ -63,10 +65,34 @@ interface ConfirmContextType {
 const ConfirmContext = createContext<ConfirmContextType>({ confirm: null, openConfirm: () => {}, closeConfirm: () => {} });
 ConfirmContext.displayName = "ConfirmContext";
 
+interface ModalContextType {
+    modalData: any;
+    openModal: (order: any) => void;
+    closeModal: () => void;
+}
+const ModalContext = createContext<ModalContextType>({
+    modalData: null,
+    openModal: () => {},
+    closeModal: () => {}
+});
+ModalContext.displayName = "ModalContext";
+
+interface QueuePileContextType {
+    queuePile: Item[];
+    setQueuePile: (queue: Item[]) => void;
+}
+const QueuePileContext = createContext<QueuePileContextType>({
+    queuePile: [],
+    setQueuePile: () => {},
+});
+QueuePileContext.displayName = "QueuePileContext";
+
 export {
     OrdersContext,
     FullscreenContext,
     OrderDisplayContext,
     BoxOrdersContext,
     ConfirmContext,
+    ModalContext,
+    QueuePileContext,
 };

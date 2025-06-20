@@ -22,6 +22,10 @@
     background: transparent;
 }
 
+html, body, .min-w-screen, .w-screen, .overflow-x-scroll, .overflow-x-auto {
+    overflow-x: hidden;
+}
+
 @theme {
     --color-brown-50: #faf9ec;
     --color-brown-100: #f4f2cd;
@@ -86,17 +90,17 @@
 
 @keyframes waterFlow {
   0% {
-    background-position: 0% 50%;
+    background-position: 5% 50%;
   }
-  100% {
-    background-position: 100% 50%;
+  50% {
+    background-position: 95% 50%;
   }
 }
 
 .bg-water-flow {
   background: linear-gradient(120deg, #a7e8f1 0%, #22d3ee 30%, #0284c7 60%, #0e7490 80%, #155e75 100%);
   background-size: 200% 200%;
-  animation: waterFlow 50s linear infinite, bgPulse 10s ease-in-out infinite;
+  animation: waterFlow 20s linear infinite;
 }
 
 /* Prompt animation for enhanced display */

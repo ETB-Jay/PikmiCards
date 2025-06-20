@@ -34,6 +34,7 @@ interface Order {
     orderID: string;
     orderNumber: string;
     customerName: string | null;
+    numberItems: number;
     deliveryMethod: string | null;
     items: Item[];
 }
