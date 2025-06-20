@@ -2,26 +2,22 @@ import { useOrderDisplay, useOrders } from "../../context/useContext";
 import { memo, useCallback } from "react";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { Button, PromptText } from "../components";
-import { getOrders } from "../../shopifyQuery";
 
 const RefreshButton = memo(() => {
-    const { setOrders } = useOrders();
-    const { setOrderDisplay } = useOrderDisplay();
+    const { fetchOrders } = useOrders();
+    const { orderDisplay, setOrderDisplay } = useOrderDisplay();
 
     const refresh = useCallback(async () => {
         try {
-            setOrders(null);
-            setOrderDisplay(null);
-            const data = await getOrders();
-            setOrders(data);
-            setOrderDisplay(data);
+            setOrderDisplay(null)
+            await fetchOrders();
         } catch (err) {
-            return
+            console.error("Error")
         }
-    }, [setOrders, setOrderDisplay]);
+    }, []);
 
     return (
-        <Button onClick={refresh}>
+        <Button onClick={refresh} disabled={!orderDisplay}>
             <RefreshIcon />
             <PromptText label="Refresh" />
         </Button>

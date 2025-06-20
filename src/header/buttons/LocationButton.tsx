@@ -1,5 +1,5 @@
 import DetermineLocation from "./DetermineLocation";
-import { Button, PromptText, ModalContainer } from "../components";
+import { Button, PromptText } from "../components";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { memo, useCallback, useState } from "react";
 
@@ -23,12 +23,10 @@ const LocationButton = memo(({ location, setLocation }: LocationButtonProps) => 
                 <PromptText label={location} />
             </Button>
             {locationPrompt && (
-                <ModalContainer position="left-0 mt-1">
-                    <DetermineLocation 
-                        location={location} 
-                        setLocation={handleLocationSelect} 
-                    />
-                </ModalContainer>
+                <DetermineLocation
+                    location={location}
+                    setLocation={handleLocationSelect}
+                />
             )}
         </div>
     );

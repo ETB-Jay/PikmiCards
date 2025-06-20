@@ -1,4 +1,3 @@
-import React from "react";
 import { ModalContainer, ModalButton, ModalOverlay } from "./components";
 import { Order } from "../types";
 

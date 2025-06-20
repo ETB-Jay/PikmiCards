@@ -9,6 +9,7 @@ interface ModalContainerProps {
 interface ButtonProps {
     children: React.ReactNode;
     onClick: MouseEventHandler;
+    disabled?: boolean;
 }
 
 const ModalContainer = ({ position, children }: ModalContainerProps) => {
@@ -25,11 +26,14 @@ const PromptText = ({ label }: {label: string}) => {
     );
 };
 
-const Button = ({ children, onClick }: ButtonProps) => {
+const Button = ({ children, onClick, disabled }: ButtonProps) => {
     return (
         <button
-            className={"relative flex items-center px-1 gap-1 bg-green-smoke-300 rounded shadow-[-2px_2px_4.1px_2px_rgba(0,0,0,0.3)] border border-black hover:bg-green-smoke-400 transition-colors cursor-pointer"}
+            className={
+                "relative flex items-center px-1 gap-1 bg-green-smoke-300 disabled:bg-gray-400 disabled:text-gray-200 rounded shadow-[-2px_2px_4.1px_2px_rgba(0,0,0,0.3)] border border-black hover:bg-green-smoke-400 transition-all cursor-pointer"
+            }
             onClick={onClick}
+            disabled={disabled}
         >
             {children}
         </button>

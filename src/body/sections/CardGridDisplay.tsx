@@ -28,7 +28,7 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
 
     const cardClass = useMemo(() => {
         const { bg, hover, border, text } = deliveryBackground(order);
-        return `relative flex flex-col h-full w-full min-w-0 cursor-pointer rounded-lg p-1 shadow border ${bg} ${hover} ${border} ${text} transition-all overflow-hidden text-xs sm:text-sm transition-colors duration-150 hover:shadow-lg hover:scale-[1.02]`;
+        return `relative flex flex-col h-full w-full min-w-0 cursor-pointer rounded-lg p-1 shadow border ${bg} ${hover} ${border} ${text} transition-all overflow-hidden text-xs sm:text-sm transition-colors duration-150 hover:shadow-lg hover:scale-[1.01]`;
     }, [order, deliveryBackground]);
 
     return (

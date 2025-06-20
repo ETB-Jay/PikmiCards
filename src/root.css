@@ -90,20 +90,25 @@ html, body, .min-w-screen, .w-screen, .overflow-x-scroll, .overflow-x-auto {
 
 @keyframes waterFlow {
   0% {
-    background-position: 5% 50%;
+    background-size: 100% 100%;
+    opacity: 1;
   }
   50% {
-    background-position: 95% 50%;
+    background-size: 120% 120%;
+    opacity: 0.85;
+  }
+  100% {
+    background-size: 100% 100%;
+    opacity: 1;
   }
 }
 
 .bg-water-flow {
-  background: linear-gradient(120deg, #a7e8f1 0%, #22d3ee 30%, #0284c7 60%, #0e7490 80%, #155e75 100%);
-  background-size: 200% 200%;
-  animation: waterFlow 20s linear infinite;
+  background: radial-gradient(circle at 50% 50%, #2176a5 0%, #3498c5 20%, #399fc2 45%, #4fa3e3 65%, #2176c7 80%, #174e85 100%);
+  background-size: 100% 100%;
+  animation: waterFlow 30s ease-in-out infinite;
 }
 
-/* Prompt animation for enhanced display */
 @keyframes prompt-fade-in {
   0% {
     opacity: 0;
@@ -117,4 +122,13 @@ html, body, .min-w-screen, .w-screen, .overflow-x-scroll, .overflow-x-auto {
 
 .prompt-animate {
   animation: prompt-fade-in 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@keyframes spaceship-move {
+  0% { left: -3rem; }
+  100% { left: calc(100% + 3rem) ; }
+}
+
+.animate-spaceship {
+  animation: spaceship-move 2s linear infinite;
 }

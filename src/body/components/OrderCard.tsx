@@ -73,7 +73,7 @@ const OrderCard = memo(({ item, className = "", selectedItems, onSelect, label }
     ].filter(Boolean), [item.itemQuantity, item.itemPrinting, boxOrders, item.orderNumber, item.itemRarity, item.itemSet]);
 
     const baseClass = useMemo(() => 
-        `flex flex-row gap-3 items-start ${isSelected ? "bg-black-olive-800 hover:bg-black-olive-900" : "bg-green-smoke-600/70 hover:bg-green-smoke-600/90"} border-brown-950 border shadow-[0px_0px_3px_2px_rgba(0,0,0,0.25)] p-2 rounded-lg cursor-pointer transition-all`,
+        `flex flex-row gap-3 items-start ${isSelected ? "bg-black-olive-800 hover:bg-black-olive-900" : "bg-green-smoke-600/70 hover:bg-green-smoke-600/90"} hover:scale-[1.02] border-brown-950 border shadow-[0px_0px_3px_2px_rgba(0,0,0,0.25)] p-2 rounded-lg cursor-pointer transition-all`,
         [isSelected]
     );
 

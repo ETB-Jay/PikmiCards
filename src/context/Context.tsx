@@ -7,8 +7,9 @@ import { Order, Item } from "../types";
 interface OrdersContextType {
     orders: Order[] | null;
     setOrders: (orders: Order[] | null) => void;
+    fetchOrders: () => Promise<void>;
 }
-const OrdersContext = createContext<OrdersContextType>({ orders: null, setOrders: () => {} });
+const OrdersContext = createContext<OrdersContextType>({ orders: null, setOrders: () => {}, fetchOrders: async () => {} });
 OrdersContext.displayName = "OrdersContext";
 
 /**
@@ -22,6 +23,7 @@ interface OrderDisplayContextType {
     handleSelect: (item: Item) => void;
     handleConfirm: () => void;
     handleClear: () => void;
+    filterOrdersByLocation: (orders: Order[], location: string) => Order[];
 }
 const OrderDisplayContext = createContext<OrderDisplayContextType>({ 
     orderDisplay: null, 
@@ -30,7 +32,8 @@ const OrderDisplayContext = createContext<OrderDisplayContextType>({
     setSelectedItems: () => {},
     handleSelect: () => {},
     handleConfirm: () => {},
-    handleClear: () => {}
+    handleClear: () => {},
+    filterOrdersByLocation: () => []
 });
 OrderDisplayContext.displayName = "OrderDisplayContext";
 

@@ -42,13 +42,13 @@ const ToPick = () => {
             <div className="flex flex-row gap-2 p-2 rounded-b-2xl bg-black-olive-800 justify-center items-center">
                 <button
                     onClick={handleConfirm}
-                    className="py-1.5 px-3 w-fit rounded-full bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-medium text-xs shadow transition-all duration-150 cursor-pointer"
+                    className="py-1.5 px-3 w-fit rounded-full bg-teal-600/50 hover:bg-teal-700/50 active:bg-teal-800/50 ring-2 text-white ring-teal-900 font-medium text-xs shadow transition-all duration-150 cursor-pointer"
                 >
                     Confirm {selectedItems.size} {selectedItems.size === 1 ? "Item" : "Items"}
                 </button>
                 <button
                     onClick={handleClear}
-                    className="py-1.5 px-3 w-fit rounded-full bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-medium text-xs shadow transition-all duration-150 cursor-pointer"
+                    className="py-1.5 px-3 w-fit rounded-full bg-red-500/50 hover:bg-red-600/50 active:bg-red-700/50 ring-2 ring-red-900 text-white font-medium text-xs shadow transition-all duration-150 cursor-pointer"
                 >
                     Clear Items
                 </button>
