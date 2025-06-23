@@ -3,9 +3,10 @@ import { useMemo, memo, useCallback } from "react";
 import { ScrollContainer } from "../components/Container";
 import { OrderCard } from "../components/OrderCard";
 import { ItemData } from "../../types";
+import { findItemByID } from "../../context/orderFunctions";
 
 const ToPick = () => {
-    const { orders, findItemByID } = useOrders()
+    const { orders } = useOrders()
     const { orderDisplay, selectedItems, handleConfirm, handleClear } = useOrderDisplay();
 
     const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
@@ -14,8 +15,7 @@ const ToPick = () => {
         const items = orderDisplay
             ?.flatMap(order => order.unretrievedItems.map(itemID => ({ orderID: order.order, itemID })))
             || [];
-        console.log(items.length)
-        return items
+        return items;
     }, [orderDisplay]);
 
     const renderItem = useCallback((item: { orderID: string, itemID: string }, index: number) => {

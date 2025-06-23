@@ -1,26 +1,18 @@
 import { createContext } from "react";
-import { OrderData, Order, OrderID, ItemID, ItemData } from "../types";
+import { OrderData, Order, ItemID } from "../types";
 
-
+/**
+ * @description OrdersContextType stores the fetched order data from Shopify
+ */
 interface OrdersContextType {
     orders: OrderData[];
     setOrders: (orders: OrderData[]) => void;
     fetchOrders: () => Promise<void>;
-    filterOrdersByLocation: (orders: OrderData[], location: string) => OrderData[];
-    getOrderKeys: (orders: OrderData[]) => Order[];
-    getItemKeys: (order: OrderData) => ItemID[];
-    findItemByID: (orders: OrderData[], orderID: OrderID, itemID: ItemID) => ItemData | undefined;
-    findOrderByID: (orders: OrderData[] | null, orderID: OrderID) => OrderData | undefined;
 }
 const OrdersContext = createContext<OrdersContextType>({
     orders: [],
     setOrders: () => {},
     fetchOrders: async () => {},
-    filterOrdersByLocation: () => [],
-    getOrderKeys: () => [],
-    getItemKeys: () => [],
-    findItemByID: () => undefined,
-    findOrderByID: () => undefined
 });
 OrdersContext.displayName = "OrdersContext";
 
@@ -34,6 +26,9 @@ interface OrderDisplayContextType {
     handleConfirm: () => void;
     handleClear: () => void;
 }
+/**
+ * React context for order display and selection state.
+ */
 const OrderDisplayContext = createContext<OrderDisplayContextType>({
     orderDisplay: [],
     setOrderDisplay: () => {},
@@ -45,44 +40,65 @@ const OrderDisplayContext = createContext<OrderDisplayContextType>({
 });
 OrderDisplayContext.displayName = "OrderDisplayContext";
 
-
+/**
+ * Context for managing the list of box orders and its setter.
+ * Used for displaying and updating the current box's orders.
+ */
 interface BoxOrdersContextType {
     boxOrders: Order[];
     setBoxOrders: (updater: Order[] | ((prev: Order[]) => Order[])) => void;
 }
+/**
+ * React context for box orders state.
+ */
 const BoxOrdersContext = createContext<BoxOrdersContextType>({
     boxOrders: [],
     setBoxOrders: () => { }
 });
 BoxOrdersContext.displayName = "BoxOrdersContext";
 
-
+/**
+ * Context for managing the queue pile (list of item IDs in the queue) and its setter.
+ */
 interface QueuePileContextType {
     queuePile: ItemID[];
     setQueuePile: (updater: ItemID[] | ((prev: ItemID[]) => ItemID[])) => void;
 }
+/**
+ * React context for queue pile state.
+ */
 const QueuePileContext = createContext<QueuePileContextType>({
     queuePile: [],
     setQueuePile: () => { },
 });
 QueuePileContext.displayName = "QueuePileContext";
 
-
+/**
+ * Context for managing fullscreen image modal state and actions.
+ */
 interface FullscreenContextType {
     openFullscreen: (imageUrl: string) => void;
     closeFullscreen: () => void;
 }
+/**
+ * React context for fullscreen modal state and actions.
+ */
 const FullscreenContext = createContext<FullscreenContextType>({ openFullscreen: () => {}, closeFullscreen: () => {} });
 FullscreenContext.displayName = "FullscreenContext";
 
+/**
+ * Context for managing the confirmation modal state and actions.
+ */
 interface ConfirmContextType {
     confirm: Order | null;
     openConfirm: (order: Order) => void;
     closeConfirm: () => void;
 }
+/**
+ * React context for confirmation modal state and actions.
+ */
 const ConfirmContext = createContext<ConfirmContextType>({ confirm: null, openConfirm: () => {}, closeConfirm: () => {} });
 ConfirmContext.displayName = "ConfirmContext";
-
 
 export {
     OrdersContext,

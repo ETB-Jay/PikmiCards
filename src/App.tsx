@@ -3,6 +3,8 @@ import Header from "./header/Header";
 import CardPicker from "./body/CardPicker";
 import { useOrders, useOrderDisplay, useBoxOrders } from "./context/useContext";
 import spaceship from "./assets/Spaceship.png";
+import { filterOrdersByLocation, getOrderKeys } from "./context/orderFunctions";
+import { MainContainer } from "./components";
 
 const LoadingSpinner = memo(() => (
     <div className="flex flex-col items-center gap-4 w-full">
@@ -17,10 +19,10 @@ const LoadingSpinner = memo(() => (
     </div>
 ));
 
-const App = () => {
-    const { orders, fetchOrders, filterOrdersByLocation, getOrderKeys } = useOrders();
+const App = memo(() => {
+    const { orders, fetchOrders } = useOrders();
     const { orderDisplay, setOrderDisplay } = useOrderDisplay();
-    const { setBoxOrders } = useBoxOrders();
+    const { setBoxOrders, boxOrders } = useBoxOrders();
     const [location, setLocation] = useState("Oakville");
 
     useEffect(() => {
@@ -37,16 +39,20 @@ const App = () => {
     useEffect(() => {
         if (orders.length === 0) return;
         const filteredOrders = filterOrdersByLocation(orders, location);
-        const filteredOrderKeys = getOrderKeys(filteredOrders)
-        console.log('setOrderDisplay', filteredOrderKeys);
-        setOrderDisplay(filteredOrderKeys);
-        console.log('setBoxOrders', filteredOrderKeys.slice(0, 20));
-        setBoxOrders(filteredOrderKeys.slice(0, 20));
-    }, [orders, location]);
+        const filteredOrderKeys = getOrderKeys(filteredOrders);
+        const isSameOrderDisplay = orderDisplay.length === filteredOrderKeys.length && orderDisplay.every((v, i) => v.order === filteredOrderKeys[i].order);
+        if (!isSameOrderDisplay) {
+            setOrderDisplay(filteredOrderKeys);
+        }
+        const newBoxOrders = filteredOrderKeys.slice(0, 20);
+        const isSameBoxOrders = boxOrders.length === newBoxOrders.length && boxOrders.every((v, i) => v.order === newBoxOrders[i].order);
+        if (!isSameBoxOrders) {
+            setBoxOrders(newBoxOrders);
+        }
+    }, [orders, location, filterOrdersByLocation, getOrderKeys, setOrderDisplay, setBoxOrders, orderDisplay, boxOrders]);
 
     return (
-        <div className="min-h-screen min-w-screen flex items-center justify-center relative overflow-y-hidden">
-            <div className="absolute flex content-center inset-0 w-full h-full bg-water-flow z-0" />
+        <MainContainer>
             {orderDisplay.length === 0 ?
                 <LoadingSpinner /> :
                 <div className="flex flex-col items-center justify-center p-5 lg:h-[calc(100vh-3rem)] w-full gap-4 select-none relative z-10">
@@ -57,8 +63,8 @@ const App = () => {
                     <CardPicker />
                 </div>
             }
-        </div>
+        </MainContainer>
     );
-};
+});
 
-export default memo(App);
+export default App;

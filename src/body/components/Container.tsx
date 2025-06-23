@@ -17,7 +17,7 @@ interface ContainerProps {
  */
 const Container = memo(({ className, children }: ContainerProps) => {
     const containerClass = useMemo(() => 
-        `rounded-2xl overflow-y-hidden ${className?.includes("bg-none") ? "" : "bg-white/10 backdrop-blur-sm shadow-lg"} ${className}`,
+        `rounded-2xl overflow-hidden ${className?.includes("bg-none") ? "" : "bg-white/10 backdrop-blur-sm shadow-lg"} ${className}`,
         [className]
     );
     return <div className={containerClass}>{children}</div>;

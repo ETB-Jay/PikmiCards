@@ -1,7 +1,7 @@
 import { ReactNode, useMemo, useState, useCallback } from "react";
 import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext, ConfirmContext, QueuePileContext } from "./Context";
 import FullscreenModal from "../modals/FullscreenModal";
-import { OrderData, ItemData, Order, OrderID, ItemID } from "../types";
+import { OrderData, Order, ItemID } from "../types";
 import ConfirmModal from "../modals/ConfirmModal";
 import { useBoxOrders, useQueuePile } from "./useContext";
 
@@ -9,13 +9,12 @@ interface ProviderProps {
     children: ReactNode;
 }
 
-
 const OrdersProvider = ({ children }: ProviderProps) => {
     const [orders, setOrders] = useState<OrderData[]>([]);
 
-    const fetchOrders = async (): Promise<void> => {
+    const fetchOrders = useCallback(async (): Promise<void> => {
         try {
-            setOrders([])
+            setOrders([]);
             const response = await fetch("http://localhost:3001/api/orders");
             if (!response.ok) {
                 throw new Error("Failed to fetch orders");
@@ -23,58 +22,16 @@ const OrdersProvider = ({ children }: ProviderProps) => {
             const orders = await response.json();
             setOrders(orders);
         } catch (error: unknown) {
-            console.error("Error fetching orders:", error instanceof Error ? error.message : error);
             throw error;
         }
-    };
-
-    const findOrderByID = (orders: OrderData[] | null, orderID: OrderID): OrderData | undefined => {
-        return orders?.find(order => order.orderID === orderID);
-    };
-
-    const filterOrdersByLocation = (orders: OrderData[], location: string): OrderData[] => {
-        if (!orders) return [];
-        return orders
-            .map((order: OrderData) => {
-                const foundOrder = findOrderByID(orders, order.orderID);
-                return {
-                    ...order,
-                    items: foundOrder?.items?.filter((item: ItemData) =>
-                        item.itemLocation?.toLowerCase().includes(location.toLowerCase())
-                    ) || []
-                };
-            })
-            .filter((order: OrderData) => order.items && order.items.length > 0);
-    };
-
-    const getItemKeys = useCallback((order: OrderData): ItemID[] => {
-        if (!order) return []
-        return order.items.map((item: ItemData) => { return item.itemID })
-    }, [])
-
-    const getOrderKeys = useCallback((orders: OrderData[]): Order[] => {
-        if (!orders) return [];
-        return orders.map((order: OrderData) => {
-            return {
-                order: order.orderID,
-                retrievedItems: [],
-                unretrievedItems: getItemKeys(order)
-            }
-        })
-    }, [])
-
-    const findItemByID = (orders: OrderData[], orderID: OrderID, itemID: ItemID): ItemData | undefined => {
-        const order = findOrderByID(orders, orderID);
-        return order?.items.find(item => item.itemID === itemID);
-    };
+    }, []);
 
     const value = useMemo(() => (
-        { orders, setOrders, fetchOrders, filterOrdersByLocation, getOrderKeys, getItemKeys, findItemByID, findOrderByID }
-    ), [orders, setOrders, fetchOrders, filterOrdersByLocation, getOrderKeys, getItemKeys, findItemByID, findOrderByID]);
+        { orders, setOrders, fetchOrders }
+    ), [orders, setOrders, fetchOrders]);
 
     return <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>;
 };
-
 
 const OrderDisplayProvider = ({ children }: ProviderProps) => {
     const { boxOrders, setBoxOrders } = useBoxOrders();
@@ -95,8 +52,8 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
     }, []);
 
     const handleClear = useCallback(() => {
-        setSelectedItems(new Set())
-    }, [])
+        setSelectedItems(new Set());
+    }, []);
 
     const handleConfirm = useCallback(() => {
         let tempOrderDisplay = [...orderDisplay];
@@ -110,7 +67,7 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
                 order.retrievedItems.push(itemID);
             }
             return order;
-        }
+        };
 
         selectedItems.forEach((itemID: ItemID) => {
             // Remove from queuePile if present (do this first)
@@ -122,21 +79,17 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
             if (boxIndex !== -1) {
                 tempBoxOrders[boxIndex] = removeOrder(tempBoxOrders, boxIndex, itemID);
             } else if (!tempQueuePile.includes(itemID)) {
-                tempQueuePile.push(itemID)
+                tempQueuePile.push(itemID);
             }
             const displayIndex = tempOrderDisplay.findIndex(order => order.unretrievedItems.includes(itemID));
             if (displayIndex !== -1) tempOrderDisplay[displayIndex] = removeOrder(tempOrderDisplay, displayIndex, itemID);
         });
 
-        console.log('setOrderDisplay', tempOrderDisplay);
         setOrderDisplay(tempOrderDisplay);
-        console.log('setQueuePile', tempQueuePile);
         setQueuePile(tempQueuePile);
-        console.log('setBoxOrders', tempBoxOrders);
         setBoxOrders(tempBoxOrders);
-        console.log('setSelectedItems', new Set());
         setSelectedItems(new Set());
-    }, [selectedItems, orderDisplay, queuePile, boxOrders, setOrderDisplay, setQueuePile, setBoxOrders, setSelectedItems]);
+    }, [selectedItems, orderDisplay, queuePile, boxOrders, setOrderDisplay, setQueuePile, setBoxOrders]);
 
     const value = useMemo(() => ({
         orderDisplay,
@@ -149,8 +102,7 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
     }), [orderDisplay, selectedItems, handleSelect, handleClear, handleConfirm]);
 
     return <OrderDisplayContext.Provider value={value}>{children}</OrderDisplayContext.Provider>;
-}
-
+};
 
 const BoxOrdersProvider = ({ children }: ProviderProps) => {
     const [boxOrders, setBoxOrdersState] = useState<Order[]>([]);
@@ -169,7 +121,6 @@ const BoxOrdersProvider = ({ children }: ProviderProps) => {
     return <BoxOrdersContext.Provider value={value}>{children}</BoxOrdersContext.Provider>;
 };
 
-
 const QueuePileProvider = ({ children }: ProviderProps) => {
     const [queuePile, setQueuePileState] = useState<ItemID[]>([]);
     const setQueuePile = (updater: ItemID[] | ((prev: ItemID[]) => ItemID[])) => {
@@ -181,7 +132,6 @@ const QueuePileProvider = ({ children }: ProviderProps) => {
     const value = useMemo(() => ({ queuePile, setQueuePile }), [queuePile]);
     return <QueuePileContext.Provider value={value}>{children}</QueuePileContext.Provider>;
 };
-
 
 const FullscreenProvider = ({ children }: ProviderProps) => {
     const [fullScreen, setFullScreen] = useState<string | null>(null);

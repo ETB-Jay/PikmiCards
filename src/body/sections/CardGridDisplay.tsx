@@ -2,6 +2,7 @@ import { useBoxOrders, useOrders } from "../../context/useContext";
 import { useMemo, memo, useCallback } from "react";
 import { Order, OrderData } from "../../types";
 import { useConfirm } from "../../context/useContext";
+import { findOrderByID } from "../../context/orderFunctions";
 
 interface CustomerInfoProps {
     order: Order;
@@ -10,7 +11,7 @@ interface CustomerInfoProps {
 
 const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
     const { openConfirm } = useConfirm()
-    const { orders, findOrderByID } = useOrders()
+    const { orders } = useOrders()
 
     const orderData = findOrderByID(orders, order.order)
 
