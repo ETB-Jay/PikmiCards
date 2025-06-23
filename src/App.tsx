@@ -26,7 +26,6 @@ const App = () => {
     useEffect(() => {
         const loadOrders = async () => {
             try {
-                console.log(orders)
                 await fetchOrders();
             } catch (err) {
                 console.error("Error")
@@ -36,12 +35,14 @@ const App = () => {
     }, []);
 
     useEffect(() => {
-        if (!orders) return;
+        if (orders.length === 0) return;
         const filteredOrders = filterOrdersByLocation(orders, location);
         const filteredOrderKeys = getOrderKeys(filteredOrders)
+        console.log('setOrderDisplay', filteredOrderKeys);
         setOrderDisplay(filteredOrderKeys);
+        console.log('setBoxOrders', filteredOrderKeys.slice(0, 20));
         setBoxOrders(filteredOrderKeys.slice(0, 20));
-    }, [orders]);
+    }, [orders, location]);
 
     return (
         <div className="min-h-screen min-w-screen flex items-center justify-center relative overflow-y-hidden">

@@ -5,9 +5,9 @@ import { memo, useCallback, useMemo } from "react";
 import { ItemData } from "../../types";
 
 const QueuePile = () => {
-    const { selectedItems, handleSelect } = useOrderDisplay();
+    const { selectedItems } = useOrderDisplay();
     const { queuePile } = useQueuePile();
-    const { orders, findItemByID } = useOrders();
+    const { orders } = useOrders();
 
     const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
 
@@ -34,10 +34,13 @@ const QueuePile = () => {
     const items = useMemo(() => queuePile.map(renderItem), [queuePile, renderItem]);
 
     return (
-        <div className="flex flex-col h-full">
-            <ScrollContainer className='flex-row flex-1'>
-                {items}
-            </ScrollContainer>
+        <div className="flex flex-col items-center justify-center h-full min-h-15">
+            {queuePile.length !== 0 ?
+                <ScrollContainer className='flex-row flex-1'>
+                    {items}
+                </ScrollContainer>
+                : <div className="flex h-full w-full items-center justify-center text-white ">Nothing Yet!</div>
+            }
         </div>
     );
 };

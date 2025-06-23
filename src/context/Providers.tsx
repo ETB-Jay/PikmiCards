@@ -3,7 +3,7 @@ import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext
 import FullscreenModal from "../modals/FullscreenModal";
 import { OrderData, ItemData, Order, OrderID, ItemID } from "../types";
 import ConfirmModal from "../modals/ConfirmModal";
-import { useBoxOrders, useQueuePile, useOrders } from "./useContext";
+import { useBoxOrders, useQueuePile } from "./useContext";
 
 interface ProviderProps {
     children: ReactNode;
@@ -30,7 +30,7 @@ const OrdersProvider = ({ children }: ProviderProps) => {
 
     const findOrderByID = (orders: OrderData[] | null, orderID: OrderID): OrderData | undefined => {
         return orders?.find(order => order.orderID === orderID);
-    };    
+    };
 
     const filterOrdersByLocation = (orders: OrderData[], location: string): OrderData[] => {
         if (!orders) return [];
@@ -103,37 +103,38 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
         let tempQueuePile = [...queuePile];
         let tempBoxOrders = [...boxOrders];
 
-        selectedItems.forEach((itemID: ItemID) => {
-            // Update boxOrders: remove from unretrieved, add to retrieved
-            tempBoxOrders = tempBoxOrders.map(order => ({
-                ...order,
-                unretrievedItems: order.unretrievedItems.filter(id => id !== itemID),
-                retrievedItems: order.unretrievedItems.includes(itemID)
-                    ? [...order.retrievedItems, itemID]
-                    : order.retrievedItems,
-            }));
-
-            // Update orderDisplay: remove from unretrieved, add to retrieved
-            const orderIdx = tempOrderDisplay.findIndex(order => order.unretrievedItems.includes(itemID));
-            if (orderIdx !== -1) {
-                const order = { ...tempOrderDisplay[orderIdx] };
-                order.unretrievedItems = order.unretrievedItems.filter(id => id !== itemID);
-                order.retrievedItems = [...order.retrievedItems, itemID];
-                tempOrderDisplay[orderIdx] = order;
+        const removeOrder = (orders: Order[], index: number, itemID: ItemID) => {
+            const order = { ...orders[index] };
+            order.unretrievedItems = order.unretrievedItems.filter(id => id !== itemID);
+            if (!order.retrievedItems.includes(itemID)) {
+                order.retrievedItems.push(itemID);
             }
+            return order;
+        }
+
+        selectedItems.forEach((itemID: ItemID) => {
+            // Remove from queuePile if present (do this first)
+            const queueIndex = tempQueuePile.indexOf(itemID);
+            if (queueIndex !== -1) {
+                tempQueuePile.splice(queueIndex, 1);
+            }
+            const boxIndex = tempBoxOrders.findIndex(order => order.unretrievedItems.includes(itemID));
+            if (boxIndex !== -1) {
+                tempBoxOrders[boxIndex] = removeOrder(tempBoxOrders, boxIndex, itemID);
+            } else if (!tempQueuePile.includes(itemID)) {
+                tempQueuePile.push(itemID)
+            }
+            const displayIndex = tempOrderDisplay.findIndex(order => order.unretrievedItems.includes(itemID));
+            if (displayIndex !== -1) tempOrderDisplay[displayIndex] = removeOrder(tempOrderDisplay, displayIndex, itemID);
         });
 
-        // After all updates, add to queue pile if not in any unretrievedItems
-        selectedItems.forEach((itemID: ItemID) => {
-            const stillInGrid = tempOrderDisplay.some(order => order.unretrievedItems.includes(itemID));
-            if (!stillInGrid && !tempQueuePile.includes(itemID)) {
-                tempQueuePile.push(itemID);
-            }
-        });
-
+        console.log('setOrderDisplay', tempOrderDisplay);
         setOrderDisplay(tempOrderDisplay);
+        console.log('setQueuePile', tempQueuePile);
         setQueuePile(tempQueuePile);
+        console.log('setBoxOrders', tempBoxOrders);
         setBoxOrders(tempBoxOrders);
+        console.log('setSelectedItems', new Set());
         setSelectedItems(new Set());
     }, [selectedItems, orderDisplay, queuePile, boxOrders, setOrderDisplay, setQueuePile, setBoxOrders, setSelectedItems]);
 
@@ -170,7 +171,7 @@ const BoxOrdersProvider = ({ children }: ProviderProps) => {
 
 
 const QueuePileProvider = ({ children }: ProviderProps) => {
-    const [queuePile, setQueuePileState] = useState<string[]>([]);
+    const [queuePile, setQueuePileState] = useState<ItemID[]>([]);
     const setQueuePile = (updater: ItemID[] | ((prev: ItemID[]) => ItemID[])) => {
         setQueuePileState(prev => {
             const next = typeof updater === "function" ? (updater as (prev: ItemID[]) => ItemID[])(prev) : updater;
@@ -208,16 +209,14 @@ const FullscreenProvider = ({ children }: ProviderProps) => {
 
 const ConfirmProvider: React.FC<ProviderProps> = ({ children }) => {
     const [confirm, setConfirm] = useState<Order | null>(null);
-    const { orders, findOrderByID } = useOrders();
     const openConfirm = useCallback((order: Order) => setConfirm(order), []);
     const closeConfirm = useCallback(() => setConfirm(null), []);
     const value = useMemo(() => ({ confirm, openConfirm, closeConfirm }), [confirm, openConfirm, closeConfirm]);
-    const orderData = confirm ? findOrderByID(orders, confirm.order) : null;
     return <ConfirmContext.Provider value={value}>
         {children}
-        {orderData && (
+        {confirm && (
             <ConfirmModal
-                order={orderData}
+                order={confirm}
                 onClose={closeConfirm}
             />
         )}

@@ -1,5 +1,5 @@
 import { memo, useCallback } from "react";
-import { ModalContainer } from "../components";
+import { ModalContainer, PromptText } from "../components";
 
 interface DetermineLocationProps {
     location: string;
@@ -22,7 +22,7 @@ const LocationOption = memo(({ newLocation, currentLocation, onSelect }: {
             className="hover:bg-black/10 rounded px-3 transition-colors cursor-pointer"
             onClick={handleClick}
         >
-            <span>{newLocation}</span>
+            <PromptText label={newLocation} />
         </div>
     );
 });
@@ -36,13 +36,13 @@ const DetermineLocation = memo(({ location, setLocation }: DetermineLocationProp
 
     return (
         <ModalContainer position="mt-1 w-fit text-sm font-semibold p-0">
-            <LocationOption 
-                newLocation="Oakville" 
+            <LocationOption
+                newLocation="Oakville"
                 currentLocation={location}
                 onSelect={handleLocationSelect}
             />
-            <LocationOption 
-                newLocation="Newmarket" 
+            <LocationOption
+                newLocation="Newmarket"
                 currentLocation={location}
                 onSelect={handleLocationSelect}
             />

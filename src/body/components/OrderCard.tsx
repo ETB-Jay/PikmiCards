@@ -23,13 +23,14 @@ interface CardProps {
  * Generates tags for the item card.
  */
 function getTags(item: ItemData, boxOrders: Order[] | null) {
+    const boxIndex = boxOrders ? boxOrders.findIndex(order => order.order === item.orderID) : -1;
     return [
         `🛒 ${item.itemQuantity}`,
-        `${item.itemPrinting}`,
-        `${boxOrders !== null && boxOrders.findIndex(order => order.order === item.orderID) !== -1 ? `📦 ${1 + boxOrders.findIndex(order => order.order === item.orderID)}` : ""}`,
-        `${item.itemRarity}`,
-        `${item.itemSet}`
-    ].filter(Boolean);
+        item.itemPrinting,
+        boxIndex !== -1 ? `📦 ${boxIndex + 1}` : undefined,
+        item.itemRarity,
+        item.itemSet
+    ].filter((tag): tag is string => Boolean(tag));
 }
 
 /**

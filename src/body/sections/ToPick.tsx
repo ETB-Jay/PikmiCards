@@ -11,9 +11,11 @@ const ToPick = () => {
     const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
 
     const itemsToPick = useMemo(() => {
-        return orderDisplay
+        const items = orderDisplay
             ?.flatMap(order => order.unretrievedItems.map(itemID => ({ orderID: order.order, itemID })))
             || [];
+        console.log(items.length)
+        return items
     }, [orderDisplay]);
 
     const renderItem = useCallback((item: { orderID: string, itemID: string }, index: number) => {

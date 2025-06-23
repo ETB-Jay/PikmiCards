@@ -22,7 +22,7 @@ const ModalContainer = ({ position, children }: ModalContainerProps) => {
 
 const PromptText = ({ label }: {label: string}) => {
     return (
-        <p className={"font-semibold text-sm"}>{label}</p>
+        <p className={"font-bold text-sm BFont"}>{label}</p>
     );
 };
 

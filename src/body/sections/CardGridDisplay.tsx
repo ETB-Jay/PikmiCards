@@ -40,7 +40,8 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
                 <div className='flex flex-row flex-wrap gap-2 items-center p-1 min-w-0 text-xs'>
                     <p className="font-semibold max-w-1/3 truncate">{orderData.customerName}</p>
                     <p className="bg-black/20 px-2 py-0.5 font-semibold rounded-2xl border text-black">📦 {index}</p>
-                    <p className="bg-black/20 px-2 py-0.5 font-semibold rounded-2xl border text-black">🏷️ {orderData.numberItems}</p>
+                    <p className="bg-black/20 px-2 py-0.5 font-semibold rounded-2xl border text-black">🏷️ {order.retrievedItems.length}</p>
+                    <p className="bg-black/20 px-2 py-0.5 font-semibold rounded-2xl border text-black">📂 {order.unretrievedItems.length}</p>
                 </div>
             </div>
         </div>
@@ -51,27 +52,18 @@ CustomerInfo.displayName = "CustomerInfo";
 
 const CardGridDisplay = memo(() => {
     const { boxOrders } = useBoxOrders();
-    const { orders } = useOrders();
 
-    const boxOrderObjects = useMemo(() => {
-        if (!orders || !boxOrders) return [];
-        const orderMap = new Map(orders.map(order => [order.orderID, order]));
-        return boxOrders
-            .map(boxOrder => orderMap.get(boxOrder.order))
-            .filter((order): order is OrderData => Boolean(order));
-    }, [orders, boxOrders]);
-
-    const renderOrder = useCallback((orderData: OrderData, index: number) => (
+    const renderOrder = useCallback((order: Order, index: number) => (
         <CustomerInfo
-            key={orderData.orderID}
-            order={{ order: orderData.orderID, retrievedItems: [], unretrievedItems: [] }}
+            key={order.order}
+            order={order}
             index={index + 1}
         />
     ), []);
 
     const ordersToDisplay = useMemo(() =>
-        boxOrderObjects.map(renderOrder),
-        [boxOrderObjects, renderOrder]
+        boxOrders.map(renderOrder),
+        [boxOrders, renderOrder]
     );
 
     return (
