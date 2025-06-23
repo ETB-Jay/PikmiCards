@@ -1,58 +1,73 @@
 import { createContext } from "react";
-import { Order, Item } from "../types";
+import { OrderData, Order, OrderID, ItemID, ItemData } from "../types";
 
-/**
- * @description Context for storing order data on the website. 
- */
+
 interface OrdersContextType {
-    orders: Order[] | null;
-    setOrders: (orders: Order[] | null) => void;
+    orders: OrderData[];
+    setOrders: (orders: OrderData[]) => void;
     fetchOrders: () => Promise<void>;
+    filterOrdersByLocation: (orders: OrderData[], location: string) => OrderData[];
+    getOrderKeys: (orders: OrderData[]) => Order[];
+    getItemKeys: (order: OrderData) => ItemID[];
+    findItemByID: (orders: OrderData[], orderID: OrderID, itemID: ItemID) => ItemData | undefined;
+    findOrderByID: (orders: OrderData[] | null, orderID: OrderID) => OrderData | undefined;
 }
-const OrdersContext = createContext<OrdersContextType>({ orders: null, setOrders: () => {}, fetchOrders: async () => {} });
+const OrdersContext = createContext<OrdersContextType>({
+    orders: [],
+    setOrders: () => {},
+    fetchOrders: async () => {},
+    filterOrdersByLocation: () => [],
+    getOrderKeys: () => [],
+    getItemKeys: () => [],
+    findItemByID: () => undefined,
+    findOrderByID: () => undefined
+});
 OrdersContext.displayName = "OrdersContext";
 
-/**
- * @description Context for storing order data for a specific location
- */
+
 interface OrderDisplayContextType {
-    orderDisplay: Order[] | null;
-    setOrderDisplay: (orders: Order[] | null) => void;
-    selectedItems: Set<Item>;
-    setSelectedItems: (items: Set<Item>) => void;
-    handleSelect: (item: Item) => void;
+    orderDisplay: Order[];
+    setOrderDisplay: (orders: Order[]) => void;
+    selectedItems: Set<ItemID>;
+    setSelectedItems: (Items: Set<ItemID>) => void;
+    handleSelect: (itemID: ItemID) => void;
     handleConfirm: () => void;
     handleClear: () => void;
-    filterOrdersByLocation: (orders: Order[], location: string) => Order[];
 }
-const OrderDisplayContext = createContext<OrderDisplayContextType>({ 
-    orderDisplay: null, 
+const OrderDisplayContext = createContext<OrderDisplayContextType>({
+    orderDisplay: [],
     setOrderDisplay: () => {},
     selectedItems: new Set(),
     setSelectedItems: () => {},
     handleSelect: () => {},
     handleConfirm: () => {},
-    handleClear: () => {},
-    filterOrdersByLocation: () => []
+    handleClear: () => {}
 });
 OrderDisplayContext.displayName = "OrderDisplayContext";
 
-/**
- * @description Context for storing orders currently being boxed
- */
+
 interface BoxOrdersContextType {
-    boxOrders: string[] | null;
-    setBoxOrders: (boxOrders: string[]) => void;
+    boxOrders: Order[];
+    setBoxOrders: (updater: Order[] | ((prev: Order[]) => Order[])) => void;
 }
 const BoxOrdersContext = createContext<BoxOrdersContextType>({
     boxOrders: [],
-    setBoxOrders: () => {}
+    setBoxOrders: () => { }
 });
 BoxOrdersContext.displayName = "BoxOrdersContext";
 
-/**
- * @description Context for a fullscreened image
- */
+
+interface QueuePileContextType {
+    queuePile: ItemID[];
+    setQueuePile: (updater: ItemID[] | ((prev: ItemID[]) => ItemID[])) => void;
+}
+const QueuePileContext = createContext<QueuePileContextType>({
+    queuePile: [],
+    setQueuePile: () => { },
+});
+QueuePileContext.displayName = "QueuePileContext";
+
+
 interface FullscreenContextType {
     openFullscreen: (imageUrl: string) => void;
     closeFullscreen: () => void;
@@ -68,27 +83,6 @@ interface ConfirmContextType {
 const ConfirmContext = createContext<ConfirmContextType>({ confirm: null, openConfirm: () => {}, closeConfirm: () => {} });
 ConfirmContext.displayName = "ConfirmContext";
 
-interface ModalContextType {
-    modalData: any;
-    openModal: (order: any) => void;
-    closeModal: () => void;
-}
-const ModalContext = createContext<ModalContextType>({
-    modalData: null,
-    openModal: () => {},
-    closeModal: () => {}
-});
-ModalContext.displayName = "ModalContext";
-
-interface QueuePileContextType {
-    queuePile: Item[];
-    setQueuePile: (queue: Item[]) => void;
-}
-const QueuePileContext = createContext<QueuePileContextType>({
-    queuePile: [],
-    setQueuePile: () => {},
-});
-QueuePileContext.displayName = "QueuePileContext";
 
 export {
     OrdersContext,
@@ -96,6 +90,5 @@ export {
     OrderDisplayContext,
     BoxOrdersContext,
     ConfirmContext,
-    ModalContext,
     QueuePileContext,
 };

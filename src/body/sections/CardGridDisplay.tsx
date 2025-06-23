@@ -1,10 +1,7 @@
 import { useBoxOrders, useOrders } from "../../context/useContext";
-import { useMemo, memo, useCallback, useContext } from "react";
-import CheckIcon from "@mui/icons-material/Check";
-import ClearIcon from "@mui/icons-material/Clear";
-import { Order } from "../../types";
+import { useMemo, memo, useCallback } from "react";
+import { Order, OrderData } from "../../types";
 import { useConfirm } from "../../context/useContext";
-import { ModalContext } from "../../context/Context";
 
 interface CustomerInfoProps {
     order: Order;
@@ -12,10 +9,16 @@ interface CustomerInfoProps {
 }
 
 const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
-    const { openConfirm } = useConfirm();
-    const { openModal } = useContext(ModalContext);
+    const { openConfirm } = useConfirm()
+    const { orders, findOrderByID } = useOrders()
 
-    const deliveryBackground = useCallback((order: Order): {bg: string, hover: string, border: string, text: string} => {
+    const orderData = findOrderByID(orders, order.order)
+
+    if (!orderData) {
+        return;
+    }
+
+    const deliveryBackground = useCallback((order: OrderData): {bg: string, hover: string, border: string, text: string} => {
         const delivery = order.deliveryMethod;
         if (delivery === "In-Store Pick-up Oakville") {
             return { bg: "bg-brown-200", hover: "hover:bg-brown-400", border: "border-brown-100", text: "text-brown-900" };
@@ -27,31 +30,17 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
     }, []);
 
     const cardClass = useMemo(() => {
-        const { bg, hover, border, text } = deliveryBackground(order);
+        const { bg, hover, border, text } = deliveryBackground(orderData);
         return `relative flex flex-col h-full w-full min-w-0 cursor-pointer rounded-lg p-1 shadow border ${bg} ${hover} ${border} ${text} transition-all overflow-hidden text-xs sm:text-sm transition-colors duration-150 hover:shadow-lg hover:scale-[1.01]`;
     }, [order, deliveryBackground]);
 
     return (
-        <div className={cardClass} onClick={() => openModal(order)}>
+        <div className={cardClass} onClick={e => { e.stopPropagation(); openConfirm(order); }}>
             <div className='flex flex-col h-full justify-between'>
                 <div className='flex flex-row flex-wrap gap-2 items-center p-1 min-w-0 text-xs'>
-                    <p className="font-semibold max-w-1/3 truncate">{order.customerName}</p>
+                    <p className="font-semibold max-w-1/3 truncate">{orderData.customerName}</p>
                     <p className="bg-black/20 px-2 py-0.5 font-semibold rounded-2xl border text-black">📦 {index}</p>
-                    <p className="bg-black/20 px-2 py-0.5 font-semibold rounded-2xl border text-black">🏷️ {order.numberItems}</p>
-                    <div className="flex gap-1 ml-auto flex-wrap min-w-0">
-                        <button 
-                            className='bg-green-400/20 border border-green-400/80 text-green-950 p-1 rounded-2xl hover:bg-green-500/30 cursor-pointer transition-colors duration-150 flex items-center justify-center'
-                            onClick={e => { e.stopPropagation(); openConfirm(order); }}
-                        >
-                            <CheckIcon sx={{ fontSize: "1rem" }} />
-                        </button>
-                        <button 
-                            className='bg-red-400/20 border border-red-400/80 text-red-950 p-1 rounded-2xl hover:bg-red-500/30 cursor-pointer transition-colors duration-150 flex items-center justify-center'
-                            onClick={e => e.stopPropagation()}
-                        >
-                            <ClearIcon sx={{ fontSize: "1rem" }} />
-                        </button>
-                    </div>
+                    <p className="bg-black/20 px-2 py-0.5 font-semibold rounded-2xl border text-black">🏷️ {orderData.numberItems}</p>
                 </div>
             </div>
         </div>
@@ -66,16 +55,16 @@ const CardGridDisplay = memo(() => {
 
     const boxOrderObjects = useMemo(() => {
         if (!orders || !boxOrders) return [];
-        const orderMap = new Map(orders.map(order => [order.orderNumber, order]));
+        const orderMap = new Map(orders.map(order => [order.orderID, order]));
         return boxOrders
-            .map(orderNumber => orderMap.get(orderNumber))
-            .filter(Boolean) as Order[];
+            .map(boxOrder => orderMap.get(boxOrder.order))
+            .filter((order): order is OrderData => Boolean(order));
     }, [orders, boxOrders]);
 
-    const renderOrder = useCallback((order: Order, index: number) => (
+    const renderOrder = useCallback((orderData: OrderData, index: number) => (
         <CustomerInfo
-            key={order.orderNumber}
-            order={order}
+            key={orderData.orderID}
+            order={{ order: orderData.orderID, retrievedItems: [], unretrievedItems: [] }}
             index={index + 1}
         />
     ), []);

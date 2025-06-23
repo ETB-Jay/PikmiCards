@@ -1,26 +1,27 @@
 import { memo } from "react";
-import { Order, Item } from "../types";
+import { OrderData, ItemData } from "../types";
 import { ScrollContainer } from "../body/components/Container";
-import { getItemKey, OrderCard } from "../body/components/OrderCard";
+import { OrderCard } from "../body/components/OrderCard";
 import { useCallback } from "react";
 import { ModalContainer, ModalButton, ModalOverlay } from "./components";
 
 interface ConfirmModalProps {
-    order: Order;
+    order: OrderData;
     onClose: () => void;
 }
 
+const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
+
 const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
 
-    const renderItem = useCallback((item: Item, index: number) => {
+    const renderItem = useCallback((item: ItemData, index: number) => {
         const itemKey = getItemKey(item, index);
         return (
             <OrderCard
                 key={itemKey}
-                item={item}
+                itemData={item}
                 itemKey={itemKey}
-                selectedItems={new Set()}
-                onSelect={() => { }}
+                selected={false}
                 label={false}
             />
         );

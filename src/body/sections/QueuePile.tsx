@@ -1,25 +1,35 @@
-import { useOrderDisplay, useQueuePile } from "../../context/useContext";
+import { useOrderDisplay, useQueuePile, useOrders } from "../../context/useContext";
 import { ScrollContainer } from "../components/Container";
-import { OrderCard, getItemKey } from "../components/OrderCard";
+import { OrderCard } from "../components/OrderCard";
 import { memo, useCallback, useMemo } from "react";
+import { ItemData } from "../../types";
 
 const QueuePile = () => {
     const { selectedItems, handleSelect } = useOrderDisplay();
     const { queuePile } = useQueuePile();
+    const { orders, findItemByID } = useOrders();
 
-    const renderItem = useCallback((item: any, index: number) => {
-        const itemKey = getItemKey(item, index);
+    const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
+
+    const renderItem = useCallback((itemID: string, index: number) => {
+        let itemData: ItemData | undefined;
+        for (const order of orders) {
+            itemData = order.items.find(item => item.itemID === itemID);
+            if (itemData) break;
+        }
+        if (!itemData) return null;
+        const itemKey = getItemKey(itemData, index);
+        const selected = selectedItems.has(itemID);
         return (
             <OrderCard
                 key={itemKey}
-                item={item}
+                itemData={itemData}
                 itemKey={itemKey}
-                selectedItems={selectedItems}
-                onSelect={handleSelect}
+                selected={selected}
                 label={false}
             />
         );
-    }, [selectedItems, handleSelect]);
+    }, [orders, selectedItems]);
 
     const items = useMemo(() => queuePile.map(renderItem), [queuePile, renderItem]);
 

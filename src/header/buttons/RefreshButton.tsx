@@ -9,7 +9,7 @@ const RefreshButton = memo(() => {
 
     const refresh = useCallback(async () => {
         try {
-            setOrderDisplay(null)
+            setOrderDisplay([])
             await fetchOrders();
         } catch (err) {
             console.error("Error")

@@ -4,7 +4,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import "@shopify/shopify-api/adapters/node";
-import { shopifyApi, LATEST_API_VERSION, Session } from "@shopify/shopify-api";
+import { shopifyApi, LATEST_API_VERSION, Session, GraphqlClient } from "@shopify/shopify-api";
 
 dotenv.config();
 
@@ -49,7 +49,6 @@ const getOrders = async (client) => {
                     cursor
                     node {
                         id
-                        name
                         currentSubtotalLineItemsQuantity
                         customer {displayName}
                         shippingLines(first: 1) {edges {node {title}}}
@@ -61,6 +60,7 @@ const getOrders = async (client) => {
                                         edges {
                                             node {
                                                 lineItem {
+                                                    id
                                                     name
                                                     quantity
                                                     variant {
@@ -88,56 +88,64 @@ const getOrders = async (client) => {
             }
         }`;
         const response = await client.request(query, {});
+        const ordersData = response.data?.orders;
 
-        if (!response.data?.orders?.edges) {
+        if (!ordersData?.edges) {
             console.error("Invalid response format:", response);
             throw new Error("Invalid response from Shopify API");
         }
 
-        const temp = response.data.orders.edges.map((edge) => {
+        const temp = ordersData.edges.map((edge) => {
             const order = edge.node;
+            const toTitleCase = (str) => {
+                return str.replace(
+                    /\w\S*/g,
+                    (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+                );
+            };
             if (!order) {
                 console.error(`Invalid Order Data: ${edge}`);
                 return null;
             }
+
             return {
                 orderID: order.id,
-                orderNumber: order.name,
-                customerName: order.customer?.displayName || null,
+                customerName: order.customer?.displayName ? toTitleCase(order.customer.displayName) : null,
                 numberItems: order.currentSubtotalLineItemsQuantity,
                 deliveryMethod: order.shippingLines?.edges?.[0]?.node?.title,
                 items: order.fulfillmentOrders?.edges?.flatMap((edge) => {
                     if (!edge?.node) {
                         console.error("Invalid line item data:", edge);
-                        return null;
+                        return [];
                     }
                     const locationName = edge.node?.assignedLocation?.location?.name;
                     return edge.node?.lineItems?.edges?.map((edge) => {
                         const item = edge.node?.lineItem;
-                        const tags = item.product?.tags;
+                        const tags = item?.product?.tags;
                         if (!item) {
                             console.error("Invalid line item:", edge);
                             return null;
                         }
                         return {
+                            itemID: item.id,
                             orderNumber: order.name,
                             itemName: item.name?.split(" - ").slice(0, -1).join(" - ") || item.name,
                             itemQuantity: item.quantity,
                             itemLocation: locationName,
-                            itemSet: tags?.find(tag => tag.startsWith("Set_"))?.replace("Set_", "") || null,
-                            itemRarity: tags?.find(tag => tag.startsWith("Rarity_"))?.replace("Rarity_", "") || null,
+                            itemSet: tags?.find((tag) => tag.startsWith("Set_"))?.replace("Set_", "") || null,
+                            itemRarity: tags?.find((tag) => tag.startsWith("Rarity_"))?.replace("Rarity_", "") || null,
                             itemPrinting: item.variant?.title !== "Default Title" ? item.variant?.title : null,
                             imageUrl: item.variant?.image?.url || item.product?.featuredImage?.url || "https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png"
                         };
-                    }) || [];
+                    }).filter(Boolean) || [];
                 }).filter(Boolean) || []
             };
-        }).filter(Boolean) || [];
+        }).filter(Boolean);
 
         orders = [...orders, ...temp];
-        hasNextPage = response.data.orders.pageInfo.hasNextPage;
+        hasNextPage = ordersData.pageInfo.hasNextPage;
         if (hasNextPage) {
-            cursor = response.data.orders.edges[response.data.orders.edges.length - 1].cursor;
+            cursor = ordersData.edges[ordersData.edges.length - 1].cursor;
         }
     }
     return orders;

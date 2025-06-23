@@ -1,20 +1,21 @@
-import React, { useMemo, useState, useCallback } from "react";
-import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext, ConfirmContext, ModalContext, QueuePileContext } from "./Context";
-import FullscreenModal from "../prompts/FullscreenModal";
-import { Order, Item } from "../types";
-import { useBoxOrders, useQueuePile } from "./useContext";
-import ConfirmModal from "../prompts/ConfirmModal";
-import UserBoxModal from "../prompts/UserBoxModal";
+import { ReactNode, useMemo, useState, useCallback } from "react";
+import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext, ConfirmContext, QueuePileContext } from "./Context";
+import FullscreenModal from "../modals/FullscreenModal";
+import { OrderData, ItemData, Order, OrderID, ItemID } from "../types";
+import ConfirmModal from "../modals/ConfirmModal";
+import { useBoxOrders, useQueuePile, useOrders } from "./useContext";
 
 interface ProviderProps {
-    children: React.ReactNode;
+    children: ReactNode;
 }
 
+
 const OrdersProvider = ({ children }: ProviderProps) => {
-    const [orders, setOrders] = useState<Order[] | null>(null);
+    const [orders, setOrders] = useState<OrderData[]>([]);
+
     const fetchOrders = async (): Promise<void> => {
         try {
-            setOrders(null)
+            setOrders([])
             const response = await fetch("http://localhost:3001/api/orders");
             if (!response.ok) {
                 throw new Error("Failed to fetch orders");
@@ -22,46 +23,72 @@ const OrdersProvider = ({ children }: ProviderProps) => {
             const orders = await response.json();
             setOrders(orders);
         } catch (error: unknown) {
-            console.error("Error fetching orders:", error instanceof Error ? error.message : String(error));
+            console.error("Error fetching orders:", error instanceof Error ? error.message : error);
             throw error;
         }
     };
-    const value = useMemo(() => ({ orders, setOrders, fetchOrders }), [orders, setOrders, fetchOrders]);
+
+    const findOrderByID = (orders: OrderData[] | null, orderID: OrderID): OrderData | undefined => {
+        return orders?.find(order => order.orderID === orderID);
+    };    
+
+    const filterOrdersByLocation = (orders: OrderData[], location: string): OrderData[] => {
+        if (!orders) return [];
+        return orders
+            .map((order: OrderData) => {
+                const foundOrder = findOrderByID(orders, order.orderID);
+                return {
+                    ...order,
+                    items: foundOrder?.items?.filter((item: ItemData) =>
+                        item.itemLocation?.toLowerCase().includes(location.toLowerCase())
+                    ) || []
+                };
+            })
+            .filter((order: OrderData) => order.items && order.items.length > 0);
+    };
+
+    const getItemKeys = useCallback((order: OrderData): ItemID[] => {
+        if (!order) return []
+        return order.items.map((item: ItemData) => { return item.itemID })
+    }, [])
+
+    const getOrderKeys = useCallback((orders: OrderData[]): Order[] => {
+        if (!orders) return [];
+        return orders.map((order: OrderData) => {
+            return {
+                order: order.orderID,
+                retrievedItems: [],
+                unretrievedItems: getItemKeys(order)
+            }
+        })
+    }, [])
+
+    const findItemByID = (orders: OrderData[], orderID: OrderID, itemID: ItemID): ItemData | undefined => {
+        const order = findOrderByID(orders, orderID);
+        return order?.items.find(item => item.itemID === itemID);
+    };
+
+    const value = useMemo(() => (
+        { orders, setOrders, fetchOrders, filterOrdersByLocation, getOrderKeys, getItemKeys, findItemByID, findOrderByID }
+    ), [orders, setOrders, fetchOrders, filterOrdersByLocation, getOrderKeys, getItemKeys, findItemByID, findOrderByID]);
+
     return <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>;
 };
 
+
 const OrderDisplayProvider = ({ children }: ProviderProps) => {
-    const [orderDisplay, setOrderDisplay] = useState<Order[] | null>(null)
-    const [selectedItems, setSelectedItems] = useState<Set<Item>>(new Set());
     const { boxOrders, setBoxOrders } = useBoxOrders();
     const { queuePile, setQueuePile } = useQueuePile();
+    const [orderDisplay, setOrderDisplay] = useState<Order[]>([]);
+    const [selectedItems, setSelectedItems] = useState<Set<ItemID>>(new Set());
 
-    const filterOrdersByLocation = (orders: Order[], location: string): Order[] => {
-        if (!orders) return [];
-        return orders
-            .map((order: Order) => ({
-                ...order,
-                items: order.items?.filter((item: Item) =>
-                    item.itemLocation?.toLowerCase().includes(location.toLowerCase())
-                )
-            }))
-            .filter((order: Order) => order.items && order.items.length > 0);
-    };
-
-    const handleSelect = useCallback((item: Item) => {
+    const handleSelect = useCallback((itemID: ItemID) => {
         setSelectedItems(prev => {
             const newSet = new Set(prev);
-            let found: Item | undefined = undefined;
-            for (let i of newSet) {
-                if (i.orderNumber === item.orderNumber && i.itemName === item.itemName) {
-                    found = i;
-                    break;
-                }
-            }
-            if (found) {
-                newSet.delete(found);
+            if (newSet.has(itemID)) {
+                newSet.delete(itemID);
             } else {
-                newSet.add(item);
+                newSet.add(itemID);
             }
             return newSet;
         });
@@ -72,29 +99,43 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
     }, [])
 
     const handleConfirm = useCallback(() => {
-        let newOrderDisplay = orderDisplay ? [...orderDisplay] : [];
-        let newBoxOrders = [...(boxOrders || [])];
-        let newQueuePile = [...queuePile];
-        selectedItems.forEach((item) => {
-            const isBoxed = boxOrders?.includes(item.orderNumber);
-            newOrderDisplay = newOrderDisplay.map(order =>
-                String(order.orderNumber) === item.orderNumber
-                    ? { ...order, items: order.items.filter(i => i.itemName !== item.itemName) }
-                    : order
-            ).filter(order => order.items.length > 0);
-            if (isBoxed) {
-                if (!newBoxOrders.includes(String(item.orderNumber))) {
-                    newBoxOrders.push(String(item.orderNumber));
-                }
-            } else {
-                newQueuePile.push(item);
+        let tempOrderDisplay = [...orderDisplay];
+        let tempQueuePile = [...queuePile];
+        let tempBoxOrders = [...boxOrders];
+
+        selectedItems.forEach((itemID: ItemID) => {
+            // Update boxOrders: remove from unretrieved, add to retrieved
+            tempBoxOrders = tempBoxOrders.map(order => ({
+                ...order,
+                unretrievedItems: order.unretrievedItems.filter(id => id !== itemID),
+                retrievedItems: order.unretrievedItems.includes(itemID)
+                    ? [...order.retrievedItems, itemID]
+                    : order.retrievedItems,
+            }));
+
+            // Update orderDisplay: remove from unretrieved, add to retrieved
+            const orderIdx = tempOrderDisplay.findIndex(order => order.unretrievedItems.includes(itemID));
+            if (orderIdx !== -1) {
+                const order = { ...tempOrderDisplay[orderIdx] };
+                order.unretrievedItems = order.unretrievedItems.filter(id => id !== itemID);
+                order.retrievedItems = [...order.retrievedItems, itemID];
+                tempOrderDisplay[orderIdx] = order;
             }
         });
-        setOrderDisplay(newOrderDisplay);
-        setBoxOrders(newBoxOrders);
-        setQueuePile(newQueuePile);
+
+        // After all updates, add to queue pile if not in any unretrievedItems
+        selectedItems.forEach((itemID: ItemID) => {
+            const stillInGrid = tempOrderDisplay.some(order => order.unretrievedItems.includes(itemID));
+            if (!stillInGrid && !tempQueuePile.includes(itemID)) {
+                tempQueuePile.push(itemID);
+            }
+        });
+
+        setOrderDisplay(tempOrderDisplay);
+        setQueuePile(tempQueuePile);
+        setBoxOrders(tempBoxOrders);
         setSelectedItems(new Set());
-    }, [selectedItems, boxOrders, orderDisplay, setOrderDisplay, setBoxOrders, queuePile, setQueuePile]);
+    }, [selectedItems, orderDisplay, queuePile, boxOrders, setOrderDisplay, setQueuePile, setBoxOrders, setSelectedItems]);
 
     const value = useMemo(() => ({
         orderDisplay,
@@ -104,31 +145,35 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
         handleSelect,
         handleConfirm,
         handleClear,
-        filterOrdersByLocation
-    }), [orderDisplay, selectedItems, handleSelect, handleConfirm, handleClear]);
+    }), [orderDisplay, selectedItems, handleSelect, handleClear, handleConfirm]);
 
     return <OrderDisplayContext.Provider value={value}>{children}</OrderDisplayContext.Provider>;
-};
+}
 
-const BoxOrdersProvider: React.FC<ProviderProps> = ({ children }) => {
-    const [boxOrders, setBoxOrdersState] = useState<string[]>([]);
+
+const BoxOrdersProvider = ({ children }: ProviderProps) => {
+    const [boxOrders, setBoxOrdersState] = useState<Order[]>([]);
+
     const setBoxOrders = useCallback(
-        (updater: string[] | ((prev: string[]) => string[])) => {
+        (updater: Order[] | ((prev: Order[]) => Order[])) => {
             setBoxOrdersState(prev =>
-                typeof updater === "function" ? (updater as (prev: string[]) => string[])(prev) : updater
+                typeof updater === "function" ? (updater as (prev: Order[]) => Order[])(prev) : updater
             );
         },
         []
     );
+
     const value = useMemo(() => ({ boxOrders, setBoxOrders }), [boxOrders, setBoxOrders]);
+
     return <BoxOrdersContext.Provider value={value}>{children}</BoxOrdersContext.Provider>;
 };
 
-const QueuePileProvider: React.FC<ProviderProps> = ({ children }) => {
-    const [queuePile, setQueuePileState] = useState<Item[]>([]);
-    const setQueuePile = (updater: Item[] | ((prev: Item[]) => Item[])) => {
+
+const QueuePileProvider = ({ children }: ProviderProps) => {
+    const [queuePile, setQueuePileState] = useState<string[]>([]);
+    const setQueuePile = (updater: ItemID[] | ((prev: ItemID[]) => ItemID[])) => {
         setQueuePileState(prev => {
-            const next = typeof updater === "function" ? (updater as (prev: Item[]) => Item[])(prev) : updater;
+            const next = typeof updater === "function" ? (updater as (prev: ItemID[]) => ItemID[])(prev) : updater;
             return next;
         });
     };
@@ -136,7 +181,8 @@ const QueuePileProvider: React.FC<ProviderProps> = ({ children }) => {
     return <QueuePileContext.Provider value={value}>{children}</QueuePileContext.Provider>;
 };
 
-const FullscreenProvider: React.FC<ProviderProps> = ({ children }) => {
+
+const FullscreenProvider = ({ children }: ProviderProps) => {
     const [fullScreen, setFullScreen] = useState<string | null>(null);
 
     const openFullscreen = useCallback((imageUrl: string) => {
@@ -162,31 +208,20 @@ const FullscreenProvider: React.FC<ProviderProps> = ({ children }) => {
 
 const ConfirmProvider: React.FC<ProviderProps> = ({ children }) => {
     const [confirm, setConfirm] = useState<Order | null>(null);
+    const { orders, findOrderByID } = useOrders();
     const openConfirm = useCallback((order: Order) => setConfirm(order), []);
     const closeConfirm = useCallback(() => setConfirm(null), []);
     const value = useMemo(() => ({ confirm, openConfirm, closeConfirm }), [confirm, openConfirm, closeConfirm]);
+    const orderData = confirm ? findOrderByID(orders, confirm.order) : null;
     return <ConfirmContext.Provider value={value}>
         {children}
-        {confirm && (
+        {orderData && (
             <ConfirmModal
-                order={confirm}
+                order={orderData}
                 onClose={closeConfirm}
             />
         )}
     </ConfirmContext.Provider>;
-};
-
-const ModalProvider: React.FC<ProviderProps> = ({ children }) => {
-    const [modalData, setModalData] = useState<any>(null);
-    const openModal = useCallback((order: any) => setModalData(order), []);
-    const closeModal = useCallback(() => setModalData(null), []);
-    const value = useMemo(() => ({ modalData, openModal, closeModal }), [modalData, openModal, closeModal]);
-    return (
-        <ModalContext.Provider value={value}>
-            {children}
-            <UserBoxModal open={!!modalData} order={modalData} onClose={closeModal} />
-        </ModalContext.Provider>
-    );
 };
 
 const Providers = ({ children }: ProviderProps) => {
@@ -197,9 +232,7 @@ const Providers = ({ children }: ProviderProps) => {
                     <OrderDisplayProvider>
                         <ConfirmProvider>
                             <FullscreenProvider>
-                                <ModalProvider>
-                                    {children}
-                                </ModalProvider>
+                                {children}
                             </FullscreenProvider>
                         </ConfirmProvider>
                     </OrderDisplayProvider>

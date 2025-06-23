@@ -1,38 +1,42 @@
-import { useOrderDisplay } from "../../context/useContext";
+import { useOrderDisplay, useOrders } from "../../context/useContext";
 import { useMemo, memo, useCallback } from "react";
 import { ScrollContainer } from "../components/Container";
-import { OrderCard, getItemKey } from "../components/OrderCard";
+import { OrderCard } from "../components/OrderCard";
+import { ItemData } from "../../types";
 
 const ToPick = () => {
-    const { orderDisplay, selectedItems, handleSelect, handleConfirm, handleClear } = useOrderDisplay();
+    const { orders, findItemByID } = useOrders()
+    const { orderDisplay, selectedItems, handleConfirm, handleClear } = useOrderDisplay();
 
-    const allItems = useMemo(() =>
-        orderDisplay?.flatMap(order =>
-            order.items?.map(item => ({
-                ...item,
-                orderNumber: order.orderNumber
-            })) || []
-        ) || [],
-        [orderDisplay]
-    );
+    const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
 
-    const renderItem = useCallback((item: any, index: number) => {
-        const itemKey = getItemKey(item, index);
+    const itemsToPick = useMemo(() => {
+        return orderDisplay
+            ?.flatMap(order => order.unretrievedItems.map(itemID => ({ orderID: order.order, itemID })))
+            || [];
+    }, [orderDisplay]);
+
+    const renderItem = useCallback((item: { orderID: string, itemID: string }, index: number) => {
+        const itemData = findItemByID(orders, item.orderID, item.itemID);
+        if (!itemData) {
+            return null;
+        }
+        const itemKey = getItemKey(itemData, index);
+        const selected = selectedItems.has(item.itemID);
         return (
             <OrderCard
                 key={itemKey}
-                item={item}
+                itemData={itemData}
                 itemKey={itemKey}
-                selectedItems={selectedItems}
-                onSelect={handleSelect}
+                selected={selected}
                 label={true}
             />
         );
-    }, [selectedItems, handleSelect]);
+    }, [orders, findItemByID, selectedItems]);
 
-    const items = useMemo(() =>
-        allItems.map(renderItem),
-        [allItems, renderItem]
+    const cards = useMemo(() =>
+        itemsToPick?.map(renderItem),
+        [itemsToPick, renderItem]
     );
 
     const confirmButton = useMemo(() => {
@@ -59,7 +63,7 @@ const ToPick = () => {
     return (
         <div className="flex flex-col h-full">
             <ScrollContainer className="p-3 flex-1">
-                {items}
+                {cards}
             </ScrollContainer>
             {confirmButton}
         </div>
