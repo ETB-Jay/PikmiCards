@@ -1,5 +1,5 @@
-import React from "react";
-import { memo, useMemo, useCallback } from "react";
+import React from 'react';
+import { memo, useMemo, useCallback } from 'react';
 
 /**
  * Props for the ImageDisplay component.
@@ -22,8 +22,8 @@ interface ImageDisplayProps {
  * @param {ImageDisplayProps} props - The props for the image display.
  * @returns {JSX.Element}
  */
-const ImageDisplay = memo(({ imageUrl, alt, onClick, className = "", onError }: ImageDisplayProps) => {
-    const imageClass = useMemo(() => 
+const ImageDisplay = memo(({ imageUrl, alt, onClick, className = '', onError }: ImageDisplayProps) => {
+    const imageClass = useMemo(() =>
         `h-full cursor-pointer rounded-lg hover:brightness-50 hover:shadow-lg transition-all ${className}`,
         [className]
     );
@@ -33,14 +33,16 @@ const ImageDisplay = memo(({ imageUrl, alt, onClick, className = "", onError }: 
     }, [onClick]);
 
     return (
-        <img
-            className={imageClass}
-            src={imageUrl}
-            alt={alt}
-            onClick={handleClick}
-            onError={onError}
-            loading={"lazy"}
-        />
+        <>
+            <img
+                className={imageClass}
+                src={imageUrl}
+                alt={alt}
+                onClick={handleClick}
+                onError={onError}
+                loading={'lazy'}
+            />
+        </>
     );
 });
 

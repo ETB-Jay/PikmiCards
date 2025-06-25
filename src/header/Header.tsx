@@ -1,7 +1,8 @@
-import LocationButton from "./buttons/LocationButton";
-import RefreshButton from "./buttons/RefreshButton";
-import icon from "../assets/pikmicard.png";
-import { memo, useMemo } from "react";
+import Hamburger from './buttons/Hamburger';
+import LocationButton from './buttons/LocationButton';
+import RefreshButton from './buttons/RefreshButton';
+import { memo, useState } from 'react';
+import Sidebar from './Sidebar';
 
 interface HeaderProps {
     location: string;
@@ -10,22 +11,37 @@ interface HeaderProps {
 
 const Header = memo(({ location, setLocation }: HeaderProps) => {
 
-    const content = useMemo(() => (
-        <div className="flex flex-row justify-between items-center w-full h-8">
-            <div className="flex flex-row gap-5">
-                <LocationButton 
-                    location={location}
-                    setLocation={setLocation}
-                />
-                <RefreshButton />
-            </div>
-            <img className="relative h-14 w-auto" src={icon} alt="pikmicard" />
-        </div>
-    ), [location, setLocation]);
+    const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+    const [sidebarVisible, setSidebarVisible] = useState<boolean>(false);
 
-    return content;
+    // Open sidebar
+    const openSidebar = () => {
+        setSidebarVisible(true);
+        setTimeout(() => setSidebarOpen(true), 10); // allow mount before animating in
+    };
+    // Close sidebar
+    const closeSidebar = () => {
+        setSidebarOpen(false);
+        setTimeout(() => setSidebarVisible(false), 300); // match animation duration
+    };
+
+    return (
+        <>
+        {sidebarVisible && (
+            <Sidebar open={sidebarOpen} closeSidebar={closeSidebar} />
+        )}
+        <div className="flex flex-row items-center w-full gap-5 h-[5vh]">
+            <Hamburger loadSidebar={openSidebar}/>
+            <LocationButton
+                location={location}
+                setLocation={setLocation}
+            />
+            <RefreshButton />
+        </div>
+        </>
+    );
 });
 
-Header.displayName = "Header";
+Header.displayName = 'Header';
 
 export default Header;

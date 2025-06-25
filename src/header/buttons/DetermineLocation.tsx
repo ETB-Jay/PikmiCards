@@ -1,9 +1,9 @@
-import { memo, useCallback } from "react";
-import { ModalContainer, PromptText } from "../components";
+import { memo, useCallback, useEffect, useRef } from 'react';
 
 interface DetermineLocationProps {
     location: string;
     setLocation: (location: string) => void;
+    prompt: (active: boolean) => void
 }
 
 const LocationOption = memo(({ newLocation, currentLocation, onSelect }: {
@@ -22,20 +22,35 @@ const LocationOption = memo(({ newLocation, currentLocation, onSelect }: {
             className="hover:bg-black/10 rounded px-3 transition-colors cursor-pointer"
             onClick={handleClick}
         >
-            <PromptText label={newLocation} />
+            <span className={'font-semibold text-green-950 text-sm BFont'}>{newLocation}</span>
         </div>
     );
 });
 
-LocationOption.displayName = "LocationOption";
+LocationOption.displayName = 'LocationOption';
 
-const DetermineLocation = memo(({ location, setLocation }: DetermineLocationProps) => {
+const DetermineLocation = memo(({ location, setLocation, prompt }: DetermineLocationProps) => {
+
+    const ref = useRef<HTMLDivElement>(null);
+    const handleClickOutside = (e: Event) => {
+        if (ref.current && !ref.current.contains(e.target as Node)) {
+            prompt(false);
+        };
+    };
+
     const handleLocationSelect = useCallback((newLocation: string) => {
         setLocation(newLocation);
     }, [setLocation]);
 
+    useEffect(() => {
+        document.addEventListener('click', handleClickOutside, true);
+        return () => {
+            document.removeEventListener('click', handleClickOutside, true);
+        };
+    }, []);
+
     return (
-        <ModalContainer position="mt-1 w-fit text-sm font-semibold p-0">
+        <div ref={ref} className={`absolute flex flex-col bg-green-smoke-200 border-1 shadow-2xl py-1 rounded z-100 w-fit text-sm font-semibold top-14`}>
             <LocationOption
                 newLocation="Oakville"
                 currentLocation={location}
@@ -46,10 +61,10 @@ const DetermineLocation = memo(({ location, setLocation }: DetermineLocationProp
                 currentLocation={location}
                 onSelect={handleLocationSelect}
             />
-        </ModalContainer>
+        </div>
     );
 });
 
-DetermineLocation.displayName = "DetermineLocation";
+DetermineLocation.displayName = 'DetermineLocation';
 
 export default DetermineLocation;

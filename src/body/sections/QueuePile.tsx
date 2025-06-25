@@ -1,8 +1,8 @@
-import { useOrderDisplay, useQueuePile, useOrders } from "../../context/useContext";
-import { ScrollContainer } from "../components/Container";
-import { OrderCard } from "../components/OrderCard";
-import { memo, useCallback, useMemo } from "react";
-import { ItemData } from "../../types";
+import { useOrderDisplay, useQueuePile, useOrders } from '../../context/useContext';
+import { ScrollContainer } from '../../components/containers';
+import OrderCard from '../../components/OrderCard';
+import { memo, useCallback, useMemo } from 'react';
+import { ItemData } from '../../types';
 
 const QueuePile = () => {
     const { selectedItems } = useOrderDisplay();
@@ -23,10 +23,10 @@ const QueuePile = () => {
         return (
             <OrderCard
                 key={itemKey}
-                itemData={itemData}
+                item={itemData}
                 itemKey={itemKey}
                 selected={selected}
-                label={false}
+                large={false}
             />
         );
     }, [orders, selectedItems]);
@@ -34,17 +34,18 @@ const QueuePile = () => {
     const items = useMemo(() => queuePile.map(renderItem), [queuePile, renderItem]);
 
     return (
-        <div className="flex flex-col items-center justify-center h-full min-h-15">
+        <div className="flex flex-col items-center justify-center h-full">
             {queuePile.length !== 0 ?
                 <ScrollContainer className='flex-row flex-1'>
                     {items}
                 </ScrollContainer>
-                : <div className="flex h-full w-full items-center justify-center text-white ">Nothing Yet!</div>
+                : 
+                <div className="flex bg-green-smoke-600/70 rounded-2xl ring-2 ring-green-900 h-full w-full items-center justify-center text-white ">Nothing Yet!</div>
             }
         </div>
     );
 };
 
-QueuePile.displayName = "QueuePile";
+QueuePile.displayName = 'QueuePile';
 
 export default memo(QueuePile);

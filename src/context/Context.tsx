@@ -1,5 +1,5 @@
-import { createContext } from "react";
-import { OrderData, Order, ItemID } from "../types";
+import { createContext } from 'react';
+import { OrderData, Order, ItemID } from '../types';
 
 /**
  * @description OrdersContextType stores the fetched order data from Shopify
@@ -14,7 +14,7 @@ const OrdersContext = createContext<OrdersContextType>({
     setOrders: () => {},
     fetchOrders: async () => {},
 });
-OrdersContext.displayName = "OrdersContext";
+OrdersContext.displayName = 'OrdersContext';
 
 
 interface OrderDisplayContextType {
@@ -38,7 +38,7 @@ const OrderDisplayContext = createContext<OrderDisplayContextType>({
     handleConfirm: () => {},
     handleClear: () => {}
 });
-OrderDisplayContext.displayName = "OrderDisplayContext";
+OrderDisplayContext.displayName = 'OrderDisplayContext';
 
 /**
  * Context for managing the list of box orders and its setter.
@@ -55,7 +55,7 @@ const BoxOrdersContext = createContext<BoxOrdersContextType>({
     boxOrders: [],
     setBoxOrders: () => { }
 });
-BoxOrdersContext.displayName = "BoxOrdersContext";
+BoxOrdersContext.displayName = 'BoxOrdersContext';
 
 /**
  * Context for managing the queue pile (list of item IDs in the queue) and its setter.
@@ -71,7 +71,7 @@ const QueuePileContext = createContext<QueuePileContextType>({
     queuePile: [],
     setQueuePile: () => { },
 });
-QueuePileContext.displayName = "QueuePileContext";
+QueuePileContext.displayName = 'QueuePileContext';
 
 /**
  * Context for managing fullscreen image modal state and actions.
@@ -84,7 +84,7 @@ interface FullscreenContextType {
  * React context for fullscreen modal state and actions.
  */
 const FullscreenContext = createContext<FullscreenContextType>({ openFullscreen: () => {}, closeFullscreen: () => {} });
-FullscreenContext.displayName = "FullscreenContext";
+FullscreenContext.displayName = 'FullscreenContext';
 
 /**
  * Context for managing the confirmation modal state and actions.
@@ -98,7 +98,7 @@ interface ConfirmContextType {
  * React context for confirmation modal state and actions.
  */
 const ConfirmContext = createContext<ConfirmContextType>({ confirm: null, openConfirm: () => {}, closeConfirm: () => {} });
-ConfirmContext.displayName = "ConfirmContext";
+ConfirmContext.displayName = 'ConfirmContext';
 
 export {
     OrdersContext,

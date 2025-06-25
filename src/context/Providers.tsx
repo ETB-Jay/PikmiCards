@@ -1,9 +1,10 @@
-import { ReactNode, useMemo, useState, useCallback } from "react";
-import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext, ConfirmContext, QueuePileContext } from "./Context";
-import FullscreenModal from "../modals/FullscreenModal";
-import { OrderData, Order, ItemID } from "../types";
-import ConfirmModal from "../modals/ConfirmModal";
-import { useBoxOrders, useQueuePile } from "./useContext";
+import React from 'react';
+import { ReactNode, useMemo, useState, useCallback } from 'react';
+import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext, ConfirmContext, QueuePileContext } from './Context';
+import FullscreenModal from '../modals/FullscreenModal';
+import { OrderData, Order, ItemID } from '../types';
+import ConfirmModal from '../modals/ConfirmModal';
+import { useBoxOrders, useQueuePile } from './useContext';
 
 interface ProviderProps {
     children: ReactNode;
@@ -13,17 +14,12 @@ const OrdersProvider = ({ children }: ProviderProps) => {
     const [orders, setOrders] = useState<OrderData[]>([]);
 
     const fetchOrders = useCallback(async (): Promise<void> => {
-        try {
-            setOrders([]);
-            const response = await fetch("http://localhost:3001/api/orders");
-            if (!response.ok) {
-                throw new Error("Failed to fetch orders");
-            }
-            const orders = await response.json();
-            setOrders(orders);
-        } catch (error: unknown) {
-            throw error;
+        const response = await fetch('http://localhost:3001/api/orders');
+        if (!response.ok) {
+            throw new Error('Failed to fetch orders');
         }
+        const orders = await response.json();
+        setOrders(orders);
     }, []);
 
     const value = useMemo(() => (
@@ -110,7 +106,7 @@ const BoxOrdersProvider = ({ children }: ProviderProps) => {
     const setBoxOrders = useCallback(
         (updater: Order[] | ((prev: Order[]) => Order[])) => {
             setBoxOrdersState(prev =>
-                typeof updater === "function" ? (updater as (prev: Order[]) => Order[])(prev) : updater
+                typeof updater === 'function' ? (updater as (prev: Order[]) => Order[])(prev) : updater
             );
         },
         []
@@ -125,7 +121,7 @@ const QueuePileProvider = ({ children }: ProviderProps) => {
     const [queuePile, setQueuePileState] = useState<ItemID[]>([]);
     const setQueuePile = (updater: ItemID[] | ((prev: ItemID[]) => ItemID[])) => {
         setQueuePileState(prev => {
-            const next = typeof updater === "function" ? (updater as (prev: ItemID[]) => ItemID[])(prev) : updater;
+            const next = typeof updater === 'function' ? (updater as (prev: ItemID[]) => ItemID[])(prev) : updater;
             return next;
         });
     };

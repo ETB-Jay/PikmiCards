@@ -1,10 +1,10 @@
-import { useContext } from "react";
-import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext, ConfirmContext, QueuePileContext } from "./Context";
+import { useContext } from 'react';
+import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext, ConfirmContext, QueuePileContext } from './Context';
 
 const useOrders = () => {
     const context = useContext(OrdersContext);
     if (!context) {
-        throw new Error("useOrders must be used in the OrdersProvider");
+        throw new Error('useOrders must be used in the OrdersProvider');
     }
     return context;
 };
@@ -12,7 +12,7 @@ const useOrders = () => {
 const useOrderDisplay = () => {
     const context = useContext(OrderDisplayContext);
     if (!context) {
-        throw new Error("useOrderDisplay must be used in the OrderDisplayProvider");
+        throw new Error('useOrderDisplay must be used in the OrderDisplayProvider');
     }
     return context;
 };
@@ -20,7 +20,7 @@ const useOrderDisplay = () => {
 const useFullscreen = () => {
     const context = useContext(FullscreenContext);
     if (!context) {
-        throw new Error("useFullscreen must be used within a FullscreenProvider");
+        throw new Error('useFullscreen must be used within a FullscreenProvider');
     }
     return context;
 };
@@ -28,7 +28,7 @@ const useFullscreen = () => {
 const useBoxOrders = () => {
     const context = useContext(BoxOrdersContext);
     if (!context) {
-        throw new Error("useBoxOrders must be used in the BoxOrdersProvider");
+        throw new Error('useBoxOrders must be used in the BoxOrdersProvider');
     }
     return context;
 };
@@ -36,7 +36,7 @@ const useBoxOrders = () => {
 const useConfirm = () => {
     const context = useContext(ConfirmContext);
     if (!context) {
-        throw new Error("useConfirm must be used in the ConfirmProvider");
+        throw new Error('useConfirm must be used in the ConfirmProvider');
     }
     return context;
 };
@@ -44,7 +44,7 @@ const useConfirm = () => {
 const useQueuePile = () => {
     const context = useContext(QueuePileContext);
     if (!context) {
-        throw new Error("useQueuePile must be used in the QueuePileProvider");
+        throw new Error('useQueuePile must be used in the QueuePileProvider');
     }
     return context;
 };

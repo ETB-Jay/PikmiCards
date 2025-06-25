@@ -1,7 +1,7 @@
-import { useOrderDisplay, useOrders } from "../../context/useContext";
-import { memo, useCallback } from "react";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import { Button, PromptText } from "../components";
+import { useOrderDisplay, useOrders } from '../../context/useContext';
+import { memo, useCallback } from 'react';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { Button } from '../../components/modal';
 
 const RefreshButton = memo(() => {
     const { fetchOrders } = useOrders();
@@ -9,21 +9,23 @@ const RefreshButton = memo(() => {
 
     const refresh = useCallback(async () => {
         try {
-            setOrderDisplay([])
+            setOrderDisplay([]);
             await fetchOrders();
-        } catch (err) {
-            console.error("Error")
+        } catch {
+            console.error('Error');
         }
-    }, []);
+    }, [fetchOrders, setOrderDisplay]);
 
     return (
-        <Button onClick={refresh} disabled={!orderDisplay}>
-            <RefreshIcon />
-            <PromptText label="Refresh" />
+        <Button
+            label="Refresh"
+            icon={<RefreshIcon />}
+            onClick={refresh}
+            disabled={!orderDisplay}>
         </Button>
     );
 });
 
-RefreshButton.displayName = "RefreshButton";
+RefreshButton.displayName = 'RefreshButton';
 
 export default RefreshButton;

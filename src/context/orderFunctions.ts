@@ -1,4 +1,4 @@
-import { OrderData, OrderID, ItemData, ItemID, Order } from "../types";
+import { OrderData, OrderID, ItemData, ItemID, Order } from '../types';
 
 const findOrderByID = (orders: OrderData[] | null, orderID: OrderID): OrderData | undefined => {
     return orders?.find(order => order.orderID === orderID);
@@ -40,4 +40,4 @@ const findItemByID = (orders: OrderData[], orderID: OrderID, itemID: ItemID): It
     return order?.items.find(item => item.itemID === itemID);
 };
 
-export { findOrderByID, filterOrdersByLocation, getItemKeys, getOrderKeys, findItemByID }
+export { findOrderByID, filterOrdersByLocation, getItemKeys, getOrderKeys, findItemByID };

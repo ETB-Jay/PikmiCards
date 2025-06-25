@@ -1,7 +1,7 @@
-import DetermineLocation from "./DetermineLocation";
-import { Button, PromptText } from "../components";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { memo, useCallback, useState } from "react";
+import DetermineLocation from './DetermineLocation';
+import { Button } from '../../components/modal';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { memo, useCallback, useState } from 'react';
 
 interface LocationButtonProps {
     location: string;
@@ -17,21 +17,22 @@ const LocationButton = memo(({ location, setLocation }: LocationButtonProps) => 
     }, [setLocation]);
 
     return (
-        <div className="relative inline-block">
-            <Button onClick={() => setLocationPrompt((prev) => !prev)}>
-                <KeyboardArrowDownIcon />
-                <PromptText label={location} />
-            </Button>
+        <>
+            <Button
+                onClick={() => setLocationPrompt((prev) => !prev)}
+                label={location}
+                icon={<KeyboardArrowDownIcon />} />
             {locationPrompt && (
                 <DetermineLocation
                     location={location}
                     setLocation={handleLocationSelect}
+                    prompt={setLocationPrompt}
                 />
             )}
-        </div>
+        </>
     );
 });
 
-LocationButton.displayName = "LocationButton";
+LocationButton.displayName = 'LocationButton';
 
 export default LocationButton;
