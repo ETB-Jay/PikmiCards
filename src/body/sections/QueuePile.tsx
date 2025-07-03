@@ -4,6 +4,17 @@ import OrderCard from '../../components/OrderCard';
 import { memo, useCallback, useMemo } from 'react';
 import { ItemData } from '../../types';
 
+/**
+ * QueuePile section component.
+ * Displays the queue of items to be picked, or a placeholder if empty.
+ *
+ * @module QueuePile
+ */
+
+/**
+ * QueuePile is a memoized component that renders the queue pile of items to pick.
+ * @returns {JSX.Element}
+ */
 const QueuePile = () => {
     const { selectedItems } = useOrderDisplay();
     const { queuePile } = useQueuePile();

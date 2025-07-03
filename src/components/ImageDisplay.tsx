@@ -2,6 +2,14 @@ import React from 'react';
 import { memo, useMemo, useCallback } from 'react';
 
 /**
+ * ImageDisplay component.
+ * Displays an image with optional click and error handlers.
+ * Used for item images in cards and modals.
+ *
+ * @module ImageDisplay
+ */
+
+/**
  * Props for the ImageDisplay component.
  * @property {string} imageUrl - The URL of the image to display.
  * @property {string} alt - The alt text for the image.

@@ -3,11 +3,18 @@ import { ItemData } from '../types';
 import { useBoxOrders } from '../context/useContext';
 
 /**
- * Button component
- * Props:
- * - icon: optional icon element
- * - className: additional classes
- * - ...all standard button props
+ * Modal UI components for PikmiCards.
+ * Includes Button, Tags, and SectionTitle for use in modals and cards.
+ *
+ * @module modal
+ */
+
+/**
+ * Button component for modal actions.
+ * @param label - The button label text.
+ * @param icon - Optional icon element.
+ * @param className - Additional CSS classes.
+ * @param ...props - Standard button props.
  */
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     label: string;
@@ -27,6 +34,11 @@ const Button: React.FC<ButtonProps> = ({ label, icon, ...props }) => (
     </button>
 );
 
+/**
+ * Tags component displays item tags (quantity, printing, box, rarity, set).
+ * @param item - The item to display tags for.
+ * @param className - Additional CSS classes.
+ */
 const Tags: React.FC<PropsWithChildren<{ item: ItemData, className?: string }>> = ({ item, className = '' }) => {
     const { boxOrders } = useBoxOrders();
     const boxIndex = boxOrders ? boxOrders.findIndex(order => order.order === item.orderID) : -1;
@@ -53,6 +65,10 @@ const Tags: React.FC<PropsWithChildren<{ item: ItemData, className?: string }>> 
     );
 };
 
+/**
+ * SectionTitle component for modal section headers.
+ * @param children - The section title content.
+ */
 const SectionTitle: React.FC<PropsWithChildren<object>> = ({ children }) => (
     <div className="sticky top-0 font-semibold text-green-50 text-center bg-black-olive-900 rounded-b-lg z-10">
         {children}

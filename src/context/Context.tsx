@@ -2,6 +2,13 @@ import { createContext } from 'react';
 import { OrderData, Order, ItemID } from '../types';
 
 /**
+ * React context definitions for PikmiCards application state.
+ * Defines context types and context objects for orders, display, box orders, queue pile, fullscreen, confirmation, and authentication.
+ *
+ * @module Context
+ */
+
+/**
  * @description OrdersContextType stores the fetched order data from Shopify
  */
 interface OrdersContextType {
@@ -100,6 +107,20 @@ interface ConfirmContextType {
 const ConfirmContext = createContext<ConfirmContextType>({ confirm: null, openConfirm: () => {}, closeConfirm: () => {} });
 ConfirmContext.displayName = 'ConfirmContext';
 
+/**
+ * React context for managing authenticated users
+ */
+interface AuthContextType {
+    user: string;
+    login: (data: string) => Promise<void>;
+    logout: () => Promise<void>;
+}
+const AuthContext = createContext<AuthContextType>({
+    user: '',
+    login: async () => {},
+    logout: async () => {},
+});
+
 export {
     OrdersContext,
     FullscreenContext,
@@ -107,4 +128,5 @@ export {
     BoxOrdersContext,
     ConfirmContext,
     QueuePileContext,
+    AuthContext
 };

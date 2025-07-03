@@ -5,9 +5,21 @@ import { ModalContainer, ScrollContainer } from '../components/containers';
 import OrderCard from '../components/OrderCard';
 import { useCallback } from 'react';
 import { Button, SectionTitle, Tags } from '../components/modal';
-import { useOrders } from '../context/useContext';
-import { findOrderByID } from '../context/orderFunctions';
+import { useBoxOrders, useOrders, useQueuePile } from '../context/useContext';
+import { findOrderByID, getOrderKeys } from '../context/orderFunctions';
 
+/**
+ * ConfirmModal component for confirming order completion and viewing item details.
+ * Displays unretrieved and retrieved items for an order, with preview and confirm actions.
+ *
+ * @module ConfirmModal
+ */
+
+/**
+ * Props for the ConfirmModal component.
+ * @property order - The order to confirm.
+ * @property onClose - Function to close the modal.
+ */
 interface ConfirmModalProps {
     order: Order;
     onClose: () => void;
@@ -15,10 +27,17 @@ interface ConfirmModalProps {
 
 const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
 
+/**
+ * ConfirmModal displays a modal for confirming order completion and viewing item details.
+ * @param order - The order to confirm.
+ * @param onClose - Function to close the modal.
+ * @returns {JSX.Element}
+ */
 const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
     const { orders } = useOrders();
+    const { boxOrders, setBoxOrders } = useBoxOrders();
+    const { queuePile } = useQueuePile();
     const [previewItem, setPreviewItem] = useState<ItemData | null>(null);
-    const orderData = findOrderByID(orders, order.order);
     const renderItem = useCallback((item: ItemData, index: number) => {
         const itemKey = getItemKey(item, index);
         return (
@@ -33,9 +52,34 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
         );
     }, []);
 
+    const orderData = findOrderByID(orders, order.order);
+
     const onConfirm = useCallback(() => {
+        const index = boxOrders.findIndex(box => box.order === order.order);
+        if (index === -1) return;
+
+        const boxOrderIDs = new Set(boxOrders.map(box => box.order));
+        const queuePileOrderIDs = new Set(
+            queuePile
+                .map((itemID: string) => {
+                    const order = orders.find(orderData => orderData.items.some(item => item.itemID === itemID));
+                    return order ? order.orderID : null;
+                })
+                .filter(Boolean)
+        );
+        const newOrderData = orders.find(orderData =>
+            !boxOrderIDs.has(orderData.orderID) &&
+            !queuePileOrderIDs.has(orderData.orderID)
+        );
+        if (!newOrderData) return;
+        const [newOrder] = getOrderKeys([newOrderData]);
+        boxOrders.splice(index, 1, newOrder);
+        setBoxOrders([...boxOrders]);
+
+        console.log(boxOrders);
+
         onClose();
-    }, []);
+    }, [boxOrders, setBoxOrders, orders, order.order, onClose]);
 
     if (!orderData) return null;
 
@@ -80,19 +124,26 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
                     />
                 </div>
 
-                <div className="hidden md:flex flex-col items-center justify-center bg-black/10 min-h-[60vh] h-[70vh] w-full rounded-2xl p-5">
-                    {previewItem &&
+                <div className="hidden md:flex flex-col items-center justify-center bg-black/10 flex-grow min-h-[60vh] h-full w-full rounded-2xl p-5">
+                    {previewItem ? (
                         <>
                             <img
                                 src={previewItem.imageUrl}
                                 alt={previewItem.itemName || 'Preview'}
-                                className="h-full w-full object-contain rounded-xl mb-2"
+                                className={`object-contain rounded-xl mb-2 h-full max-h-[45vh] w-full`}
                             />
+                            <p className='text-white mb-3 font-semibold'>
+                                {previewItem.itemName}
+                            </p>
                             <div className='flex flex-row flex-wrap items-center justify-center w-full text-2xl'>
                                 <Tags item={previewItem} />
                             </div>
                         </>
-                    }
+                    ) : (
+                        <div className="flex flex-col items-center justify-center h-full w-full text-white opacity-60">
+                            <span className="text-lg">No Preview</span>
+                        </div>
+                    )}
                 </div>
             </div>
         </ModalContainer >

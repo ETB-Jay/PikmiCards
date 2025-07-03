@@ -14,15 +14,18 @@ interface CustomerInfoProps {
     index: number;
 }
 
+/**
+ * CustomerInfo displays summary info for a single order in the grid.
+ * @param order - The order to display.
+ * @param index - The index of the order in the list.
+ */
 const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
     const { openConfirm } = useConfirm();
     const { orders } = useOrders();
 
     const orderData = findOrderByID(orders, order.order);
 
-    if (!orderData) {
-        return;
-    }
+    if (!orderData) return;
 
     return (
         <div
@@ -32,7 +35,7 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
             <div className='flex flex-col h-full justify-center p-2'>
                 <div className='flex flex-row flex-wrap gap-3 items-center min-w-0 text-xs'>
                     <p className="font-semibold max-w-2/9 md:max-w-1/3 truncate">{orderData.customerName}</p>
-                    <CustomerInfoBadge><img src="/Cart.svg" alt="Box" className="w-4 h-4 inline-block align-middle mr-1" />{index}</CustomerInfoBadge>
+                    <CustomerInfoBadge><img src="/ClosedBox.svg" alt="Box" className="w-4 h-4 inline-block align-middle mr-1" />{index}</CustomerInfoBadge>
                     <CustomerInfoBadge><img src="/Picked.svg" alt="Picked" className="w-4 h-4 inline-block align-middle mr-1" />{order.retrievedItems.length}</CustomerInfoBadge>
                     <CustomerInfoBadge><img src="/NotPicked.svg" alt="Not Picked" className="w-4 h-4 inline-block align-middle mr-1" />{order.unretrievedItems.length}</CustomerInfoBadge>
                 </div>
@@ -43,6 +46,10 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
 
 CustomerInfo.displayName = 'CustomerInfo';
 
+/**
+ * CardGridDisplay is a memoized component that renders a grid of orders for the current box.
+ * @returns {JSX.Element}
+ */
 const CardGridDisplay = memo(() => {
     const { boxOrders } = useBoxOrders();
 

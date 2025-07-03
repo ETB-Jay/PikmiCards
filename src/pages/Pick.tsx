@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, memo, useState } from 'react';
 import Header from '../header/Header';
 import CardPicker from '../body/CardPicker';
@@ -5,7 +6,11 @@ import { useOrders, useOrderDisplay, useBoxOrders } from '../context/useContext'
 import { filterOrdersByLocation, getOrderKeys } from '../context/orderFunctions';
 import { MainContainer } from '../components/containers';
 
-const LoadingSpinner = memo(() => (
+/**
+ * LoadingSpinner displays an animated loading indicator for orders.
+ * @returns Loading Spinner component
+ */
+const LoadingSpinner = memo((): React.ReactElement => (
     <div className="flex flex-col items-center justify-center gap-4 h-full w-full">
         <div className="animate-float-spin">
             <div className="relative flex flex-row flex-nowrap items-center justify-center animate-fly-horizontal">
@@ -24,7 +29,12 @@ const LoadingSpinner = memo(() => (
     </div>
 ));
 
-const Pick = memo(() => {
+/**
+ * Pick is the main page for picking orders.
+ * Handles order loading, filtering, and layout.
+ * @returns Order Picking component
+ */
+const Pick = memo((): React.ReactElement => {
     const { orders, fetchOrders } = useOrders();
     const { orderDisplay, setOrderDisplay } = useOrderDisplay();
     const { setBoxOrders, boxOrders } = useBoxOrders();
@@ -42,6 +52,8 @@ const Pick = memo(() => {
     }, []);
 
     useEffect(() => {
+
+
         if (orders.length === 0) return;
         const filteredOrders = filterOrdersByLocation(orders, location);
         const filteredOrderKeys = getOrderKeys(filteredOrders);

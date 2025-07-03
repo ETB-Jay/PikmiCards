@@ -44,6 +44,14 @@ void main() {
 }
 `;
 
+/**
+ * Props for the Iridescence component.
+ * @property color - RGB color array for the effect.
+ * @property speed - Animation speed.
+ * @property amplitude - Mouse effect amplitude.
+ * @property mouseReact - Whether to react to mouse movement.
+ * @property className - Additional CSS classes.
+ */
 interface IridescenceProps {
     color?: [number, number, number];
     speed?: number;
@@ -52,6 +60,15 @@ interface IridescenceProps {
     className?: string;
 }
 
+/**
+ * Iridescence renders an animated background using a custom WebGL shader.
+ * @param color - RGB color array for the effect.
+ * @param speed - Animation speed.
+ * @param amplitude - Mouse effect amplitude.
+ * @param mouseReact - Whether to react to mouse movement.
+ * @param className - Additional CSS classes.
+ * @returns {JSX.Element}
+ */
 const Iridescence = ({
     color = [1, 1, 1],
     speed = 1.0,

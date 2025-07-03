@@ -3,6 +3,8 @@ import { useFullscreen, useOrderDisplay } from '../context/useContext';
 import { ItemData } from '../types';
 import { ImageDisplay } from './ImageDisplay';
 import { Tags } from './modal';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 /**
  * Props for the OrderCard component.
@@ -21,6 +23,13 @@ interface CardProps {
     onImageClick?: () => void;
 }
 
+/**
+ * OrderCard component.
+ * Displays an item card with image, selection state, and tags.
+ * Used in picking and confirmation UIs.
+ *
+ * @module OrderCard
+ */
 const OrderCard = memo(({ item, selected, large, onImageClick }: CardProps) => {
     const { openFullscreen } = useFullscreen();
     const { handleSelect } = useOrderDisplay();
@@ -43,11 +52,22 @@ const OrderCard = memo(({ item, selected, large, onImageClick }: CardProps) => {
         <div
             className={`flex flex-row gap-3 items-center justify-start shadow-lg rounded-lg transition-all min-w-fit min-h-fit p-2
                         ${selected === null ? 'bg-green-smoke-600/20' : selected ? 'bg-green-smoke-800/70 hover:bg-green-smoke-900/70 cursor-pointer hover:scale-102' : 'bg-green-smoke-600/60 hover:bg-green-smoke-600/70 cursor-pointer hover:scale-101'}
-                        ${large ? '': ' h-full'}`}
+                        ${large ? '' : ' h-full'}`}
             onClick={handleCardClick}
         >
             <div className={`relative h-22 w-auto ${selected === null && 'h-30'}`}>
-                {!large && <div className='absolute bg-black/70 ring-2 ring-black text-white rounded-2xl px-1 bottom-2 left-2 text-xs z-10'>{item.itemQuantity}</div>}
+                {!large &&
+                    <>
+                        {!onImageClick &&
+                            <div className='absolute top-0 right-0 m-1 bg-black/70 rounded-full p-1 z-10 flex items-center justify-center'>
+                                {selected ? <CheckBoxIcon style={{ color: 'white' }} /> : <CheckBoxOutlineBlankIcon style={{ color: 'white' }} />}
+                            </div>
+                        }
+                        <div className='absolute bg-black/70 ring-2 ring-black text-white rounded-2xl px-1 bottom-2 left-2 text-xs z-10'>
+                            {item.itemQuantity}
+                        </div>
+                    </>
+                }
                 <ImageDisplay
                     imageUrl={item.imageUrl}
                     alt={item.itemName || 'Unnamed'}

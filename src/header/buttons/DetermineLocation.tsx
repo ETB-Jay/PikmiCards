@@ -1,11 +1,30 @@
 import { memo, useCallback, useEffect, useRef } from 'react';
 
+/**
+ * DetermineLocation dropdown component for selecting a location.
+ * Used in the header for location selection.
+ *
+ * @module DetermineLocation
+ */
+
+/**
+ * Props for the DetermineLocation component.
+ * @property location - The current location string.
+ * @property setLocation - Function to update the location.
+ * @property prompt - Function to toggle the prompt visibility.
+ */
 interface DetermineLocationProps {
     location: string;
     setLocation: (location: string) => void;
     prompt: (active: boolean) => void
 }
 
+/**
+ * LocationOption displays a selectable location option in the dropdown.
+ * @param newLocation - The location string for this option.
+ * @param currentLocation - The currently selected location.
+ * @param onSelect - Function to select this location.
+ */
 const LocationOption = memo(({ newLocation, currentLocation, onSelect }: {
     newLocation: string;
     currentLocation: string;
@@ -29,6 +48,13 @@ const LocationOption = memo(({ newLocation, currentLocation, onSelect }: {
 
 LocationOption.displayName = 'LocationOption';
 
+/**
+ * DetermineLocation renders a dropdown for selecting a location.
+ * @param location - The current location string.
+ * @param setLocation - Function to update the location.
+ * @param prompt - Function to toggle the prompt visibility.
+ * @returns {JSX.Element}
+ */
 const DetermineLocation = memo(({ location, setLocation, prompt }: DetermineLocationProps) => {
 
     const ref = useRef<HTMLDivElement>(null);
@@ -50,7 +76,7 @@ const DetermineLocation = memo(({ location, setLocation, prompt }: DetermineLoca
     }, []);
 
     return (
-        <div ref={ref} className={`absolute flex flex-col bg-green-smoke-200 border-1 shadow-2xl py-1 rounded z-100 w-fit text-sm font-semibold top-14`}>
+        <div ref={ref} className={`absolute flex flex-col bg-green-smoke-200 border-1 shadow-2xl py-1 rounded z-100 w-fit text-sm font-semibold top-10`}>
             <LocationOption
                 newLocation="Oakville"
                 currentLocation={location}

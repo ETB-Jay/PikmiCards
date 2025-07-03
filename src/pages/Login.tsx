@@ -1,10 +1,25 @@
+/**
+ * Login page for PikmiCards.
+ * Provides a login form for user authentication.
+ *
+ * @module Login
+ */
 import React from 'react';
 import { MainContainer } from '../components/containers';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
+import { useAuth } from '../context/useContext';
 
+/**
+ * InputField displays a styled input with an icon for the login form.
+ * @param label - The input label/placeholder.
+ * @param type - The input type (default: text).
+ * @param value - The input value.
+ * @param onChange - Change handler for the input.
+ * @param icon - Icon to display in the input.
+ * @returns {JSX.Element}
+ */
 const InputField = ({ label, type = 'text', value, onChange, icon }: { label: string, type?: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, icon: React.ReactNode }) => {
     return (
         <div className="relative flex items-center">
@@ -21,13 +36,17 @@ const InputField = ({ label, type = 'text', value, onChange, icon }: { label: st
     );
 };
 
+/**
+ * Login page component for user authentication.
+ * @returns {JSX.Element}
+ */
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate();
+    const { login } = useAuth();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!username.trim() || !password.trim()) {
             setError('Username and password are required.');
@@ -37,8 +56,8 @@ function Login() {
             setError('Invalid Username/Password');
             return;
         };
+        await login(username);
         setError('');
-        navigate('/pick');
     };
 
     return (

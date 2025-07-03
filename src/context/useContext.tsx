@@ -1,6 +1,17 @@
 import { useContext } from 'react';
-import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext, ConfirmContext, QueuePileContext } from './Context';
+import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext, ConfirmContext, QueuePileContext, AuthContext } from './Context';
 
+/**
+ * Custom React hooks for accessing PikmiCards context values.
+ * Provides hooks for orders, display, box orders, queue pile, fullscreen, confirmation, and authentication.
+ *
+ * @module useContext
+ */
+
+/**
+ * useOrders returns the OrdersContext value.
+ * @throws Error if used outside OrdersProvider.
+ */
 const useOrders = () => {
     const context = useContext(OrdersContext);
     if (!context) {
@@ -9,6 +20,10 @@ const useOrders = () => {
     return context;
 };
 
+/**
+ * useOrderDisplay returns the OrderDisplayContext value.
+ * @throws Error if used outside OrderDisplayProvider.
+ */
 const useOrderDisplay = () => {
     const context = useContext(OrderDisplayContext);
     if (!context) {
@@ -17,6 +32,10 @@ const useOrderDisplay = () => {
     return context;
 };
 
+/**
+ * useFullscreen returns the FullscreenContext value.
+ * @throws Error if used outside FullscreenProvider.
+ */
 const useFullscreen = () => {
     const context = useContext(FullscreenContext);
     if (!context) {
@@ -25,6 +44,10 @@ const useFullscreen = () => {
     return context;
 };
 
+/**
+ * useBoxOrders returns the BoxOrdersContext value.
+ * @throws Error if used outside BoxOrdersProvider.
+ */
 const useBoxOrders = () => {
     const context = useContext(BoxOrdersContext);
     if (!context) {
@@ -33,6 +56,10 @@ const useBoxOrders = () => {
     return context;
 };
 
+/**
+ * useConfirm returns the ConfirmContext value.
+ * @throws Error if used outside ConfirmProvider.
+ */
 const useConfirm = () => {
     const context = useContext(ConfirmContext);
     if (!context) {
@@ -41,6 +68,10 @@ const useConfirm = () => {
     return context;
 };
 
+/**
+ * useQueuePile returns the QueuePileContext value.
+ * @throws Error if used outside QueuePileProvider.
+ */
 const useQueuePile = () => {
     const context = useContext(QueuePileContext);
     if (!context) {
@@ -49,4 +80,16 @@ const useQueuePile = () => {
     return context;
 };
 
-export { useOrders, useFullscreen, useOrderDisplay, useBoxOrders, useConfirm, useQueuePile };
+/**
+ * useAuth returns the AuthContext value.
+ * @throws Error if used outside AuthProvider.
+ */
+const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useQueuePile must be used in the Authentication Provider');
+    }
+    return context;
+};
+
+export { useOrders, useFullscreen, useOrderDisplay, useBoxOrders, useConfirm, useQueuePile, useAuth };

@@ -5,6 +5,17 @@ import OrderCard from '../../components/OrderCard';
 import { ItemData, ItemID, OrderID } from '../../types';
 import { findItemByID } from '../../context/orderFunctions';
 
+/**
+ * ToPick section component.
+ * Displays a list of items that need to be picked, with selection and confirmation controls.
+ *
+ * @module ToPick
+ */
+
+/**
+ * ToPick is a memoized component that renders the list of items to pick and confirmation controls.
+ * @returns {JSX.Element}
+ */
 const ToPick = () => {
     const { orders } = useOrders();
     const { orderDisplay, selectedItems, handleConfirm, handleClear } = useOrderDisplay();
@@ -15,25 +26,6 @@ const ToPick = () => {
         const items = orderDisplay
             ?.flatMap(order => order.unretrievedItems.map(itemID => ({ orderID: order.order, itemID })))
             || [];
-
-        items.sort((a, b) => {
-            const itemA = findItemByID(orders, a.orderID, a.itemID);
-            const itemB = findItemByID(orders, b.orderID, b.itemID);
-
-            if (!itemA || !itemB) {
-                if (!itemA && !itemB) return 0;
-                if (!itemA) return 1; // Put items without data at the end
-                return -1; // Keep item with data at the front
-            }
-
-            const setCompare = (itemA.itemSet ?? '').localeCompare(itemB.itemSet ?? '');
-            if (setCompare !== 0) return setCompare;
-
-            const rarityCompare = (itemA.itemRarity ?? '').localeCompare(itemB.itemRarity ?? '');
-            if (rarityCompare !== 0) return rarityCompare;
-
-            return (itemA.itemPrinting ?? '').localeCompare(itemB.itemPrinting ?? '');
-        });
 
         return items;
     }, [orderDisplay, orders]);

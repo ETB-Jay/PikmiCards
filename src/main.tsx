@@ -9,26 +9,36 @@ import {
   RouterProvider,
   Navigate,
 } from 'react-router-dom';
+import Guide from './pages/Guide';
+import ProtectedRoute from './context/Routing/ProtectedRoute';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/login" replace />,
+    element: <Navigate to="/pick" replace />,
   },
   {
     path: '/login',
-    element: <Login />
+    element: <Providers><Login /></Providers>
   },
   {
     path: '/pick',
-    element: <Pick />
+    element: (
+      <Providers>
+        <ProtectedRoute>
+          <Pick />
+        </ProtectedRoute>
+      </Providers>
+    )
+  },
+  {
+    path: '/guide',
+    element: <Providers><Guide /></Providers>
   }
 ]);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Providers>
-      <RouterProvider router={router} />
-    </Providers>
-  </StrictMode>,
+    <RouterProvider router={router} />
+  </StrictMode>
 );

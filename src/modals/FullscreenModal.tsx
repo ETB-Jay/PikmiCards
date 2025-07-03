@@ -1,12 +1,32 @@
 import React, { memo, useCallback, PropsWithChildren, ReactNode } from 'react';
 import { ModalContainer } from '../components/containers';
 
+/**
+ * FullscreenModal component for displaying images in fullscreen overlay.
+ * Used for item image previews.
+ *
+ * @module FullscreenModal
+ */
+
+/**
+ * Props for the FullscreenModal component.
+ * @property image - The image URL to display.
+ * @property onClose - Function to close the modal.
+ * @property children - Optional additional content.
+ */
 interface FullscreenModalProps extends PropsWithChildren<object> {
     image?: string;
     onClose: () => void;
     children?: ReactNode;
 }
 
+/**
+ * FullscreenModal displays an image in a fullscreen modal overlay.
+ * @param image - The image URL to display.
+ * @param onClose - Function to close the modal.
+ * @param children - Optional additional content.
+ * @returns {JSX.Element}
+ */
 const FullscreenModal: React.FC<FullscreenModalProps> = memo(({ image, onClose, children }: FullscreenModalProps) => {
     const handleModalClick = useCallback(() => {
         onClose();
