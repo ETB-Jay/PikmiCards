@@ -1,7 +1,8 @@
+import React, { useContext, useState, useCallback } from 'react';
 import DetermineLocation from './DetermineLocation';
 import { Button } from '../../components/modal';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { memo, useCallback, useState } from 'react';
+import { LocationContext } from '../../context/Context';
 
 /**
  * LocationButton component for selecting the current location.
@@ -11,25 +12,13 @@ import { memo, useCallback, useState } from 'react';
  */
 
 /**
- * Props for the LocationButton component.
- * @property location - The current location string.
- * @property setLocation - Function to update the location.
- */
-interface LocationButtonProps {
-    location: string;
-    setLocation: (location: string) => void;
-}
-
-/**
  * LocationButton displays a button for the current location and opens a dropdown to change it.
- * @param location - The current location string.
- * @param setLocation - Function to update the location.
- * @returns {JSX.Element}
  */
-const LocationButton = memo(({ location, setLocation }: LocationButtonProps) => {
+const LocationButton = (): React.ReactElement => {
+    const { location, setLocation } = useContext(LocationContext);
     const [locationPrompt, setLocationPrompt] = useState<boolean>(false);
 
-    const handleLocationSelect = useCallback((newLocation: string) => {
+    const handleLocationSelect = useCallback((newLocation: import('../../types').Location) => {
         setLocation(newLocation);
         setLocationPrompt(false);
     }, [setLocation]);
@@ -39,7 +28,8 @@ const LocationButton = memo(({ location, setLocation }: LocationButtonProps) => 
             <Button
                 onClick={() => setLocationPrompt((prev) => !prev)}
                 label={location}
-                icon={<KeyboardArrowDownIcon />} />
+                icon={<KeyboardArrowDownIcon />}
+            />
             {locationPrompt && (
                 <DetermineLocation
                     location={location}
@@ -49,7 +39,7 @@ const LocationButton = memo(({ location, setLocation }: LocationButtonProps) => 
             )}
         </div>
     );
-});
+};
 
 LocationButton.displayName = 'LocationButton';
 

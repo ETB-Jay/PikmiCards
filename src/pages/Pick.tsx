@@ -1,10 +1,9 @@
-import React from 'react';
-import { useEffect, memo, useState } from 'react';
+import React, { useEffect, memo, useContext } from 'react';
 import Header from '../header/Header';
 import CardPicker from '../body/CardPicker';
-import { useOrders, useOrderDisplay, useBoxOrders } from '../context/useContext';
-import { filterOrdersByLocation, getOrderKeys } from '../context/orderFunctions';
+import { useOrders, useOrderDisplay } from '../context/useContext';
 import { MainContainer } from '../components/containers';
+import { LocationContext } from '../context/Context';
 
 /**
  * LoadingSpinner displays an animated loading indicator for orders.
@@ -35,10 +34,9 @@ const LoadingSpinner = memo((): React.ReactElement => (
  * @returns Order Picking component
  */
 const Pick = memo((): React.ReactElement => {
-    const { orders, fetchOrders } = useOrders();
+    const { orders, fetchOrders, fromOrderDataToOrder } = useOrders();
     const { orderDisplay, setOrderDisplay } = useOrderDisplay();
-    const { setBoxOrders, boxOrders } = useBoxOrders();
-    const [location, setLocation] = useState('Oakville');
+    const { location } = useContext(LocationContext);
 
     useEffect(() => {
         const loadOrders = async () => {
@@ -52,20 +50,11 @@ const Pick = memo((): React.ReactElement => {
     }, []);
 
     useEffect(() => {
-
-
         if (orders.length === 0) return;
-        const filteredOrders = filterOrdersByLocation(orders, location);
-        const filteredOrderKeys = getOrderKeys(filteredOrders);
-        const isSameOrderDisplay = orderDisplay.length === filteredOrderKeys.length && orderDisplay.every((v, i) => v.order === filteredOrderKeys[i].order);
-        if (!isSameOrderDisplay) {
-            setOrderDisplay(filteredOrderKeys);
-        }
-        const newBoxOrders = filteredOrderKeys.slice(0, 20);
-        const isSameBoxOrders = boxOrders.length === newBoxOrders.length && boxOrders.every((v, i) => v.order === newBoxOrders[i].order);
-        if (!isSameBoxOrders) {
-            setBoxOrders(newBoxOrders);
-        }
+        const filteredOrders = fromOrderDataToOrder(orders, location);
+        console.log(filteredOrders);
+        console.log(location);
+        if (filteredOrders) setOrderDisplay(filteredOrders);
     }, [orders, location]);
 
     return (
@@ -73,10 +62,7 @@ const Pick = memo((): React.ReactElement => {
             {orderDisplay.length === 0 ?
                 <LoadingSpinner /> :
                 <>
-                    <Header
-                        location={location}
-                        setLocation={setLocation}
-                    />
+                    <Header />
                     <CardPicker />
                 </>
             }

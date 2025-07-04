@@ -1,5 +1,5 @@
 import React from 'react';
-import { useBoxOrders, useOrders } from '../../context/useContext';
+import { useOrderDisplay, useOrders } from '../../context/useContext';
 import { useMemo, memo, useCallback } from 'react';
 import { Order } from '../../types';
 import { useConfirm } from '../../context/useContext';
@@ -23,9 +23,13 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
     const { openConfirm } = useConfirm();
     const { orders } = useOrders();
 
-    const orderData = findOrderByID(orders, order.order);
+    const orderData = findOrderByID(orders, order.orderID);
 
-    if (!orderData) return;
+    if (!orderData) return null;
+
+    // Count items by status
+    const retrievedCount = order.items.filter(item => item.status === 'inBox').length;
+    const unretrievedCount = order.items.filter(item => item.status !== 'inBox').length;
 
     return (
         <div
@@ -36,8 +40,8 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
                 <div className='flex flex-row flex-wrap gap-3 items-center min-w-0 text-xs'>
                     <p className="font-semibold max-w-2/9 md:max-w-1/3 truncate">{orderData.customerName}</p>
                     <CustomerInfoBadge><img src="/ClosedBox.svg" alt="Box" className="w-4 h-4 inline-block align-middle mr-1" />{index}</CustomerInfoBadge>
-                    <CustomerInfoBadge><img src="/Picked.svg" alt="Picked" className="w-4 h-4 inline-block align-middle mr-1" />{order.retrievedItems.length}</CustomerInfoBadge>
-                    <CustomerInfoBadge><img src="/NotPicked.svg" alt="Not Picked" className="w-4 h-4 inline-block align-middle mr-1" />{order.unretrievedItems.length}</CustomerInfoBadge>
+                    <CustomerInfoBadge><img src="/Picked.svg" alt="Picked" className="w-4 h-4 inline-block align-middle mr-1" />{retrievedCount}</CustomerInfoBadge>
+                    <CustomerInfoBadge><img src="/NotPicked.svg" alt="Not Picked" className="w-4 h-4 inline-block align-middle mr-1" />{unretrievedCount}</CustomerInfoBadge>
                 </div>
             </div>
         </div>
@@ -48,23 +52,24 @@ CustomerInfo.displayName = 'CustomerInfo';
 
 /**
  * CardGridDisplay is a memoized component that renders a grid of orders for the current box.
- * @returns {JSX.Element}
  */
-const CardGridDisplay = memo(() => {
-    const { boxOrders } = useBoxOrders();
+const CardGridDisplay = memo((): React.ReactElement => {
+    const { orderDisplay } = useOrderDisplay();
 
     const renderOrder = useCallback((order: Order, index: number) => (
         <CustomerInfo
-            key={order.order}
+            key={order.orderID}
             order={order}
             index={index + 1}
         />
     ), []);
 
-    const ordersToDisplay = useMemo(() =>
-        boxOrders.map(renderOrder),
-        [boxOrders, renderOrder]
-    );
+    const ordersToDisplay = useMemo(() => {
+        const filtered = orderDisplay.slice(0, 20);
+        return filtered.map((order, idx) =>
+            renderOrder(order, idx)
+        );
+    }, [orderDisplay, renderOrder]);
 
     return (
         <div className="flex-1 rounded-lg grid grid-cols-1 p-2 sm:grid-cols-2 gap-2 auto-rows-fr h-full w-full overflow-y-auto">

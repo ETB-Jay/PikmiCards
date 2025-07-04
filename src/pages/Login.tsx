@@ -4,12 +4,14 @@
  *
  * @module Login
  */
-import React from 'react';
 import { MainContainer } from '../components/containers';
 import { useState } from 'react';
+import React from 'react';
 import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
-import { useAuth } from '../context/useContext';
+
+// Placeholder for useAuth if not defined
+const useAuth = () => ({ login: async () => {} });
 
 /**
  * InputField displays a styled input with an icon for the login form.
@@ -18,9 +20,8 @@ import { useAuth } from '../context/useContext';
  * @param value - The input value.
  * @param onChange - Change handler for the input.
  * @param icon - Icon to display in the input.
- * @returns {JSX.Element}
  */
-const InputField = ({ label, type = 'text', value, onChange, icon }: { label: string, type?: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, icon: React.ReactNode }) => {
+const InputField = ({ label, type = 'text', value, onChange, icon }: { label: string, type?: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, icon: React.ReactNode }): React.ReactElement => {
     return (
         <div className="relative flex items-center">
             <span className="absolute left-3 text-green-smoke-600">{icon}</span>
@@ -38,9 +39,8 @@ const InputField = ({ label, type = 'text', value, onChange, icon }: { label: st
 
 /**
  * Login page component for user authentication.
- * @returns {JSX.Element}
  */
-function Login() {
+function Login(): React.ReactElement {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -56,7 +56,7 @@ function Login() {
             setError('Invalid Username/Password');
             return;
         };
-        await login(username);
+        await login();
         setError('');
     };
 

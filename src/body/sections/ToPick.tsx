@@ -1,3 +1,4 @@
+import React from 'react';
 import { useOrderDisplay, useOrders } from '../../context/useContext';
 import { useMemo, memo, useCallback } from 'react';
 import { ScrollContainer } from '../../components/containers';
@@ -13,28 +14,24 @@ import { findItemByID } from '../../context/orderFunctions';
  */
 
 /**
- * ToPick is a memoized component that renders the list of items to pick and confirmation controls.
- * @returns {JSX.Element}
+ * @description ToPick is a memoized component that renders the list of items to pick and confirmation controls.
  */
-const ToPick = () => {
+const ToPick = (): React.ReactElement => {
     const { orders } = useOrders();
     const { orderDisplay, selectedItems, handleConfirm, handleClear } = useOrderDisplay();
 
     const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
 
     const itemsToPick = useMemo(() => {
-        const items = orderDisplay
-            ?.flatMap(order => order.unretrievedItems.map(itemID => ({ orderID: order.order, itemID })))
-            || [];
-
-        return items;
-    }, [orderDisplay, orders]);
+        return orderDisplay.flatMap(order =>
+            order.items
+                .filter(item => item.status === 'unPicked')
+        );
+    }, [orderDisplay]);
 
     const renderItem = useCallback((item: { orderID: OrderID, itemID: ItemID }, index: number) => {
         const itemData = findItemByID(orders, item.orderID, item.itemID);
-        if (!itemData) {
-            return null;
-        }
+        if (!itemData) return null;
         const itemKey = getItemKey(itemData, index);
         const selected = selectedItems.has(item.itemID);
         return (
@@ -46,7 +43,7 @@ const ToPick = () => {
                 large={true}
             />
         );
-    }, [selectedItems]);
+    }, [orders, selectedItems]);
 
     const cards = useMemo(() =>
         itemsToPick?.map(renderItem),

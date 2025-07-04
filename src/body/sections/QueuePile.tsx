@@ -1,7 +1,7 @@
-import { useOrderDisplay, useQueuePile, useOrders } from '../../context/useContext';
+import { useOrderDisplay, useOrders } from '../../context/useContext';
 import { ScrollContainer } from '../../components/containers';
 import OrderCard from '../../components/OrderCard';
-import { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { ItemData } from '../../types';
 
 /**
@@ -13,11 +13,9 @@ import { ItemData } from '../../types';
 
 /**
  * QueuePile is a memoized component that renders the queue pile of items to pick.
- * @returns {JSX.Element}
  */
-const QueuePile = () => {
+const QueuePile = (): React.ReactElement => {
     const { selectedItems } = useOrderDisplay();
-    const { queuePile } = useQueuePile();
     const { orders } = useOrders();
 
     const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
@@ -42,16 +40,20 @@ const QueuePile = () => {
         );
     }, [orders, selectedItems]);
 
-    const items = useMemo(() => queuePile.map(renderItem), [queuePile, renderItem]);
+    const { orderDisplay } = useOrderDisplay();
+    const queueItemIDs = orderDisplay.flatMap(order => order.items.filter(item => item.status === 'queue').map(item => item.itemID));
+    const items = useMemo(() => queueItemIDs.map(renderItem), [queueItemIDs, renderItem]);
 
     return (
         <div className="flex flex-col items-center justify-center h-full">
-            {queuePile.length !== 0 ?
+            {items.length !== 0 ?
                 <ScrollContainer className='flex-row flex-1'>
                     {items}
                 </ScrollContainer>
-                : 
-                <div className="flex bg-green-smoke-600/70 rounded-2xl ring-2 ring-green-900 h-full w-full items-center justify-center text-white ">Nothing Yet!</div>
+                :
+                <div className="flex bg-green-smoke-600/70 rounded-2xl ring-2 ring-green-900 h-full w-full items-center justify-center text-white">
+                    Nothing Yet!
+                </div>
             }
         </div>
     );

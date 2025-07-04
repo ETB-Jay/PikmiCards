@@ -1,4 +1,4 @@
-import { OrderData, OrderID, ItemData, ItemID, Order } from '../types';
+import { OrderData, OrderID, ItemData, ItemID, Order, Status } from '../types';
 
 /**
  * Utility functions for manipulating and querying order and item data in PikmiCards.
@@ -15,27 +15,6 @@ import { OrderData, OrderID, ItemData, ItemID, Order } from '../types';
  */
 const findOrderByID = (orders: OrderData[] | null, orderID: OrderID): OrderData | undefined => {
     return orders?.find(order => order.orderID === orderID);
-};
-
-/**
- * Filters orders by item location.
- * @param orders - The list of orders.
- * @param location - The location string to filter by.
- * @returns Filtered list of orders with items at the given location.
- */
-const filterOrdersByLocation = (orders: OrderData[], location: string): OrderData[] => {
-    if (!orders) return [];
-    return orders
-        .map((order: OrderData) => {
-            const foundOrder = findOrderByID(orders, order.orderID);
-            return {
-                ...order,
-                items: foundOrder?.items?.filter((item: ItemData) =>
-                    item.itemLocation?.toLowerCase().includes(location.toLowerCase())
-                ) || []
-            };
-        })
-        .filter((order: OrderData) => order.items && order.items.length > 0);
 };
 
 /**
@@ -57,9 +36,13 @@ const getOrderKeys = (orders: OrderData[]): Order[] => {
     if (!orders) return [];
     return orders.map((order: OrderData) => {
         return {
-            order: order.orderID,
-            retrievedItems: [],
-            unretrievedItems: getItemKeys(order)
+            orderID: order.orderID,
+            location: order.items[0]?.itemLocation || 'Oakville', // fallback if empty
+            box: null,
+            items: order.items.map(item => ({
+                itemID: item.itemID,
+                status: 'unPicked' as Status
+            }))
         };
     });
 };
@@ -76,4 +59,4 @@ const findItemByID = (orders: OrderData[], orderID: OrderID, itemID: ItemID): It
     return order?.items.find(item => item.itemID === itemID);
 };
 
-export { findOrderByID, filterOrdersByLocation, getItemKeys, getOrderKeys, findItemByID };
+export { findOrderByID, getItemKeys, getOrderKeys, findItemByID };

@@ -7,7 +7,6 @@
 import React from 'react';
 import Hamburger from './buttons/Hamburger';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/useContext';
 
 interface FieldProps {
     label: string;
@@ -21,18 +20,11 @@ interface FieldProps {
  */
 const Sidebar = ({ open, closeSidebar }: { open: boolean; closeSidebar: () => void }) => {
     const navigate = useNavigate();
-    const { logout, user } = useAuth();
-
     const Field: React.FC<FieldProps> = ({ label, onClick }) => (
         <div className='flex flex-col w-full text-white hover:bg-white/10 cursor-pointer text-start p-2' onClick={onClick}>
             {label}
         </div>
     );
-
-    const handleLogout = () => {
-        console.log('Sidebar logout, user before:', user);
-        logout();
-    };
 
     return (
         <div className={`fixed top-0 left-0 h-screen w-[30vw] min-w-40 max-w-60 bg-black/90 z-100 flex flex-col py-3 px-1.5 gap-7 shadow-lg transition-all duration-300 transform ${open ? 'translate-x-0' : '-translate-x-full'}`}>
@@ -46,7 +38,7 @@ const Sidebar = ({ open, closeSidebar }: { open: boolean; closeSidebar: () => vo
                 <Field label="Welcome" onClick={() => navigate('/pick')} />
                 <Field label="Guide" onClick={() => navigate('/guide')} />
                 <div className='mt-auto'>
-                    <Field label="Logout" onClick={handleLogout} />
+                    <Field label="Logout" onClick={() => navigate('/')} />
                 </div>
             </div>
         </div>

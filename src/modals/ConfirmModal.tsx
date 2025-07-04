@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
-import { memo } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { Order, ItemData } from '../types';
 import { ModalContainer, ScrollContainer } from '../components/containers';
 import OrderCard from '../components/OrderCard';
-import { useCallback } from 'react';
 import { Button, SectionTitle, Tags } from '../components/modal';
-import { useBoxOrders, useOrders, useQueuePile } from '../context/useContext';
-import { findOrderByID, getOrderKeys } from '../context/orderFunctions';
+import { useOrderDisplay, useOrders } from '../context/useContext';
+import { findOrderByID } from '../context/orderFunctions';
 
 /**
  * ConfirmModal component for confirming order completion and viewing item details.
@@ -34,9 +32,8 @@ const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.it
  * @returns {JSX.Element}
  */
 const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
-    const { orders } = useOrders();
-    const { boxOrders, setBoxOrders } = useBoxOrders();
-    const { queuePile } = useQueuePile();
+    const { orders, setOrders } = useOrders();
+    const { orderDisplay, setOrderDisplay } = useOrderDisplay();
     const [previewItem, setPreviewItem] = useState<ItemData | null>(null);
     const renderItem = useCallback((item: ItemData, index: number) => {
         const itemKey = getItemKey(item, index);
@@ -52,40 +49,28 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
         );
     }, []);
 
-    const orderData = findOrderByID(orders, order.order);
-
-    const onConfirm = useCallback(() => {
-        const index = boxOrders.findIndex(box => box.order === order.order);
-        if (index === -1) return;
-
-        const boxOrderIDs = new Set(boxOrders.map(box => box.order));
-        const queuePileOrderIDs = new Set(
-            queuePile
-                .map((itemID: string) => {
-                    const order = orders.find(orderData => orderData.items.some(item => item.itemID === itemID));
-                    return order ? order.orderID : null;
-                })
-                .filter(Boolean)
-        );
-        const newOrderData = orders.find(orderData =>
-            !boxOrderIDs.has(orderData.orderID) &&
-            !queuePileOrderIDs.has(orderData.orderID)
-        );
-        if (!newOrderData) return;
-        const [newOrder] = getOrderKeys([newOrderData]);
-        boxOrders.splice(index, 1, newOrder);
-        setBoxOrders([...boxOrders]);
-
-        console.log(boxOrders);
-
-        onClose();
-    }, [boxOrders, setBoxOrders, orders, order.order, onClose]);
+    const orderData = findOrderByID(orders, order.orderID);
 
     if (!orderData) return null;
 
-    // Split items into unretrieved and retrieved
-    const unretrievedItems = orderData.items.filter(item => order.unretrievedItems.includes(item.itemID));
-    const retrievedItems = orderData.items.filter(item => order.retrievedItems.includes(item.itemID));
+    const onConfirm = () => {
+        const newOrders = orders.filter(order => (order.orderID !== orderData.orderID));
+        setOrders(newOrders);
+
+        const newOrderDisplay = orderDisplay.filter(order => (order.orderID !== orderData.orderID));
+        setOrderDisplay(newOrderDisplay);
+
+        onClose();
+    };
+
+    const unretrievedItems = order.items
+        .filter(item => item.status === 'unPicked')
+        .map(item => orderData?.items.find(data => data.itemID === item.itemID))
+        .filter(Boolean) as ItemData[];
+    const retrievedItems = order.items
+        .filter(item => item.status !== 'unPicked')
+        .map(item => orderData?.items.find(data => data.itemID === item.itemID))
+        .filter(Boolean) as ItemData[];
 
     const Empty = () => (
         <div className="bg-green-50/10 p-4 rounded-xl text-lg h-full w-full flex flex-col text-white items-center justify-center text-center">

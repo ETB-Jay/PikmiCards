@@ -1,4 +1,4 @@
-import React, { memo, useCallback, PropsWithChildren, ReactNode } from 'react';
+import React, { memo, useCallback } from 'react';
 import { ModalContainer } from '../components/containers';
 
 /**
@@ -14,10 +14,10 @@ import { ModalContainer } from '../components/containers';
  * @property onClose - Function to close the modal.
  * @property children - Optional additional content.
  */
-interface FullscreenModalProps extends PropsWithChildren<object> {
+interface FullscreenModalProps {
     image?: string;
     onClose: () => void;
-    children?: ReactNode;
+    children?: React.ReactNode;
 }
 
 /**

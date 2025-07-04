@@ -1,27 +1,14 @@
+import { useState } from 'react';
 import Hamburger from './buttons/Hamburger';
 import LocationButton from './buttons/LocationButton';
 import RefreshButton from './buttons/RefreshButton';
-import { memo, useState } from 'react';
 import Sidebar from './Sidebar';
 
 /**
- * Props for the Header component.
- * @property location - The current location string.
- * @property setLocation - Function to update the location.
- */
-interface HeaderProps {
-    location: string;
-    setLocation: (location: string) => void;
-}
-
-/**
  * Header displays the top navigation bar with sidebar, location, and refresh controls.
- * @param location - The current location string.
- * @param setLocation - Function to update the location.
- * @returns {JSX.Element}
  */
-const Header = memo(({ location, setLocation }: HeaderProps) => {
-
+const Header = () => {
+    // const { location, setLocation } = useContext(LocationContext); // No longer needed
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
     const [sidebarVisible, setSidebarVisible] = useState<boolean>(false);
 
@@ -43,15 +30,12 @@ const Header = memo(({ location, setLocation }: HeaderProps) => {
         )}
         <div className="relative flex flex-row items-center w-full gap-5 h-[5vh]">
             <Hamburger loadSidebar={openSidebar}/>
-            <LocationButton
-                location={location}
-                setLocation={setLocation}
-            />
+            <LocationButton />
             <RefreshButton />
         </div>
         </>
     );
-});
+};
 
 Header.displayName = 'Header';
 

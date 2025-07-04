@@ -1,4 +1,5 @@
-import { memo, useCallback, useEffect, useRef } from 'react';
+import React from 'react';
+import { Location } from '../../types';
 
 /**
  * DetermineLocation dropdown component for selecting a location.
@@ -14,8 +15,8 @@ import { memo, useCallback, useEffect, useRef } from 'react';
  * @property prompt - Function to toggle the prompt visibility.
  */
 interface DetermineLocationProps {
-    location: string;
-    setLocation: (location: string) => void;
+    location: Location;
+    setLocation: (location: Location) => void;
     prompt: (active: boolean) => void
 }
 
@@ -25,16 +26,16 @@ interface DetermineLocationProps {
  * @param currentLocation - The currently selected location.
  * @param onSelect - Function to select this location.
  */
-const LocationOption = memo(({ newLocation, currentLocation, onSelect }: {
-    newLocation: string;
-    currentLocation: string;
-    onSelect: (location: string) => void;
+const LocationOption = ({ newLocation, currentLocation, onSelect }: {
+    newLocation: Location;
+    currentLocation: Location;
+    onSelect: (location: Location) => void;
 }) => {
-    const handleClick = useCallback(() => {
+    const handleClick = () => {
         if (currentLocation !== newLocation) {
             onSelect(newLocation);
         }
-    }, [currentLocation, newLocation, onSelect]);
+    };
 
     return (
         <div
@@ -44,7 +45,7 @@ const LocationOption = memo(({ newLocation, currentLocation, onSelect }: {
             <span className={'font-semibold text-green-950 text-sm BFont'}>{newLocation}</span>
         </div>
     );
-});
+};
 
 LocationOption.displayName = 'LocationOption';
 
@@ -53,22 +54,21 @@ LocationOption.displayName = 'LocationOption';
  * @param location - The current location string.
  * @param setLocation - Function to update the location.
  * @param prompt - Function to toggle the prompt visibility.
- * @returns {JSX.Element}
  */
-const DetermineLocation = memo(({ location, setLocation, prompt }: DetermineLocationProps) => {
+const DetermineLocation = ({ location, setLocation, prompt }: DetermineLocationProps): React.ReactElement => {
 
-    const ref = useRef<HTMLDivElement>(null);
+    const ref = React.useRef<HTMLDivElement>(null);
     const handleClickOutside = (e: Event) => {
         if (ref.current && !ref.current.contains(e.target as Node)) {
             prompt(false);
         };
     };
 
-    const handleLocationSelect = useCallback((newLocation: string) => {
+    const handleLocationSelect = (newLocation: Location) => {
         setLocation(newLocation);
-    }, [setLocation]);
+    };
 
-    useEffect(() => {
+    React.useEffect(() => {
         document.addEventListener('click', handleClickOutside, true);
         return () => {
             document.removeEventListener('click', handleClickOutside, true);
@@ -89,7 +89,7 @@ const DetermineLocation = memo(({ location, setLocation, prompt }: DetermineLoca
             />
         </div>
     );
-});
+};
 
 DetermineLocation.displayName = 'DetermineLocation';
 

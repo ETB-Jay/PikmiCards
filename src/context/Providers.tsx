@@ -1,13 +1,9 @@
 import React from 'react';
-import { ReactNode, useMemo, useState, useCallback } from 'react';
-import { OrdersContext, FullscreenContext, OrderDisplayContext, BoxOrdersContext, ConfirmContext, QueuePileContext } from './Context';
-import { AuthContext } from './Context';
+import { ReactNode, useState, useCallback } from 'react';
+import { OrdersContext, OrdersContextType, FullscreenContext, OrderDisplayContext, ConfirmContext, OrderDisplayContextType, FullscreenContextType, ConfirmContextType, LocationContext } from './Context';
 import FullscreenModal from '../modals/FullscreenModal';
-import { OrderData, Order, ItemID } from '../types';
+import { OrderData, Order, Location, Status, ItemID } from '../types';
 import ConfirmModal from '../modals/ConfirmModal';
-import { useBoxOrders, useQueuePile } from './useContext';
-import { useNavigate } from 'react-router-dom';
-import { useLocalStorage } from './Routing/useLocalStorage';
 
 interface ProviderProps {
     children: ReactNode;
@@ -15,7 +11,7 @@ interface ProviderProps {
 
 /**
  * Context providers for PikmiCards application state.
- * Provides Orders, OrderDisplay, BoxOrders, QueuePile, Fullscreen, Confirm, and Auth contexts.
+ * Provides Orders, OrderDisplay, Fullscreen, and Confirm contexts.
  *
  * @module Providers
  */
@@ -26,21 +22,59 @@ interface ProviderProps {
  */
 const OrdersProvider = ({ children }: ProviderProps) => {
     const [orders, setOrders] = useState<OrderData[]>([]);
+    const [error, setError] = useState<string | null>(null);
 
     const fetchOrders = useCallback(async (): Promise<void> => {
-        const response = await fetch('http://localhost:3001/api/orders');
-        if (!response.ok) {
-            throw new Error('Failed to fetch orders');
+        setError(null);
+        try {
+            const response = await fetch('http://localhost:3001/api/orders');
+            if (!response.ok) {
+                throw new Error('Failed to fetch orders');
+            }
+            const orders = await response.json();
+            setOrders(orders);
+        } catch (err) {
+            setError((err as Error).message);
         }
-        const orders = await response.json();
-        setOrders(orders);
     }, []);
 
-    const value = useMemo(() => (
-        { orders, setOrders, fetchOrders }
-    ), [orders, setOrders, fetchOrders]);
+    const fromOrderDataToOrder = useCallback((orders: OrderData[], location: Location): Order[] => {
+        if (!orders) return [];
+        const transformed = orders.map(order => ({
+            orderID: order.orderID,
+            location: location,
+            box: null,
+            items: order.items
+                .filter(item => item.itemLocation.includes(location))
+                .map(item => ({
+                    itemID: item.itemID,
+                    orderID: item.orderID,
+                    status: 'unPicked' as Status,
+                    box: null
+                }))
+        })).filter(order => order.items.length > 0);
+        return assignBoxes(transformed);
+    }, []);
 
-    return <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>;
+    const assignBoxes = (orders: Order[]): Order[] => {
+        return orders.map((order, idx) => {
+            const boxNum = idx + 1;
+            return {
+                ...order,
+                box: boxNum,
+                items: order.items.map(item => ({
+                    ...item,
+                    box: boxNum
+                }))
+            };
+        });
+    };
+
+    const value: OrdersContextType & { error: string | null } = { orders, setOrders, fetchOrders, fromOrderDataToOrder, error };
+
+    return <OrdersContext.Provider value={value}>
+        {children}
+    </OrdersContext.Provider>;
 };
 
 /**
@@ -48,8 +82,6 @@ const OrdersProvider = ({ children }: ProviderProps) => {
  * @param children - The child components to wrap.
  */
 const OrderDisplayProvider = ({ children }: ProviderProps) => {
-    const { boxOrders, setBoxOrders } = useBoxOrders();
-    const { queuePile, setQueuePile } = useQueuePile();
     const [orderDisplay, setOrderDisplay] = useState<Order[]>([]);
     const [selectedItems, setSelectedItems] = useState<Set<ItemID>>(new Set());
 
@@ -70,44 +102,27 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
     }, []);
 
     const handleConfirm = useCallback(() => {
-        let tempOrderDisplay = [...orderDisplay];
-        let tempQueuePile = [...queuePile];
-        let tempBoxOrders = [...boxOrders];
+        const displayedOrderIDs = new Set(orderDisplay.filter(order => order.box !== null).map(order => order.orderID));
 
-        const removeOrder = (orders: Order[], index: number, itemID: ItemID, transfer: boolean = true) => {
-            const order = { ...orders[index] };
-            if (transfer) {
-                order.unretrievedItems = order.unretrievedItems.filter(id => id !== itemID);
-                if (!order.retrievedItems.includes(itemID)) order.retrievedItems.push(itemID);
-            }
-            return order;
-        };
-
-        selectedItems.forEach((itemID: ItemID) => {
-            const queueIndex = tempQueuePile.indexOf(itemID);
-            if (queueIndex !== -1) tempQueuePile.splice(queueIndex, 1);
-
-            const boxIndex = tempBoxOrders.findIndex(order => order.unretrievedItems.includes(itemID));
-            if (boxIndex !== -1) {
-                tempBoxOrders[boxIndex] = removeOrder(tempBoxOrders, boxIndex, itemID, true);
-            } else if (!tempQueuePile.includes(itemID)) {
-                tempQueuePile.push(itemID);
-            }
-
-            const displayIndex = tempOrderDisplay.findIndex(order => order.unretrievedItems.includes(itemID));
-            if (displayIndex !== -1) {
-                const wasInBox = boxIndex !== -1;
-                tempOrderDisplay[displayIndex] = removeOrder(tempOrderDisplay, displayIndex, itemID, wasInBox);
-            }
-        });
-
-        setOrderDisplay(tempOrderDisplay);
-        setQueuePile(tempQueuePile);
-        setBoxOrders(tempBoxOrders);
+        const updatedOrderDisplay = orderDisplay.map(order => ({
+            ...order,
+            items: order.items.map(item =>
+                selectedItems.has(item.itemID)
+                    ? {
+                        ...item,
+                        status: (
+                            displayedOrderIDs.has(item.orderID) ?
+                                'inBox' : 'queue'
+                        ) as Status
+                    }
+                    : item
+            )
+        }));
+        setOrderDisplay(updatedOrderDisplay);
         setSelectedItems(new Set());
-    }, [selectedItems, orderDisplay, queuePile, boxOrders, setOrderDisplay, setQueuePile, setBoxOrders]);
+    }, [orderDisplay, selectedItems]);
 
-    const value = useMemo(() => ({
+    const value: OrderDisplayContextType = {
         orderDisplay,
         setOrderDisplay,
         selectedItems,
@@ -115,42 +130,9 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
         handleSelect,
         handleConfirm,
         handleClear,
-    }), [orderDisplay, selectedItems, handleSelect, handleClear, handleConfirm]);
+    };
 
     return <OrderDisplayContext.Provider value={value}>{children}</OrderDisplayContext.Provider>;
-};
-
-/**
- * BoxOrdersProvider manages the state of box orders for the current box.
- * @param children - The child components to wrap.
- */
-const BoxOrdersProvider = ({ children }: ProviderProps) => {
-    const [boxOrders, setBoxOrdersState] = useState<Order[]>([]);
-
-    const setBoxOrders = useCallback(
-        (updater: Order[] | ((prev: Order[]) => Order[])) => {
-            setBoxOrdersState(prev =>
-                typeof updater === 'function' ? (updater as (prev: Order[]) => Order[])(prev) : updater
-            );
-        }, []);
-    const value = useMemo(() => ({ boxOrders, setBoxOrders }), [boxOrders, setBoxOrders]);
-    return <BoxOrdersContext.Provider value={value}>{children}</BoxOrdersContext.Provider>;
-};
-
-/**
- * QueuePileProvider manages the queue pile state for items to be picked.
- * @param children - The child components to wrap.
- */
-const QueuePileProvider = ({ children }: ProviderProps) => {
-    const [queuePile, setQueuePileState] = useState<ItemID[]>([]);
-    const setQueuePile = (updater: ItemID[] | ((prev: ItemID[]) => ItemID[])) => {
-        setQueuePileState(prev => {
-            const next = typeof updater === 'function' ? (updater as (prev: ItemID[]) => ItemID[])(prev) : updater;
-            return next;
-        });
-    };
-    const value = useMemo(() => ({ queuePile, setQueuePile }), [queuePile]);
-    return <QueuePileContext.Provider value={value}>{children}</QueuePileContext.Provider>;
 };
 
 /**
@@ -168,8 +150,10 @@ const FullscreenProvider = ({ children }: ProviderProps) => {
         setFullScreen(null);
     }, []);
 
+    const value: FullscreenContextType = { openFullscreen, closeFullscreen };
+
     return (
-        <FullscreenContext.Provider value={{ openFullscreen, closeFullscreen }}>
+        <FullscreenContext.Provider value={value}>
             {children}
             {fullScreen && (
                 <FullscreenModal
@@ -189,7 +173,11 @@ const ConfirmProvider: React.FC<ProviderProps> = ({ children }) => {
     const [confirm, setConfirm] = useState<Order | null>(null);
     const openConfirm = useCallback((order: Order) => setConfirm(order), []);
     const closeConfirm = useCallback(() => setConfirm(null), []);
-    const value = useMemo(() => ({ confirm, openConfirm, closeConfirm }), [confirm, openConfirm, closeConfirm]);
+    const confirmConfirm = useCallback(() => {
+        
+        closeConfirm();
+    }, []);
+    const value: ConfirmContextType = { confirm, openConfirm, confirmConfirm, closeConfirm };
     return <ConfirmContext.Provider value={value}>
         {children}
         {confirm && (
@@ -201,32 +189,13 @@ const ConfirmProvider: React.FC<ProviderProps> = ({ children }) => {
     </ConfirmContext.Provider>;
 };
 
-/**
- * AuthProvider manages authentication state and login/logout actions.
- * @param children - The child components to wrap.
- */
-const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
-    const [user, setUser]: [string, (newValue: string) => void] = useLocalStorage('user', '');
-    const navigate = useNavigate();
-
-    const login = async (data: string) => {
-        setUser(data);
-        navigate('/pick');
-    };
-
-    const logout = async () => {
-        setUser('');
-        navigate('/login', { replace: true });
-    };
-
-    const value = useMemo(() => ({
-        user,
-        login,
-        logout,
-    }), [user]
+const LocationProvider = ({ children }: { children: React.ReactNode }) => {
+    const [location, setLocation] = useState<Location>('Oakville');
+    return (
+        <LocationContext.Provider value={{ location, setLocation }}>
+            {children}
+        </LocationContext.Provider>
     );
-
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 /**
@@ -236,19 +205,15 @@ const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
 const Providers = ({ children }: ProviderProps) => {
     return (
         <OrdersProvider>
-            <BoxOrdersProvider>
-                <QueuePileProvider>
-                    <OrderDisplayProvider>
-                        <ConfirmProvider>
-                            <FullscreenProvider>
-                                <AuthProvider>
-                                    {children}
-                                </AuthProvider>
-                            </FullscreenProvider>
-                        </ConfirmProvider>
-                    </OrderDisplayProvider>
-                </QueuePileProvider>
-            </BoxOrdersProvider>
+            <OrderDisplayProvider>
+                <ConfirmProvider>
+                    <FullscreenProvider>
+                        <LocationProvider>
+                            {children}
+                        </LocationProvider>
+                    </FullscreenProvider>
+                </ConfirmProvider>
+            </OrderDisplayProvider>
         </OrdersProvider>
     );
 };

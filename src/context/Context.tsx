@@ -1,132 +1,141 @@
 import { createContext } from 'react';
-import { OrderData, Order, ItemID } from '../types';
+import { Order, OrderData, ItemID, Location } from '../types';
 
-/**
- * React context definitions for PikmiCards application state.
- * Defines context types and context objects for orders, display, box orders, queue pile, fullscreen, confirmation, and authentication.
- *
- * @module Context
- */
-
-/**
- * @description OrdersContextType stores the fetched order data from Shopify
- */
+/** @description OrdersContextType stores the fetched order data from Shopify */
 interface OrdersContextType {
+
+    /** @description The list of all orders */
     orders: OrderData[];
-    setOrders: (orders: OrderData[]) => void;
+
+    /** 
+     * @description Function that updates the order state
+     * @param order - a list of OrderData
+    */
+    setOrders: (order: OrderData[]) => void;
+    /** @description Function that pulls data from the Shopify server backend */
     fetchOrders: () => Promise<void>;
-}
+
+    /** 
+     * @description Function that converts OrderData[] to Order[]
+     * @param orders - a list of OrderData
+     * @param location -  the currently selected location
+     * @returns a list of Order that match orders
+     */
+    fromOrderDataToOrder: (order: OrderData[], location: Location) => Order[];
+
+};
+
 const OrdersContext = createContext<OrdersContextType>({
     orders: [],
-    setOrders: () => {},
-    fetchOrders: async () => {},
+    setOrders: () => { },
+    fetchOrders: async () => { },
+    fromOrderDataToOrder: () => [],
 });
+
 OrdersContext.displayName = 'OrdersContext';
 
 
+/** @description OrderDisplayContextType manages the displayed orders */
 interface OrderDisplayContextType {
+
+    /** @description The list of all displayed orders */
     orderDisplay: Order[];
+
+    /** 
+     * @description Function to update orderDisplay 
+     * @param orders - A list of Order
+    */
     setOrderDisplay: (orders: Order[]) => void;
+
+    /** @description A set containing the selected ItemIDs */
     selectedItems: Set<ItemID>;
+
+    /** 
+     * @description Function to update selectedItems 
+     * @param selectedItems - A set of ItemID
+    */
     setSelectedItems: (Items: Set<ItemID>) => void;
+
+    /** 
+     * @description Function to select or deselect an item by its ID.
+     * @param itemID - The selected itemID
+     */
     handleSelect: (itemID: ItemID) => void;
+
+    /** @description Function to confirm the current selection. */
     handleConfirm: () => void;
+
+    /** @description Function to clear the current selection. */
     handleClear: () => void;
+
 }
-/**
- * React context for order display and selection state.
- */
 const OrderDisplayContext = createContext<OrderDisplayContextType>({
     orderDisplay: [],
-    setOrderDisplay: () => {},
+    setOrderDisplay: () => { },
     selectedItems: new Set(),
-    setSelectedItems: () => {},
-    handleSelect: () => {},
-    handleConfirm: () => {},
-    handleClear: () => {}
+    setSelectedItems: () => { },
+    handleSelect: () => { },
+    handleConfirm: () => { },
+    handleClear: () => { }
 });
 OrderDisplayContext.displayName = 'OrderDisplayContext';
 
-/**
- * Context for managing the list of box orders and its setter.
- * Used for displaying and updating the current box's orders.
- */
-interface BoxOrdersContextType {
-    boxOrders: Order[];
-    setBoxOrders: (updater: Order[] | ((prev: Order[]) => Order[])) => void;
-}
-/**
- * React context for box orders state.
- */
-const BoxOrdersContext = createContext<BoxOrdersContextType>({
-    boxOrders: [],
-    setBoxOrders: () => { }
-});
-BoxOrdersContext.displayName = 'BoxOrdersContext';
 
-/**
- * Context for managing the queue pile (list of item IDs in the queue) and its setter.
- */
-interface QueuePileContextType {
-    queuePile: ItemID[];
-    setQueuePile: (updater: ItemID[] | ((prev: ItemID[]) => ItemID[])) => void;
-}
-/**
- * React context for queue pile state.
- */
-const QueuePileContext = createContext<QueuePileContextType>({
-    queuePile: [],
-    setQueuePile: () => { },
-});
-QueuePileContext.displayName = 'QueuePileContext';
-
-/**
- * Context for managing fullscreen image modal state and actions.
- */
+/** @description FullscreenContextType manages the fullscreen mdoal state */
 interface FullscreenContextType {
+    /**
+     * @description Function to open the fullscreen modal with a given imageURL
+     * @param imageURL - a valid imageURL
+     */
     openFullscreen: (imageUrl: string) => void;
+    /**
+     * @description Function to close the fullscreen modal. Wipes the current imageURL
+     * @requires openFullscreen was called before
+     */
     closeFullscreen: () => void;
 }
-/**
- * React context for fullscreen modal state and actions.
- */
-const FullscreenContext = createContext<FullscreenContextType>({ openFullscreen: () => {}, closeFullscreen: () => {} });
+const FullscreenContext = createContext<FullscreenContextType>({
+    openFullscreen: () => { },
+    closeFullscreen: () => { }
+});
 FullscreenContext.displayName = 'FullscreenContext';
 
-/**
- * Context for managing the confirmation modal state and actions.
- */
+
+/** @description ConfirmContextType manages the confirm modal state */
 interface ConfirmContextType {
+    /** @description The order currently being confirmed, or null if none */
     confirm: Order | null;
+    /** 
+     * @description Function to open the confirmation modal with a given order
+     * @param order The order to be displayed 
+     */
     openConfirm: (order: Order) => void;
+    /** @description Function to confirm the confirmation modal. Calls closeConfirm to close the order after*/
+    confirmConfirm: () => void;
+    /** @description Function to close the confirmation modal. Wipes the current order */
     closeConfirm: () => void;
 }
 /**
  * React context for confirmation modal state and actions.
  */
-const ConfirmContext = createContext<ConfirmContextType>({ confirm: null, openConfirm: () => {}, closeConfirm: () => {} });
+const ConfirmContext = createContext<ConfirmContextType>({
+    confirm: null,
+    openConfirm: () => { },
+    confirmConfirm: () => { },
+    closeConfirm: () => { },
+});
 ConfirmContext.displayName = 'ConfirmContext';
 
-/**
- * React context for managing authenticated users
- */
-interface AuthContextType {
-    user: string;
-    login: (data: string) => Promise<void>;
-    logout: () => Promise<void>;
+// Location context for global location state
+interface LocationContextType {
+    location: Location;
+    setLocation: (location: Location) => void;
 }
-const AuthContext = createContext<AuthContextType>({
-    user: '',
-    login: async () => {},
-    logout: async () => {},
+const LocationContext = createContext<LocationContextType>({
+    location: 'Oakville',
+    setLocation: () => {},
 });
+LocationContext.displayName = 'LocationContext';
 
-export {
-    OrdersContext,
-    FullscreenContext,
-    OrderDisplayContext,
-    BoxOrdersContext,
-    ConfirmContext,
-    QueuePileContext,
-    AuthContext
-};
+export type { OrdersContextType, OrderDisplayContextType, FullscreenContextType, ConfirmContextType };
+export { OrdersContext, OrderDisplayContext, FullscreenContext, ConfirmContext, LocationContext };

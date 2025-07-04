@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { ItemData } from '../types';
-import { useBoxOrders } from '../context/useContext';
+import { useOrderDisplay } from '../context/useContext';
 
 /**
  * Modal UI components for PikmiCards.
@@ -40,14 +40,19 @@ const Button: React.FC<ButtonProps> = ({ label, icon, ...props }) => (
  * @param className - Additional CSS classes.
  */
 const Tags: React.FC<PropsWithChildren<{ item: ItemData, className?: string }>> = ({ item, className = '' }) => {
-    const { boxOrders } = useBoxOrders();
-    const boxIndex = boxOrders ? boxOrders.findIndex(order => order.order === item.orderID) : -1;
+    const { orderDisplay } = useOrderDisplay();
+
     const tags: { value: string; icon?: string; alt?: string }[] = [];
     tags.push({ icon: '/Cart.svg', alt: 'Cart', value: String(item.itemQuantity) });
     if (item.itemPrinting) tags.push({ value: item.itemPrinting.split(/\s+/).map(w => w[0]).join('') });
-    if (boxIndex !== -1) tags.push({ icon: '/ClosedBox.svg', alt: 'Box', value: String(boxIndex + 1) });
     if (item.itemRarity) tags.push({ value: item.itemRarity });
     if (item.itemSet) tags.push({ value: item.itemSet });
+
+    const order = orderDisplay.find((order): order is import('../types').Order => order.orderID === item.orderID);
+    if (order && order.box) {
+        tags.push({ icon: '/ClosedBox.svg', alt: 'Box', value: String(order.box) });
+    }
+
     return (
         <div className="flex flex-row flex-wrap gap-2">
             {tags.map((tag, idx) => (

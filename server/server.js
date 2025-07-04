@@ -86,7 +86,7 @@ const getOrders = async (client) => {
     while (hasNextPage) {
         const query = `
         {
-            orders(first: 1, 
+            orders(first: 50, 
                 after: ${cursor ? `"${cursor}"` : 'null'}, 
                 query: "created_at:>${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled", 
                 reverse: true) {
@@ -97,11 +97,11 @@ const getOrders = async (client) => {
                         currentSubtotalLineItemsQuantity
                         customer {displayName}
                         shippingLines(first: 1) {edges {node {title}}}
-                        fulfillmentOrders(first: 1) {
+                        fulfillmentOrders(first: 2) {
                             edges {
                                 node {
                                     assignedLocation {location {name}}
-                                    lineItems(first: 50) {
+                                    lineItems(first: 100) {
                                         edges {
                                             node {
                                                 lineItem {

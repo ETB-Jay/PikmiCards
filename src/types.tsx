@@ -33,7 +33,7 @@ interface ItemData {
     orderID: OrderID;
     itemName: string;
     itemQuantity: number;
-    itemLocation: string;
+    itemLocation: Location;
     itemSet: string | null;
     itemRarity: string | null;
     itemPrinting: string | null;
@@ -50,24 +50,29 @@ interface ItemData {
  * @property {Location} location - The order's location.
  * @property {number | null} box - The order's current box number. null otherwise.
  * @requires box must be a non-negative integer between 1 and 20 inclusive or null.
- * @property {ItemID[]} items - A list of items associated with the order
+ * @property {Item[]} items - A list of items associated with the order
  */
 interface Order {
-    order: OrderID;
+    orderID: OrderID;
     location: Location;
     box: number | null;
-    items: ItemID[];
+    items: Item[];
 }
 
 /**
  * @description Item represents a Shopify Item's local state.
  * 
  * @property {ItemID} itemID - The item's unique identifier.
+ * @property {OrderID} orderID - The unique identifier of the order containing the item.
  * @property {Status} status - The item's current local status.
+ * @property {number | null} box - The order's current box number. null otherwise.
+ * @requires box must be a non-negative integer between 1 and 20 inclusive or null.
  */
 interface Item {
-    item: ItemID;
+    itemID: ItemID;
+    orderID: OrderID;
     status: Status;
+    box: number | null;
 }
 
 /** 
@@ -89,5 +94,5 @@ type Location = 'Oakville' | 'Newmarket' | 'Guelph';
 type Status = 'unPicked' | 'queue' | 'inBox';
 
 export type {
-    OrderData, ItemData, Order, Item, OrderID, ItemID
+    OrderData, ItemData, Order, Item, OrderID, ItemID, Location, Status
 };
