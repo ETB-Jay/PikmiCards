@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { Order, OrderData, ItemID, Location } from '../types';
+import { Order, OrderData, ItemID, Location, User } from '../types';
 
 /** @description OrdersContextType stores the fetched order data from Shopify */
 interface OrdersContextType {
@@ -115,9 +115,7 @@ interface ConfirmContextType {
     /** @description Function to close the confirmation modal. Wipes the current order */
     closeConfirm: () => void;
 }
-/**
- * React context for confirmation modal state and actions.
- */
+/** @description React context for confirmation modal state and actions. */
 const ConfirmContext = createContext<ConfirmContextType>({
     confirm: null,
     openConfirm: () => { },
@@ -126,16 +124,34 @@ const ConfirmContext = createContext<ConfirmContextType>({
 });
 ConfirmContext.displayName = 'ConfirmContext';
 
-// Location context for global location state
+/** @description LocationContextType manages the location state */
 interface LocationContextType {
     location: Location;
     setLocation: (location: Location) => void;
 }
+/** @description React context for the current location */
 const LocationContext = createContext<LocationContextType>({
+    /** @description The current location being picked from */
     location: 'Oakville',
-    setLocation: () => {},
+    /** @description Function to set location */
+    setLocation: () => { },
 });
 LocationContext.displayName = 'LocationContext';
 
-export type { OrdersContextType, OrderDisplayContextType, FullscreenContextType, ConfirmContextType };
-export { OrdersContext, OrderDisplayContext, FullscreenContext, ConfirmContext, LocationContext };
+/** @description AuthContextType manages the authentication process */
+interface AuthContextType {
+    user: User,
+    login: (data: User) => void,
+    logout: () => void
+}
+/** @description React context for authenticating a user */
+const AuthContext = createContext<AuthContextType>({
+    /** @description The current user */
+    user: {username: '', password: ''},
+    login: () => {},
+    logout: () => {}
+});
+AuthContext.displayName = 'AuthContext';
+
+export type { OrdersContextType, OrderDisplayContextType, FullscreenContextType, ConfirmContextType, AuthContextType };
+export { OrdersContext, OrderDisplayContext, FullscreenContext, ConfirmContext, LocationContext, AuthContext };

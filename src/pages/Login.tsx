@@ -9,9 +9,7 @@ import { useState } from 'react';
 import React from 'react';
 import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
-
-// Placeholder for useAuth if not defined
-const useAuth = () => ({ login: async () => {} });
+import { useAuth } from '../context/useContext';
 
 /**
  * InputField displays a styled input with an icon for the login form.
@@ -41,23 +39,38 @@ const InputField = ({ label, type = 'text', value, onChange, icon }: { label: st
  * Login page component for user authentication.
  */
 function Login(): React.ReactElement {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [username, setUsername] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [error, setError] = useState<{ username?: string; password?: string; general?: string }>({});
     const { login } = useAuth();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!username.trim() || !password.trim()) {
-            setError('Username and password are required.');
+        let hasError = false;
+        const newError: { username?: string; password?: string; general?: string } = {};
+        if (!username.trim()) {
+            newError.username = 'Username is required.';
+            hasError = true;
+        }
+        if (!password.trim()) {
+            newError.password = 'Password is required.';
+            hasError = true;
+        }
+        if (hasError) {
+            setError(newError);
             return;
-        };
+        }
         if (username !== 'ETBETB' || password !== 'ETBETB') {
-            setError('Invalid Username/Password');
+            setError({ general: 'Invalid Username/Password' });
             return;
-        };
-        await login();
-        setError('');
+        }
+        try {
+            console.log('Attempting login with:', { username, password });
+            login({ username, password });
+            setError({});
+        } catch {
+            setError({ general: 'Login failed. Please try again.' });
+        }
     };
 
     return (
@@ -69,17 +82,25 @@ function Login(): React.ReactElement {
                     <InputField
                         label="Username"
                         value={username}
-                        onChange={e => setUsername(e.target.value)}
+                        onChange={e => {
+                            console.log('Username changed:', e.target.value);
+                            setUsername(e.target.value);
+                        }}
                         icon={<PersonIcon />}
                     />
+                    {error.username && <div className="bg-red-100 border border-red-300 text-red-900 text-center font-semibold rounded-lg py-2 px-3 animate-shake">{error.username}</div>}
                     <InputField
                         label="Password"
                         type="password"
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={e => {
+                            console.log('Password changed:', e.target.value);
+                            setPassword(e.target.value);
+                        }}
                         icon={<KeyIcon />}
                     />
-                    {error && <div className="bg-red-100 border border-red-300 text-red-900 text-center font-semibold rounded-lg py-2 px-3 animate-shake">{error}</div>}
+                    {error.password && <div className="bg-red-100 border border-red-300 text-red-900 text-center font-semibold rounded-lg py-2 px-3 animate-shake">{error.password}</div>}
+                    {error.general && <div className="bg-red-100 border border-red-300 text-red-900 text-center font-semibold rounded-lg py-2 px-3 animate-shake">{error.general}</div>}
                     <button
                         className="mt-2 bg-green-smoke-600 hover:bg-green-smoke-700 text-white font-bold py-2 rounded-xl shadow transition-all text-lg tracking-wide focus:outline-none focus:ring-2 focus:ring-green-smoke-800 cursor-pointer"
                         type="submit"

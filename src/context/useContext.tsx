@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { OrdersContext, FullscreenContext, OrderDisplayContext, ConfirmContext } from './Context';
+import { OrdersContext, FullscreenContext, OrderDisplayContext, ConfirmContext, AuthContext } from './Context';
 
 /**
  * Custom React hooks for accessing PikmiCards context values.
@@ -14,9 +14,7 @@ import { OrdersContext, FullscreenContext, OrderDisplayContext, ConfirmContext }
  */
 const useOrders = () => {
     const context = useContext(OrdersContext);
-    if (!context) {
-        throw new Error('useOrders must be used in the OrdersProvider');
-    }
+    if (!context) throw new Error('useOrders must be used in the OrdersProvider');
     return context;
 };
 
@@ -26,9 +24,7 @@ const useOrders = () => {
  */
 const useOrderDisplay = () => {
     const context = useContext(OrderDisplayContext);
-    if (!context) {
-        throw new Error('useOrderDisplay must be used in the OrderDisplayProvider');
-    }
+    if (!context) throw new Error('useOrderDisplay must be used in the OrderDisplayProvider');
     return context;
 };
 
@@ -38,9 +34,7 @@ const useOrderDisplay = () => {
  */
 const useFullscreen = () => {
     const context = useContext(FullscreenContext);
-    if (!context) {
-        throw new Error('useFullscreen must be used within a FullscreenProvider');
-    }
+    if (!context) throw new Error('useFullscreen must be used within a FullscreenProvider');
     return context;
 };
 
@@ -50,10 +44,18 @@ const useFullscreen = () => {
  */
 const useConfirm = () => {
     const context = useContext(ConfirmContext);
-    if (!context) {
-        throw new Error('useConfirm must be used in the ConfirmProvider');
-    }
+    if (!context) throw new Error('useConfirm must be used in the ConfirmProvider');
     return context;
 };
 
-export { useOrders, useFullscreen, useOrderDisplay, useConfirm };
+/**
+ * useAuth returns the AuthContext value.
+ * @throws Error if used otuside AuthProvider
+ */
+const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) throw new Error('useAuth must be used in the AuthProvider');
+    return context;
+};
+
+export { useOrders, useFullscreen, useOrderDisplay, useConfirm, useAuth };

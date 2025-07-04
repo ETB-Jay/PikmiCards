@@ -10,6 +10,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import Guide from './pages/Guide';
+import ProtectedRoute from './context/ProtectedRoute';
 
 const router = createBrowserRouter([
   {
@@ -18,24 +19,30 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <Providers><Login /></Providers>
+    element: <Login />
   },
   {
     path: '/pick',
     element: (
-      <Providers>
-          <Pick />
-      </Providers>
+      <ProtectedRoute>
+        <Pick />
+      </ProtectedRoute>
     )
   },
   {
     path: '/guide',
-    element: <Providers><Guide /></Providers>
+    element: (
+      <ProtectedRoute>
+        <Guide />
+      </ProtectedRoute>
+    )
   }
 ]);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Providers>
+      <RouterProvider router={router} />
+    </Providers>
   </StrictMode>
 );

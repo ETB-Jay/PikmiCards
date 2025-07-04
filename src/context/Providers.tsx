@@ -1,8 +1,8 @@
-import React from 'react';
+import useLocalStorage from './useLocalStorage';
 import { ReactNode, useState, useCallback } from 'react';
-import { OrdersContext, OrdersContextType, FullscreenContext, OrderDisplayContext, ConfirmContext, OrderDisplayContextType, FullscreenContextType, ConfirmContextType, LocationContext } from './Context';
+import { OrdersContext, OrdersContextType, FullscreenContext, OrderDisplayContext, ConfirmContext, OrderDisplayContextType, FullscreenContextType, ConfirmContextType, LocationContext, AuthContextType, AuthContext } from './Context';
 import FullscreenModal from '../modals/FullscreenModal';
-import { OrderData, Order, Location, Status, ItemID } from '../types';
+import { OrderData, Order, Location, Status, ItemID, User } from '../types';
 import ConfirmModal from '../modals/ConfirmModal';
 
 interface ProviderProps {
@@ -28,9 +28,7 @@ const OrdersProvider = ({ children }: ProviderProps) => {
         setError(null);
         try {
             const response = await fetch('http://localhost:3001/api/orders');
-            if (!response.ok) {
-                throw new Error('Failed to fetch orders');
-            }
+            if (!response.ok) throw new Error('Failed to fetch orders');
             const orders = await response.json();
             setOrders(orders);
         } catch (err) {
@@ -88,11 +86,8 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
     const handleSelect = useCallback((itemID: ItemID) => {
         setSelectedItems(prev => {
             const newSet = new Set(prev);
-            if (newSet.has(itemID)) {
-                newSet.delete(itemID);
-            } else {
-                newSet.add(itemID);
-            }
+            if (newSet.has(itemID)) newSet.delete(itemID);
+            else newSet.add(itemID);
             return newSet;
         });
     }, []);
@@ -169,12 +164,11 @@ const FullscreenProvider = ({ children }: ProviderProps) => {
  * ConfirmProvider manages the confirmation modal state and actions.
  * @param children - The child components to wrap.
  */
-const ConfirmProvider: React.FC<ProviderProps> = ({ children }) => {
+const ConfirmProvider = ({ children }: ProviderProps) => {
     const [confirm, setConfirm] = useState<Order | null>(null);
     const openConfirm = useCallback((order: Order) => setConfirm(order), []);
     const closeConfirm = useCallback(() => setConfirm(null), []);
     const confirmConfirm = useCallback(() => {
-        
         closeConfirm();
     }, []);
     const value: ConfirmContextType = { confirm, openConfirm, confirmConfirm, closeConfirm };
@@ -189,7 +183,7 @@ const ConfirmProvider: React.FC<ProviderProps> = ({ children }) => {
     </ConfirmContext.Provider>;
 };
 
-const LocationProvider = ({ children }: { children: React.ReactNode }) => {
+const LocationProvider = ({ children }: ProviderProps) => {
     const [location, setLocation] = useState<Location>('Oakville');
     return (
         <LocationContext.Provider value={{ location, setLocation }}>
@@ -198,23 +192,43 @@ const LocationProvider = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
+const AuthProvider = ({ children }: ProviderProps) => {
+    const [user, setUser] = useLocalStorage('user', null);
+
+    const login = (data: User): void => {
+        console.log('Logging in with:', data);
+        setUser(data);
+        window.location.href = '/pick';
+    };
+
+    const logout = () => {
+        setUser(null);
+        window.location.href = '/login';
+    };
+
+    const value: AuthContextType = { user, login, logout };
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
 /**
  * Providers wraps all context providers for the app.
  * @param children - The child components to wrap.
  */
 const Providers = ({ children }: ProviderProps) => {
     return (
-        <OrdersProvider>
-            <OrderDisplayProvider>
-                <ConfirmProvider>
-                    <FullscreenProvider>
-                        <LocationProvider>
-                            {children}
-                        </LocationProvider>
-                    </FullscreenProvider>
-                </ConfirmProvider>
-            </OrderDisplayProvider>
-        </OrdersProvider>
+        <AuthProvider>
+            <OrdersProvider>
+                <OrderDisplayProvider>
+                    <ConfirmProvider>
+                        <FullscreenProvider>
+                            <LocationProvider>
+                                {children}
+                            </LocationProvider>
+                        </FullscreenProvider>
+                    </ConfirmProvider>
+                </OrderDisplayProvider>
+            </OrdersProvider>
+        </AuthProvider>
     );
 };
 
