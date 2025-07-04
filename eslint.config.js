@@ -12,7 +12,8 @@ const shopifyConfig = [
     },
     rules: {
       '@shopify/strict-component-boundaries': 'off',
-      'react-hooks/exhaustive-deps': 'off'
+      'react-hooks/exhaustive-deps': 'off',
+      "no-process-env": "off"
     },
   },
 ];

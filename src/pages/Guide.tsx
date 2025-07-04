@@ -4,13 +4,14 @@
  *
  * @module Guide
  */
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { useState } from 'react';
 
 import { MainContainer } from '../components/containers';
 import Hamburger from '../header/buttons/Hamburger';
 import Sidebar from '../header/Sidebar';
 
-// Define constants for hardcoded content
+// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
 const GUIDE_TITLE = "Guide";
 const GUIDE_SECTION_1 = "Section 1";
 const GUIDE_SECTION_2 = "Section 2";
@@ -30,6 +31,7 @@ const GUIDE_SPAN_2 = "Span 2";
 const GUIDE_SPAN_3 = "Span 3";
 const GUIDE_SPAN_4 = "Span 4";
 
+// ─ Guide Page ────────────────────────────────────────────────────────────────────────────────────────
 /**
  * Guide page component with user instructions.
  */
@@ -88,4 +90,5 @@ function Guide(): React.ReactElement {
   );
 }
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export default Guide;

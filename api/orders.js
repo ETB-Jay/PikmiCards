@@ -1,3 +1,5 @@
+/* eslint-env node */
+/* global process */
 import '@shopify/shopify-api/adapters/node';
 import dotenv from 'dotenv';
 import { shopifyApi, LATEST_API_VERSION, Session } from '@shopify/shopify-api';
@@ -70,7 +72,6 @@ const getOrders = async (client) => {
     const ordersData = response.data?.orders;
 
     if (!ordersData?.edges) {
-      console.error('Invalid response format:', response);
       throw new Error('Invalid response from Shopify API');
     }
 
@@ -83,7 +84,6 @@ const getOrders = async (client) => {
             .toLowerCase());
 
       if (!order) {
-        console.error(`Invalid Order Data: ${edge}`);
         return null;
       }
 
@@ -94,7 +94,6 @@ const getOrders = async (client) => {
         deliveryMethod: order.shippingLines?.edges?.[0]?.node?.title,
         items: order.fulfillmentOrders?.edges?.flatMap((fulfillEdge) => {
           if (!fulfillEdge?.node) {
-            console.error('Invalid line item data:', fulfillEdge);
             return [];
           }
           const locationName = fulfillEdge.node?.assignedLocation?.location?.name;
@@ -102,7 +101,6 @@ const getOrders = async (client) => {
             const item = itemEdge.node?.lineItem;
             const tags = item?.product?.tags;
             if (!item) {
-              console.error('Invalid line item:', itemEdge);
               return null;
             }
             return {
@@ -113,7 +111,7 @@ const getOrders = async (client) => {
               itemLocation: locationName,
               itemSet: tags?.find((tag) => tag.startsWith('Set_'))?.replace('Set_', '') || null,
               itemRarity: tags?.find((tag) => tag.startsWith('Rarity_'))?.replace('Rarity_', '') || null,
-              itemPrinting: item.variant?.title !== 'Default Title' ? item.variant?.title : null,
+              itemPrinting: item.variant?.title === 'Default Title' ? null : item.variant?.title,
               imageUrl: item.variant?.image?.url || item.product?.featuredImage?.url || 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png'
             };
           }).filter(Boolean) || [];
@@ -160,3 +158,4 @@ async function handler(req, res) {
 }
 
 export default handler;
+export const expressHandler = (req, res) => handler(req, res);

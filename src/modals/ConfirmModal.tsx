@@ -1,3 +1,4 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { useState, useCallback, memo } from 'react';
 
 import { Order, ItemData } from '../types';
@@ -7,30 +8,27 @@ import { Button, SectionTitle, Tags } from '../components/modal';
 import { useOrderDisplay, useOrders } from '../context/useContext';
 import { findOrderByID } from '../context/orderFunctions';
 
+// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
+const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
+const EMPTY_TEXT = "None";
+const EMPTY_ALT = "Empty Box";
+const UNRETRIEVED_TITLE = "Unretrieved Items";
+const RETRIEVED_TITLE = "Retrieved Items";
+const NO_PREVIEW_TEXT = "No Preview";
+
+// ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────────
+interface ConfirmModalProps {
+    order: Order;
+    onClose: () => void;
+}
+
+// ─ Components ────────────────────────────────────────────────────────────────────────────────────────
 /**
  * ConfirmModal component for confirming order completion and viewing item details.
  * Displays unretrieved and retrieved items for an order, with preview and confirm actions.
  *
  * @module ConfirmModal
  */
-
-/**
- * Props for the ConfirmModal component.
- * @property order - The order to confirm.
- * @property onClose - Function to close the modal.
- */
-interface ConfirmModalProps {
-    order: Order;
-    onClose: () => void;
-}
-
-const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
-
-const EMPTY_TEXT = "None";
-const EMPTY_ALT = "Empty Box";
-const UNRETRIEVED_TITLE = "Unretrieved Items";
-const RETRIEVED_TITLE = "Retrieved Items";
-const NO_PREVIEW_TEXT = "No Preview";
 
 /**
  * ConfirmModal displays a modal for confirming order completion and viewing item details.
@@ -48,7 +46,6 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
             <OrderCard
               key={itemKey}
               item={item}
-              itemKey={itemKey}
               selected={null}
               large={false}
               onImageClick={() => setPreviewItem(prev => prev?.itemID === item.itemID ? null : item)}
@@ -154,4 +151,5 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
 
 ConfirmModal.displayName = 'ConfirmModal';
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export default ConfirmModal;

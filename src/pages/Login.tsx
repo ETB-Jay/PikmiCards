@@ -4,6 +4,7 @@
  *
  * @module Login
  */
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { useState } from 'react';
 import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
@@ -11,11 +12,12 @@ import KeyIcon from '@mui/icons-material/Key';
 import { MainContainer } from '../components/containers';
 import { useAuth } from '../context/useContext';
 
-// Define constants for hardcoded content
+// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
 const LOGIN_TITLE = "Login";
 const LOGIN_BUTTON_TEXT = "Sign In";
 const LOGIN_IMAGE_ALT = "Login Illustration";
 
+// ─ InputField Component ──────────────────────────────────────────────────────────────────────────────
 /**
  * InputField displays a styled input with an icon for the login form.
  * @param label - The input label/placeholder.
@@ -37,28 +39,25 @@ const InputField = ({
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   icon: React.ReactNode;
 }): React.ReactElement => {
-  // Generate a unique id for the input
   const inputId = React.useId();
   return (
     <div className="relative flex items-center">
-      <label htmlFor={inputId} className="sr-only">
-        {label}
-        <input
-          role="button"
-          id={inputId}
-          className="bg-white/80 border border-green-smoke-200 rounded-xl pl-10 pr-4 py-2 text-base text-stone-800 placeholder:text-stone-600 focus:outline-none focus:ring-2 focus:ring-green-smoke-400 transition-all shadow-sm w-full"
-          placeholder={label}
-          type={type}
-          value={value}
-          aria-label={inputId}
-          onChange={onChange}
-        />
-      </label>
+      <input
+        role="button"
+        id={inputId}
+        className="bg-white/80 border border-green-smoke-200 rounded-xl pl-10 pr-4 py-2 text-base text-stone-800 placeholder:text-stone-600 focus:outline-none focus:ring-2 focus:ring-green-smoke-400 transition-all shadow-sm w-full"
+        placeholder={label}
+        type={type}
+        value={value}
+        aria-label={inputId}
+        onChange={onChange}
+      />
       <span className="absolute left-3 text-green-smoke-600">{icon}</span>
     </div>
   );
 };
 
+// ─ Login Page ────────────────────────────────────────────────────────────────────────────────────────
 /**
  * Login page component for user authentication.
  */
@@ -134,4 +133,5 @@ function Login(): React.ReactElement {
   );
 };
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export default Login;

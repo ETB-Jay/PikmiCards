@@ -4,6 +4,7 @@
  *
  * @module RefreshButton
  */
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { memo, useCallback, useState } from 'react';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
@@ -41,3 +42,4 @@ const RefreshButton = memo(() => {
 RefreshButton.displayName = 'RefreshButton';
 
 export default RefreshButton;
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────

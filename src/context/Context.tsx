@@ -1,3 +1,4 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import { createContext } from 'react';
 
 import { Order, OrderData, ItemID, Location, User } from '../types';
@@ -154,5 +155,6 @@ const AuthContext = createContext<AuthContextType>({
 });
 AuthContext.displayName = 'AuthContext';
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export type { OrdersContextType, OrderDisplayContextType, FullscreenContextType, ConfirmContextType, AuthContextType };
 export { OrdersContext, OrderDisplayContext, FullscreenContext, ConfirmContext, LocationContext, AuthContext };

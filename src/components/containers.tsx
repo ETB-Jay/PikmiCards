@@ -1,3 +1,4 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { ReactNode, PropsWithChildren } from 'react';
 
 import Iridescence from './Iridescence';

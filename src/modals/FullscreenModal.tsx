@@ -1,3 +1,4 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { memo, useCallback } from 'react';
 
 import { ModalContainer } from '../components/containers';
@@ -9,7 +10,7 @@ import { ModalContainer } from '../components/containers';
  * @module FullscreenModal
  */
 
-// Define constants for hardcoded content
+// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
 const FULLSCREEN_MODAL_ALT = "Fullscreen Modal Image";
 
 /**

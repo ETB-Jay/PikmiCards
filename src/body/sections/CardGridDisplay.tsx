@@ -1,10 +1,11 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { useMemo, memo, useCallback } from 'react';
 
 import { useOrderDisplay, useOrders, useConfirm  } from '../../context/useContext';
 import { Order } from '../../types';
 import { findOrderByID } from '../../context/orderFunctions';
 
-// Define constants for hardcoded content
+// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
 const CARD_IMAGE_ALT_1 = "Card Image 1";
 const CARD_IMAGE_ALT_2 = "Card Image 2";
 const CARD_IMAGE_ALT_3 = "Card Image 3";

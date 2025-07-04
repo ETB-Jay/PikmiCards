@@ -1,3 +1,4 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { PropsWithChildren } from 'react';
 
 import { ItemData } from '../types';

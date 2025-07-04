@@ -1,5 +1,7 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import { useState } from 'react';
 
+// ─ useLocalStorage Hook ──────────────────────────────────────────────────────────────────────────────
 const useLocalStorage = (keyName, defaultValue) => {
     const [storedValue, setStoredValue] = useState(() => {
         try {
@@ -26,4 +28,5 @@ const useLocalStorage = (keyName, defaultValue) => {
     return [storedValue, setValue];
 };
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export default useLocalStorage;

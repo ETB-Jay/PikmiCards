@@ -1,3 +1,4 @@
+// ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────────
 /**
  * @description OrderData represents a Shopify Order with its associated data.
  * 
@@ -75,6 +76,18 @@ interface Item {
     box: number | null;
 }
 
+/** *
+ * @description User is a user in the system
+ * 
+ * @property {string} username - username of user
+ * @property {string} password - password of user
+ */
+interface User {
+    username: string;
+    password: string;
+}
+
+// ─ Types ─────────────────────────────────────────────────────────────────────────────────────────────
 /** 
  * @description OrderID is a unique identifier for an Order.
  * @requires OrderID no duplicates can be found.
@@ -93,17 +106,7 @@ type Location = 'Oakville' | 'Newmarket' | 'Guelph';
 /** @description Status details the item's current status in the picking process. */
 type Status = 'unPicked' | 'queue' | 'inBox';
 
-/** *
- * @description User is a user in the system
- * 
- * @property {string} username - username of user
- * @property {string} password - password of user
- */
-interface User {
-    username: string;
-    password: string;
-}
-
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export type {
     OrderData, ItemData, Order, Item, OrderID, ItemID, Location, Status, User
 };

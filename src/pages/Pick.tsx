@@ -1,3 +1,4 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { useEffect, memo, useContext, useState } from 'react';
 
 import Header from '../header/Header';
@@ -6,10 +7,11 @@ import { useOrders, useOrderDisplay } from '../context/useContext';
 import { MainContainer } from '../components/containers';
 import { LocationContext } from '../context/Context';
 
+// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
 const SPACESHIP_ALT = "Spaceship illustration";
 const LOADING_TEXT = "Loading Orders";
-const PICK_ERROR_MESSAGE = "Failed to fetch orders";
 
+// ─ Loading Spinner ───────────────────────────────────────────────────────────────────────────────────
 /**
  * LoadingSpinner displays an animated loading indicator for orders.
  * @returns Loading Spinner component
@@ -34,6 +36,7 @@ const LoadingSpinner = memo((): React.ReactElement => (
 ));
 LoadingSpinner.displayName = "LoadingSpinner"
 
+// ─ Pick Page ─────────────────────────────────────────────────────────────────────────────────────────
 /**
  * Pick is the main page for picking orders.
  * Handles order loading, filtering, and layout.
@@ -80,4 +83,5 @@ const Pick = memo((): React.ReactElement => {
 });
 Pick.displayName = "Pick"
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export default Pick;

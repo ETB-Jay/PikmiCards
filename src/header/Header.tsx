@@ -1,3 +1,4 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { useState } from 'react';
 
 import Hamburger from './buttons/Hamburger';
@@ -38,3 +39,5 @@ const Header = () => {
 Header.displayName = 'Header';
 
 export default Header;
+
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────

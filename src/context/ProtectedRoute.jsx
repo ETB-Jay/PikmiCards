@@ -1,6 +1,8 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './useContext';
 
+// ─ ProtectedRoute Component ──────────────────────────────────────────────────────────────────────────
 const ProtectedRoute = ({ children }) => {
     const { user } = useAuth();
     console.log('ProtectedRoute user:', user);
@@ -9,4 +11,5 @@ const ProtectedRoute = ({ children }) => {
     return children;
 };
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export default ProtectedRoute;

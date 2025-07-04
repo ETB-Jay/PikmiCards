@@ -4,6 +4,7 @@
  *
  * @module Sidebar
  */
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,12 +12,13 @@ import { useAuth } from '../context/useContext';
 
 import Hamburger from './buttons/Hamburger';
 
+// ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────────
 interface FieldProps {
   label: string;
   onClick: () => void;
 }
 
-// Define constants for hardcoded content
+// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
 const SIDEBAR_ALT = "Sidebar Image";
 const SIDEBAR_ARIA_LABEL = "Sidebar Button";
 
@@ -25,6 +27,7 @@ const SIDEBAR_ARIA_LABEL = "Sidebar Button";
  * @property open - Whether the sidebar is open (visible).
  * @property closeSidebar - Function to close the sidebar.
  */
+// ─ Components ────────────────────────────────────────────────────────────────────────────────────────
 const Sidebar = ({ open, closeSidebar }: { open: boolean; closeSidebar: () => void }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -63,4 +66,5 @@ const Sidebar = ({ open, closeSidebar }: { open: boolean; closeSidebar: () => vo
   );
 };
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export default Sidebar;

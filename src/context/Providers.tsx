@@ -1,3 +1,4 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { ReactNode, useState, useCallback, useMemo } from 'react';
 
 import FullscreenModal from '../modals/FullscreenModal';

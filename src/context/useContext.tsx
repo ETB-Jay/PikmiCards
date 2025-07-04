@@ -1,7 +1,8 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import { useContext } from 'react';
-
 import { OrdersContext, FullscreenContext, OrderDisplayContext, ConfirmContext, AuthContext } from './Context';
 
+// ─ Custom Hooks ──────────────────────────────────────────────────────────────────────────────────────
 /**
  * Custom React hooks for accessing PikmiCards context values.
  * Provides hooks for orders, display, box orders, queue pile, fullscreen, confirmation, and authentication.
@@ -54,4 +55,5 @@ const useAuth = () => {
     return context;
 };
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export { useOrders, useFullscreen, useOrderDisplay, useConfirm, useAuth };

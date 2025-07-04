@@ -1,5 +1,5 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { useMemo, memo, useCallback } from 'react';
-
 import { useOrderDisplay, useOrders } from '../../context/useContext';
 import { ScrollContainer } from '../../components/containers';
 import OrderCard from '../../components/OrderCard';
@@ -16,6 +16,7 @@ import { findItemByID } from '../../context/orderFunctions';
 /**
  * @description ToPick is a memoized component that renders the list of items to pick and confirmation controls.
  */
+// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
 const CONFIRM_BUTTON_TEXT = "Confirm";
 const CLEAR_BUTTON_TEXT = "Clear Items";
 

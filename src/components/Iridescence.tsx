@@ -1,6 +1,8 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import { Renderer, Program, Mesh, Color, Triangle } from 'ogl';
 import React, { useEffect, useRef } from 'react';
 
+// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
 const vertexShader = `
 attribute vec2 uv;
 attribute vec2 position;
@@ -44,6 +46,7 @@ void main() {
 }
 `;
 
+// ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────────
 /**
  * Props for the Iridescence component.
  * @property color - RGB color array for the effect.
@@ -60,6 +63,7 @@ interface IridescenceProps {
   className?: string;
 }
 
+// ─ Components ────────────────────────────────────────────────────────────────────────────────────────
 /**
  * Iridescence renders an animated background using a custom WebGL shader.
  * @param color - RGB color array for the effect.
@@ -163,4 +167,5 @@ const Iridescence = ({
   );
 };
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export default Iridescence;

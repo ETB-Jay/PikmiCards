@@ -1,5 +1,7 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import { OrderData, OrderID, ItemData, ItemID, Order, Status } from '../types';
 
+// ─ Utility Functions ─────────────────────────────────────────────────────────────────────────────────
 /**
  * Utility functions for manipulating and querying order and item data in PikmiCards.
  * Includes find, filter, and key extraction helpers.
@@ -59,4 +61,5 @@ const findItemByID = (orders: OrderData[], orderID: OrderID, itemID: ItemID): It
     return order?.items.find(item => item.itemID === itemID);
 };
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export { findOrderByID, getItemKeys, getOrderKeys, findItemByID };

@@ -1,3 +1,4 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React from 'react';
 
 /**
@@ -7,18 +8,18 @@ import React from 'react';
  * @module Hamburger
  */
 
-// Define constants for hardcoded content
+// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
 const HAMBURGER_ALT = "Hamburger Icon";
 
 /**
  * Hamburger displays a clickable hamburger icon for toggling the sidebar.
  * @param loadSidebar - Function to toggle the sidebar open/close state.
- * @returns {JSX.Element}
  */
 const Hamburger = ({ loadSidebar }: { loadSidebar: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const handleClick = () => {
         loadSidebar(prev => !prev);
     };
+
 
     return (
         <div

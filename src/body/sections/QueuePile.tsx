@@ -1,3 +1,4 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { memo, useCallback, useMemo } from 'react';
 
 import { useOrderDisplay, useOrders } from '../../context/useContext';
@@ -12,7 +13,7 @@ import { ItemData } from '../../types';
  * @module QueuePile
  */
 
-// Define constants for hardcoded content
+// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
 const EMPTY_QUEUE_TEXT = "Queue is empty";
 
 /**

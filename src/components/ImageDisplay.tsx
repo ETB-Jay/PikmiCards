@@ -1,3 +1,4 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { memo, useMemo, useCallback } from 'react';
 
 
@@ -50,7 +51,6 @@ const ImageDisplay = memo(({ imageUrl, alt, onClick, className = '', onError }: 
           handleClick(event as unknown as React.MouseEvent<HTMLImageElement>);
         }
       }}
-      style={{ display: 'inline-block' }}
       onError={onError}
     >
       <img

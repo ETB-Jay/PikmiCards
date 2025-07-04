@@ -4,6 +4,7 @@
  *
  * @module CardPicker
  */
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { ReactNode } from 'react';
 
 import ToPick from './sections/ToPick';
@@ -40,3 +41,4 @@ const CardPicker = (): React.ReactElement => {
 CardPicker.displayName = 'CardPicker';
 
 export default CardPicker;
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────

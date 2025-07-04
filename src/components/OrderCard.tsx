@@ -1,3 +1,4 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { useCallback, memo } from 'react';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -7,9 +8,6 @@ import { ItemData } from '../types';
 
 import { ImageDisplay } from './ImageDisplay';
 import { Tags } from './modal';
-
-// Define constants for hardcoded content
-const ORDER_CARD_ALT = "Order Card Image";
 
 /**
  * Props for the OrderCard component.
