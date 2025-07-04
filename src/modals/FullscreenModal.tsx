@@ -1,4 +1,5 @@
 import React, { memo, useCallback } from 'react';
+
 import { ModalContainer } from '../components/containers';
 
 /**
@@ -7,6 +8,9 @@ import { ModalContainer } from '../components/containers';
  *
  * @module FullscreenModal
  */
+
+// Define constants for hardcoded content
+const FULLSCREEN_MODAL_ALT = "Fullscreen Modal Image";
 
 /**
  * Props for the FullscreenModal component.
@@ -32,23 +36,34 @@ const FullscreenModal: React.FC<FullscreenModalProps> = memo(({ image, onClose, 
         onClose();
     }, [onClose]);
 
-    const handleImageClick = useCallback((e: React.MouseEvent) => {
-        e.stopPropagation();
-    }, []);
+    const handleImageClick = (event: React.MouseEvent<HTMLImageElement>) => {
+        event.stopPropagation();
+    };
 
     return (
         <ModalContainer
-            className="flex flex-col gap-4 items-center justify-center"
-            onClick={e => e.stopPropagation()}
-            onClose={handleModalClick}
+          className="flex flex-col gap-4 items-center justify-center"
+          onClick={event => event.stopPropagation()}
+          onClose={handleModalClick}
         >
             {image && (
-                <img
-                    src={image}
-                    className="max-h-[70vh] w-auto object-contain rounded-3xl ring-2 ring-offset-2 shadow-[0_0_30px_4px_black]"
-                    onClick={handleImageClick}
-                    alt="Fullscreen view"
-                />
+                <div
+                  className="max-h-[70vh] w-auto object-contain rounded-3xl ring-2 ring-offset-2 shadow-[0_0_30px_4px_black]"
+                  onClick={handleImageClick}
+                  tabIndex={0}
+                  role="button"
+                  onKeyDown={event => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                          handleImageClick(event as any);
+                      }
+                  }}
+                >
+                    <img
+                      src={image}
+                      className="max-h-[70vh] w-auto object-contain rounded-3xl ring-2 ring-offset-2 shadow-[0_0_30px_4px_black]"
+                      alt={FULLSCREEN_MODAL_ALT}
+                    />
+                </div>
             )}
             {children}
         </ModalContainer>

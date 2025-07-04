@@ -1,5 +1,4 @@
 import React from 'react';
-import hamburger from '/Hamburger.svg';
 
 /**
  * Hamburger button component for opening/closing the sidebar.
@@ -7,6 +6,9 @@ import hamburger from '/Hamburger.svg';
  *
  * @module Hamburger
  */
+
+// Define constants for hardcoded content
+const HAMBURGER_ALT = "Hamburger Icon";
 
 /**
  * Hamburger displays a clickable hamburger icon for toggling the sidebar.
@@ -20,10 +22,17 @@ const Hamburger = ({ loadSidebar }: { loadSidebar: React.Dispatch<React.SetState
 
     return (
         <div
-            className='cursor-pointer hover:brightness-85 active:brightness-75 transition-all'
-            onClick={handleClick}
+          className='cursor-pointer hover:brightness-85 active:brightness-75 transition-all'
+          onClick={handleClick}
+          tabIndex={0}
+          role="button"
+          onKeyDown={event => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                  handleClick();
+              }
+          }}
         >
-            <img src={hamburger} />
+            <img src='./Hamburger.svg' alt={HAMBURGER_ALT} />
         </div>
     );
 };

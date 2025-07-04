@@ -93,7 +93,7 @@ type Location = 'Oakville' | 'Newmarket' | 'Guelph';
 /** @description Status details the item's current status in the picking process. */
 type Status = 'unPicked' | 'queue' | 'inBox';
 
-/***
+/** *
  * @description User is a user in the system
  * 
  * @property {string} username - username of user

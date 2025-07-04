@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Location } from '../../types';
 
 /**
@@ -39,10 +40,17 @@ const LocationOption = ({ newLocation, currentLocation, onSelect }: {
 
     return (
         <div
-            className="hover:bg-black/10 rounded px-3 transition-colors cursor-pointer"
-            onClick={handleClick}
+          className="hover:bg-black/10 rounded px-3 transition-colors cursor-pointer"
+          onClick={handleClick}
+          tabIndex={0}
+          role="button"
+          onKeyDown={event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              handleClick();
+            }
+          }}
         >
-            <span className={'font-semibold text-green-950 text-sm BFont'}>{newLocation}</span>
+            <span className="font-semibold text-green-950 text-sm BFont">{newLocation}</span>
         </div>
     );
 };
@@ -58,8 +66,8 @@ LocationOption.displayName = 'LocationOption';
 const DetermineLocation = ({ location, setLocation, prompt }: DetermineLocationProps): React.ReactElement => {
 
     const ref = React.useRef<HTMLDivElement>(null);
-    const handleClickOutside = (e: Event) => {
-        if (ref.current && !ref.current.contains(e.target as Node)) {
+    const handleClickOutside = (event: Event) => {
+        if (ref.current && !ref.current.contains(event.target as Node)) {
             prompt(false);
         };
     };
@@ -76,16 +84,16 @@ const DetermineLocation = ({ location, setLocation, prompt }: DetermineLocationP
     }, []);
 
     return (
-        <div ref={ref} className={`absolute flex flex-col bg-green-smoke-200 border-1 shadow-2xl py-1 rounded z-100 w-fit text-sm font-semibold top-10`}>
+        <div ref={ref} className="absolute flex flex-col bg-green-smoke-200 border-1 shadow-2xl py-1 rounded z-100 w-fit text-sm font-semibold top-10">
             <LocationOption
-                newLocation="Oakville"
-                currentLocation={location}
-                onSelect={handleLocationSelect}
+              newLocation="Oakville"
+              currentLocation={location}
+              onSelect={handleLocationSelect}
             />
             <LocationOption
-                newLocation="Newmarket"
-                currentLocation={location}
-                onSelect={handleLocationSelect}
+              newLocation="Newmarket"
+              currentLocation={location}
+              onSelect={handleLocationSelect}
             />
         </div>
     );

@@ -23,7 +23,6 @@ const findOrderByID = (orders: OrderData[] | null, orderID: OrderID): OrderData 
  * @returns Array of item IDs.
  */
 const getItemKeys = (order: OrderData): ItemID[] => {
-    if (!order) return [];
     return order.items.map((item: ItemData) => item.itemID);
 };
 
@@ -33,15 +32,16 @@ const getItemKeys = (order: OrderData): ItemID[] => {
  * @returns Array of Order objects.
  */
 const getOrderKeys = (orders: OrderData[]): Order[] => {
-    if (!orders) return [];
     return orders.map((order: OrderData) => {
         return {
             orderID: order.orderID,
-            location: order.items[0]?.itemLocation || 'Oakville', // fallback if empty
+            location: order.items[0]?.itemLocation,
             box: null,
             items: order.items.map(item => ({
                 itemID: item.itemID,
-                status: 'unPicked' as Status
+                orderID: order.orderID,
+                status: 'unPicked' as Status,
+                box: null
             }))
         };
     });

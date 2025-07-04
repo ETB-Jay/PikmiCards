@@ -1,9 +1,11 @@
-import useLocalStorage from './useLocalStorage';
-import { ReactNode, useState, useCallback } from 'react';
-import { OrdersContext, OrdersContextType, FullscreenContext, OrderDisplayContext, ConfirmContext, OrderDisplayContextType, FullscreenContextType, ConfirmContextType, LocationContext, AuthContextType, AuthContext } from './Context';
+import React, { ReactNode, useState, useCallback, useMemo } from 'react';
+
 import FullscreenModal from '../modals/FullscreenModal';
 import { OrderData, Order, Location, Status, ItemID, User } from '../types';
 import ConfirmModal from '../modals/ConfirmModal';
+
+import { OrdersContext, FullscreenContext, OrderDisplayContext, ConfirmContext, LocationContext, AuthContext } from './Context';
+import useLocalStorage from './useLocalStorage';
 
 interface ProviderProps {
     children: ReactNode;
@@ -27,8 +29,8 @@ const OrdersProvider = ({ children }: ProviderProps) => {
     const fetchOrders = useCallback(async (): Promise<void> => {
         setError(null);
         try {
-            const response = await fetch('http://localhost:3001/api/orders');
-            if (!response.ok) throw new Error('Failed to fetch orders');
+            const response = await fetch('/api/orders');
+            if (!response.ok) {throw new Error('Failed to fetch orders');}
             const orders = await response.json();
             setOrders(orders);
         } catch (err) {
@@ -37,10 +39,9 @@ const OrdersProvider = ({ children }: ProviderProps) => {
     }, []);
 
     const fromOrderDataToOrder = useCallback((orders: OrderData[], location: Location): Order[] => {
-        if (!orders) return [];
         const transformed = orders.map(order => ({
             orderID: order.orderID,
-            location: location,
+            location,
             box: null,
             items: order.items
                 .filter(item => item.itemLocation.includes(location))
@@ -68,7 +69,10 @@ const OrdersProvider = ({ children }: ProviderProps) => {
         });
     };
 
-    const value: OrdersContextType & { error: string | null } = { orders, setOrders, fetchOrders, fromOrderDataToOrder, error };
+    const value = useMemo(
+        () => ({ orders, setOrders, fetchOrders, fromOrderDataToOrder, error }),
+        [orders, setOrders, fetchOrders, fromOrderDataToOrder, error]
+    );
 
     return <OrdersContext.Provider value={value}>
         {children}
@@ -86,8 +90,8 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
     const handleSelect = useCallback((itemID: ItemID) => {
         setSelectedItems(prev => {
             const newSet = new Set(prev);
-            if (newSet.has(itemID)) newSet.delete(itemID);
-            else newSet.add(itemID);
+            if (newSet.has(itemID)) {newSet.delete(itemID);}
+            else {newSet.add(itemID);}
             return newSet;
         });
     }, []);
@@ -117,15 +121,18 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
         setSelectedItems(new Set());
     }, [orderDisplay, selectedItems]);
 
-    const value: OrderDisplayContextType = {
-        orderDisplay,
-        setOrderDisplay,
-        selectedItems,
-        setSelectedItems,
-        handleSelect,
-        handleConfirm,
-        handleClear,
-    };
+    const value = useMemo(
+        () => ({
+            orderDisplay,
+            setOrderDisplay,
+            selectedItems,
+            setSelectedItems,
+            handleSelect,
+            handleConfirm,
+            handleClear,
+        }),
+        [orderDisplay, setOrderDisplay, selectedItems, setSelectedItems, handleSelect, handleConfirm, handleClear]
+    );
 
     return <OrderDisplayContext.Provider value={value}>{children}</OrderDisplayContext.Provider>;
 };
@@ -145,15 +152,18 @@ const FullscreenProvider = ({ children }: ProviderProps) => {
         setFullScreen(null);
     }, []);
 
-    const value: FullscreenContextType = { openFullscreen, closeFullscreen };
+    const value = useMemo(
+        () => ({ openFullscreen, closeFullscreen }),
+        [openFullscreen, closeFullscreen]
+    );
 
     return (
         <FullscreenContext.Provider value={value}>
             {children}
             {fullScreen && (
                 <FullscreenModal
-                    image={fullScreen}
-                    onClose={closeFullscreen}
+                  image={fullScreen}
+                  onClose={closeFullscreen}
                 />
             )}
         </FullscreenContext.Provider>
@@ -171,13 +181,16 @@ const ConfirmProvider = ({ children }: ProviderProps) => {
     const confirmConfirm = useCallback(() => {
         closeConfirm();
     }, []);
-    const value: ConfirmContextType = { confirm, openConfirm, confirmConfirm, closeConfirm };
+    const value = useMemo(
+        () => ({ confirm, openConfirm, confirmConfirm, closeConfirm }),
+        [confirm, openConfirm, confirmConfirm, closeConfirm]
+    );
     return <ConfirmContext.Provider value={value}>
         {children}
         {confirm && (
             <ConfirmModal
-                order={confirm}
-                onClose={closeConfirm}
+              order={confirm}
+              onClose={closeConfirm}
             />
         )}
     </ConfirmContext.Provider>;
@@ -185,8 +198,12 @@ const ConfirmProvider = ({ children }: ProviderProps) => {
 
 const LocationProvider = ({ children }: ProviderProps) => {
     const [location, setLocation] = useState<Location>('Oakville');
+    const value = useMemo(
+        () => ({ location, setLocation }),
+        [location, setLocation]
+    );
     return (
-        <LocationContext.Provider value={{ location, setLocation }}>
+        <LocationContext.Provider value={value}>
             {children}
         </LocationContext.Provider>
     );
@@ -196,7 +213,6 @@ const AuthProvider = ({ children }: ProviderProps) => {
     const [user, setUser] = useLocalStorage('user', null);
 
     const login = (data: User): void => {
-        console.log('Logging in with:', data);
         setUser(data);
         window.location.href = '/pick';
     };
@@ -206,7 +222,10 @@ const AuthProvider = ({ children }: ProviderProps) => {
         window.location.href = '/login';
     };
 
-    const value: AuthContextType = { user, login, logout };
+    const value = useMemo(
+        () => ({ user, login, logout }),
+        [user, login, logout]
+    );
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

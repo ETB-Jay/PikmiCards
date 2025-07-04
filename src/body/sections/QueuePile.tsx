@@ -1,7 +1,8 @@
+import React, { memo, useCallback, useMemo } from 'react';
+
 import { useOrderDisplay, useOrders } from '../../context/useContext';
 import { ScrollContainer } from '../../components/containers';
 import OrderCard from '../../components/OrderCard';
-import React, { memo, useCallback, useMemo } from 'react';
 import { ItemData } from '../../types';
 
 /**
@@ -10,6 +11,9 @@ import { ItemData } from '../../types';
  *
  * @module QueuePile
  */
+
+// Define constants for hardcoded content
+const EMPTY_QUEUE_TEXT = "Queue is empty";
 
 /**
  * QueuePile is a memoized component that renders the queue pile of items to pick.
@@ -24,18 +28,17 @@ const QueuePile = (): React.ReactElement => {
         let itemData: ItemData | undefined;
         for (const order of orders) {
             itemData = order.items.find(item => item.itemID === itemID);
-            if (itemData) break;
+            if (itemData) {break;}
         }
-        if (!itemData) return null;
+        if (!itemData) {return null;}
         const itemKey = getItemKey(itemData, index);
         const selected = selectedItems.has(itemID);
         return (
             <OrderCard
-                key={itemKey}
-                item={itemData}
-                itemKey={itemKey}
-                selected={selected}
-                large={false}
+              key={itemKey}
+              item={itemData}
+              selected={selected}
+              large={false}
             />
         );
     }, [orders, selectedItems]);
@@ -44,17 +47,24 @@ const QueuePile = (): React.ReactElement => {
     const queueItemIDs = orderDisplay.flatMap(order => order.items.filter(item => item.status === 'queue').map(item => item.itemID));
     const items = useMemo(() => queueItemIDs.map(renderItem), [queueItemIDs, renderItem]);
 
+    let content;
+    if (items.length === 0) {
+        content = (
+            <div className="flex bg-green-smoke-600/70 rounded-2xl ring-2 ring-green-900 h-full w-full items-center justify-center text-white">
+                {EMPTY_QUEUE_TEXT}
+            </div>
+        );
+    } else {
+        content = (
+            <ScrollContainer className='flex-row flex-1'>
+                {items}
+            </ScrollContainer>
+        );
+    }
+
     return (
         <div className="flex flex-col items-center justify-center h-full">
-            {items.length !== 0 ?
-                <ScrollContainer className='flex-row flex-1'>
-                    {items}
-                </ScrollContainer>
-                :
-                <div className="flex bg-green-smoke-600/70 rounded-2xl ring-2 ring-green-900 h-full w-full items-center justify-center text-white">
-                    Nothing Yet!
-                </div>
-            }
+            {content}
         </div>
     );
 };

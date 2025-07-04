@@ -1,5 +1,5 @@
-import React from 'react';
-import { memo, useMemo, useCallback } from 'react';
+import React, { memo, useMemo, useCallback } from 'react';
+
 
 /**
  * ImageDisplay component.
@@ -18,11 +18,11 @@ import { memo, useMemo, useCallback } from 'react';
  * @property {(e: React.SyntheticEvent<HTMLImageElement>) => void} [onError] - Optional error handler for the image.
  */
 interface ImageDisplayProps {
-    imageUrl: string;
-    alt: string;
-    onClick?: (e: React.MouseEvent) => void;
-    className?: string;
-    onError?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
+  imageUrl: string;
+  alt: string;
+  onClick?: (e: React.MouseEvent) => void;
+  className?: string;
+  onError?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
 }
 
 /**
@@ -31,27 +31,38 @@ interface ImageDisplayProps {
  * @returns {JSX.Element}
  */
 const ImageDisplay = memo(({ imageUrl, alt, onClick, className = '', onError }: ImageDisplayProps) => {
-    const imageClass = useMemo(() =>
-        `h-full cursor-pointer rounded-lg hover:brightness-50 hover:shadow-lg transition-all ${className}`,
-        [className]
-    );
+  const imageClass = useMemo(() =>
+    `h-full cursor-pointer rounded-lg hover:brightness-50 hover:shadow-lg transition-all ${className}`,
+    [className]
+  );
 
-    const handleClick = useCallback((e: React.MouseEvent) => {
-        onClick?.(e);
-    }, [onClick]);
+  const handleClick = useCallback((event: React.MouseEvent) => {
+    onClick?.(event);
+  }, [onClick]);
 
-    return (
-        <>
-            <img
-                className={imageClass}
-                src={imageUrl}
-                alt={alt}
-                onClick={handleClick}
-                onError={onError}
-                loading={'lazy'}
-            />
-        </>
-    );
+  return (
+    <span
+      tabIndex={0}
+      role="button"
+      onClick={handleClick}
+      onKeyDown={event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          handleClick(event as unknown as React.MouseEvent<HTMLImageElement>);
+        }
+      }}
+      style={{ display: 'inline-block' }}
+      onError={onError}
+    >
+      <img
+        className={imageClass}
+        src={imageUrl}
+        alt={alt}
+        loading="lazy"
+      />
+    </span>
+  );
 });
+
+ImageDisplay.displayName = "ImageDisplay";
 
 export { ImageDisplay }; 

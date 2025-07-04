@@ -1,9 +1,13 @@
-import React from 'react';
-import { useOrderDisplay, useOrders } from '../../context/useContext';
-import { useMemo, memo, useCallback } from 'react';
+import React, { useMemo, memo, useCallback } from 'react';
+
+import { useOrderDisplay, useOrders, useConfirm  } from '../../context/useContext';
 import { Order } from '../../types';
-import { useConfirm } from '../../context/useContext';
 import { findOrderByID } from '../../context/orderFunctions';
+
+// Define constants for hardcoded content
+const CARD_IMAGE_ALT_1 = "Card Image 1";
+const CARD_IMAGE_ALT_2 = "Card Image 2";
+const CARD_IMAGE_ALT_3 = "Card Image 3";
 
 const CustomerInfoBadge: React.FC<React.PropsWithChildren<object>> = ({ children }) => (
     <p className="bg-black/50 px-1.5 py-0.5 font-semibold rounded-2xl text-white ring-2 ring-black">{children}</p>
@@ -25,23 +29,34 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
 
     const orderData = findOrderByID(orders, order.orderID);
 
-    if (!orderData) return null;
+    if (!orderData) {return null;}
 
     // Count items by status
     const retrievedCount = order.items.filter(item => item.status === 'inBox').length;
     const unretrievedCount = order.items.filter(item => item.status !== 'inBox').length;
 
+    const ariaLabel = orderData.customerName ? orderData.customerName : "Order";
+
     return (
         <div
-            className="relative flex flex-col h-full w-full cursor-pointer rounded-lg shadow border-2 border-green-950 text-green-100 bg-green-smoke-600/60 hover:bg-green-smoke-600/70 backdrop-blur-md transition-all overflow-hidden text-xs sm:text-sm duration-150 hover:shadow-lg hover:scale-[1.01]"
-            onClick={e => { e.stopPropagation(); openConfirm(order); }}
+          className="relative flex flex-col h-full w-full cursor-pointer rounded-lg shadow border-2 border-green-950 text-green-100 bg-green-smoke-600/60 hover:bg-green-smoke-600/70 backdrop-blur-md transition-all overflow-hidden text-xs sm:text-sm duration-150 hover:shadow-lg hover:scale-[1.01]"
+          onClick={event => { event.stopPropagation(); openConfirm(order); }}
+          tabIndex={0}
+          role="button"
+          aria-label={ariaLabel}
+          onKeyDown={event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.stopPropagation();
+              openConfirm(order);
+            }
+          }}
         >
             <div className='flex flex-col h-full justify-center p-2'>
                 <div className='flex flex-row flex-wrap gap-3 items-center min-w-0 text-xs'>
                     <p className="font-semibold max-w-2/9 md:max-w-1/3 truncate">{orderData.customerName}</p>
-                    <CustomerInfoBadge><img src="/ClosedBox.svg" alt="Box" className="w-4 h-4 inline-block align-middle mr-1" />{index}</CustomerInfoBadge>
-                    <CustomerInfoBadge><img src="/Picked.svg" alt="Picked" className="w-4 h-4 inline-block align-middle mr-1" />{retrievedCount}</CustomerInfoBadge>
-                    <CustomerInfoBadge><img src="/NotPicked.svg" alt="Not Picked" className="w-4 h-4 inline-block align-middle mr-1" />{unretrievedCount}</CustomerInfoBadge>
+                    <CustomerInfoBadge><img src="/ClosedBox.svg" alt={CARD_IMAGE_ALT_1} className="w-4 h-4 inline-block align-middle mr-1" />{index}</CustomerInfoBadge>
+                    <CustomerInfoBadge><img src="/Picked.svg" alt={CARD_IMAGE_ALT_2} className="w-4 h-4 inline-block align-middle mr-1" />{retrievedCount}</CustomerInfoBadge>
+                    <CustomerInfoBadge><img src="/NotPicked.svg" alt={CARD_IMAGE_ALT_3} className="w-4 h-4 inline-block align-middle mr-1" />{unretrievedCount}</CustomerInfoBadge>
                 </div>
             </div>
         </div>
@@ -58,9 +73,9 @@ const CardGridDisplay = memo((): React.ReactElement => {
 
     const renderOrder = useCallback((order: Order, index: number) => (
         <CustomerInfo
-            key={order.orderID}
-            order={order}
-            index={index + 1}
+          key={order.orderID}
+          order={order}
+          index={index + 1}
         />
     ), []);
 

@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+
 import { Order, OrderData, ItemID, Location, User } from '../types';
 
 /** @description OrdersContextType stores the fetched order data from Shopify */

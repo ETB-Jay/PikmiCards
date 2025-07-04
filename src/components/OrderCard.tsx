@@ -1,25 +1,27 @@
 import React, { useCallback, memo } from 'react';
-import { useFullscreen, useOrderDisplay } from '../context/useContext';
-import { ItemData } from '../types';
-import { ImageDisplay } from './ImageDisplay';
-import { Tags } from './modal';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+
+import { useFullscreen, useOrderDisplay } from '../context/useContext';
+import { ItemData } from '../types';
+
+import { ImageDisplay } from './ImageDisplay';
+import { Tags } from './modal';
+
+// Define constants for hardcoded content
+const ORDER_CARD_ALT = "Order Card Image";
 
 /**
  * Props for the OrderCard component.
  * @property {ItemData} item - The item to display in the card.
- * @property {string} [className] - Additional CSS classes for the card.
  * @property {boolean | null} selected - If the card is selected or not. Null if not selectable
  * @property {boolean} large- Whether to the card is a large display or not
  * @property {function | undefined} onImageClick - Optional function to call when the image is clicked
  */
 interface CardProps {
     item: ItemData;
-    className?: string;
     selected: boolean | null;
     large: boolean;
-    itemKey: string;
     onImageClick?: () => void;
 }
 
@@ -34,8 +36,8 @@ const OrderCard = memo(({ item, selected, large, onImageClick }: CardProps) => {
     const { openFullscreen } = useFullscreen();
     const { handleSelect } = useOrderDisplay();
 
-    const handleImageClick = useCallback((e: React.MouseEvent) => {
-        e.stopPropagation();
+    const handleImageClick = useCallback((event: React.MouseEvent) => {
+        event.stopPropagation();
         if (onImageClick) {
             onImageClick();
         } else {
@@ -44,51 +46,93 @@ const OrderCard = memo(({ item, selected, large, onImageClick }: CardProps) => {
     }, [onImageClick, openFullscreen, item.imageUrl]);
 
     const handleCardClick = useCallback(() => {
-        if (selected === null) return;
+        if (selected === null) {return;}
         handleSelect(item.itemID);
     }, [handleSelect, item, selected]);
 
+    let cardBgClass = '';
+    if (selected === null) {
+      cardBgClass = 'bg-green-smoke-600/20';
+    } else if (selected) {
+      cardBgClass = 'bg-green-smoke-800/70 hover:bg-green-smoke-900/70 cursor-pointer hover:scale-102';
+    } else {
+      cardBgClass = 'bg-green-smoke-600/60 hover:bg-green-smoke-600/70 cursor-pointer hover:scale-101';
+    }
+    const cardHeightClass = large ? '' : ' h-full';
+
+    let checkboxIconElement = null;
+    if (selected) {
+      checkboxIconElement = <CheckBoxIcon style={{ color: 'white' }} />;
+    } else {
+      checkboxIconElement = <CheckBoxOutlineBlankIcon style={{ color: 'white' }} />;
+    }
+
+    let checkboxIcon = null;
+    if (!large && !onImageClick) {
+      checkboxIcon = (
+        <div className='absolute top-0 right-0 m-1 bg-black/70 rounded-full p-1 z-10 flex items-center justify-center'>
+          {checkboxIconElement}
+        </div>
+      );
+    }
+
+    let quantityBadge = null;
+    if (!large) {
+      quantityBadge = (
+        <div className='absolute bg-black/70 ring-2 ring-black text-white rounded-2xl px-1 bottom-2 left-2 text-xs z-10'>
+          {item.itemQuantity}
+        </div>
+      );
+    }
+
+    let itemNameSpan = null;
+    if (large && item.itemName) {
+      itemNameSpan = (
+        <span className="block text-wrap rounded-2xl mb-1.5 text-silver-100 text-sm md:text-md font-semibold">
+          {item.itemName}
+        </span>
+      );
+    }
+
+    let largeDetails = null;
+    if (large) {
+      largeDetails = (
+        <div className="flex flex-col h-full w-fit max-w-[calc(100%-6.5rem)] min-w-0">
+          {itemNameSpan}
+          <div className="flex flex-row flex-wrap min-w-0 gap-2 sm:gap-3">
+            <Tags item={item} />
+          </div>
+        </div>
+      );
+    }
+
     return (
         <div
-            className={`flex flex-row gap-3 items-center justify-start shadow-lg rounded-lg transition-all min-w-fit min-h-fit p-2
-                        ${selected === null ? 'bg-green-smoke-600/20' : selected ? 'bg-green-smoke-800/70 hover:bg-green-smoke-900/70 cursor-pointer hover:scale-102' : 'bg-green-smoke-600/60 hover:bg-green-smoke-600/70 cursor-pointer hover:scale-101'}
-                        ${large ? '' : ' h-full'}`}
-            onClick={handleCardClick}
+          className={`flex flex-row gap-3 items-center justify-start shadow-lg rounded-lg transition-all min-w-fit min-h-fit p-2 ${cardBgClass}${cardHeightClass}`}
+          onClick={handleCardClick}
+          tabIndex={0}
+          role="button"
+          onKeyDown={event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              handleCardClick();
+            }
+          }}
         >
             <div className={`relative h-22 w-auto ${selected === null && 'h-30'}`}>
-                {!large &&
-                    <>
-                        {!onImageClick &&
-                            <div className='absolute top-0 right-0 m-1 bg-black/70 rounded-full p-1 z-10 flex items-center justify-center'>
-                                {selected ? <CheckBoxIcon style={{ color: 'white' }} /> : <CheckBoxOutlineBlankIcon style={{ color: 'white' }} />}
-                            </div>
-                        }
-                        <div className='absolute bg-black/70 ring-2 ring-black text-white rounded-2xl px-1 bottom-2 left-2 text-xs z-10'>
-                            {item.itemQuantity}
-                        </div>
-                    </>
-                }
+                {checkboxIcon}
+                {quantityBadge}
                 <ImageDisplay
-                    imageUrl={item.imageUrl}
-                    alt={item.itemName || 'Unnamed'}
-                    onClick={handleImageClick}
-                    className="h-full w-full object-contain max-w-full max-h-full"
+                  imageUrl={item.imageUrl}
+                  alt={item.itemName || 'Unnamed'}
+                  onClick={handleImageClick}
+                  className="h-full w-full object-contain max-w-full max-h-full"
                 />
             </div>
-            {large &&
-                <div className={`flex flex-col h-full w-fit max-w-[calc(100%-6.5rem)] min-w-0`}>
-                    {item.itemName && (
-                        <span className="block text-wrap rounded-2xl mb-1.5 text-silver-100 text-sm md:text-md font-semibold">
-                            {item.itemName}
-                        </span>
-                    )}
-                    <div className={'flex flex-row flex-wrap min-w-0 gap-2 sm:gap-3'}>
-                        <Tags item={item} />
-                    </div>
-                </div>
-            }
+            {largeDetails}
         </div>
     );
 });
+
+OrderCard.displayName = "OrderCard";
 
 export default OrderCard;

@@ -1,8 +1,10 @@
 import React, { useContext, useState, useCallback } from 'react';
-import DetermineLocation from './DetermineLocation';
-import { Button } from '../../components/modal';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
+import { Button } from '../../components/modal';
 import { LocationContext } from '../../context/Context';
+
+import DetermineLocation from './DetermineLocation';
 
 /**
  * LocationButton component for selecting the current location.
@@ -26,15 +28,15 @@ const LocationButton = (): React.ReactElement => {
     return (
         <div className='relative'>
             <Button
-                onClick={() => setLocationPrompt((prev) => !prev)}
-                label={location}
-                icon={<KeyboardArrowDownIcon />}
+              onClick={() => setLocationPrompt((prev) => !prev)}
+              label={location}
+              icon={<KeyboardArrowDownIcon />}
             />
             {locationPrompt && (
                 <DetermineLocation
-                    location={location}
-                    setLocation={handleLocationSelect}
-                    prompt={setLocationPrompt}
+                  location={location}
+                  setLocation={handleLocationSelect}
+                  prompt={setLocationPrompt}
                 />
             )}
         </div>
