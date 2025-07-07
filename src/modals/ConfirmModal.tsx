@@ -2,9 +2,9 @@
 import React, { useState, useCallback, memo } from 'react';
 
 import { Order, ItemData } from '../types';
-import { ModalContainer, ScrollContainer, FlexColCenter, ErrorBox } from '../components/containers';
-import OrderCard from '../components/OrderCard';
-import { Button, SectionTitle, Tags } from '../components/modal';
+import { ModalContainer, ScrollContainer, FlexColCenter, ErrorBox, FlexRowBetween } from '../components/containers';
+import OrderCardConfirmModal from '../components/OrderCardConfirmModal';
+import { Button, SectionTitle, TagPill, Tags } from '../components/modal';
 import { useOrderDisplay, useOrders } from '../context/useContext';
 import { findOrderByID } from '../context/orderFunctions';
 
@@ -37,17 +37,15 @@ interface ConfirmModalProps {
  * @returns {JSX.Element}
  */
 const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
-  const { orders, setOrders } = useOrders();
+  const { orders } = useOrders();
   const { orderDisplay, setOrderDisplay } = useOrderDisplay();
   const [previewItem, setPreviewItem] = useState<ItemData | null>(null);
   const renderItem = useCallback((item: ItemData, index: number) => {
     const itemKey = getItemKey(item, index);
     return (
-      <OrderCard
+      <OrderCardConfirmModal
         key={itemKey}
         item={item}
-        selected={null}
-        large={false}
         onImageClick={() => setPreviewItem(prev =>
           prev?.itemID === item.itemID ? null : item
         )}
@@ -60,25 +58,35 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
   if (!orderData) { return null; }
 
   const onConfirm = () => {
-    const newOrders = orders.filter(orderItem =>
-      (orderItem.orderID !== orderData.orderID)
-    );
-    setOrders(newOrders);
+    const removeIdx = orderDisplay.findIndex(orderItem => orderItem.orderID === orderData.orderID);
+    if (removeIdx === -1) { return; }
 
-    const newOrderDisplay = orderDisplay.filter(orderItem =>
-      (orderItem.orderID !== orderData.orderID)
-    );
+    const newOrderDisplay = [...orderDisplay];
+
+    if (newOrderDisplay.length > 24) {
+      // Prepare the swapped-in order with the correct box number
+      const swapIdx = 24;
+      const swappedOrder = { ...newOrderDisplay[swapIdx], box: removeIdx + 1 };
+      swappedOrder.items = swappedOrder.items.map(item => ({ ...item, box: removeIdx + 1 }));
+      // Replace the removed order with the swapped-in order
+      newOrderDisplay.splice(removeIdx, 1, swappedOrder);
+      // Remove the duplicate at the end
+      newOrderDisplay.splice(swapIdx, 1);
+    } else {
+      // Just remove the order
+      newOrderDisplay.splice(removeIdx, 1);
+    }
+
     setOrderDisplay(newOrderDisplay);
-
     onClose();
   };
 
   const unretrievedItems = order.items
-    .filter(item => item.status === 'unPicked')
+    .filter(item => item.status !== 'inBox')
     .map(item => orderData.items.find(data => data.itemID === item.itemID))
     .filter(Boolean) as ItemData[];
   const retrievedItems = order.items
-    .filter(item => item.status !== 'unPicked')
+    .filter(item => item.status === 'inBox')
     .map(item => orderData.items.find(data => data.itemID === item.itemID))
     .filter(Boolean) as ItemData[];
 
@@ -132,19 +140,25 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
       <div className='flex flex-row items-center justify-center gap-10 min-w-[70vw] '>
         <div className='flex flex-col items-center justify-center w-full gap-4'>
           <FlexColCenter className="w-full gap-4">
-            <span className="text-lg font-bold text-center text-white">
-              {orderData.customerName}
-            </span>
-            <div className="flex flex-col gap-3 h-full w-full flex-1">
+            <div className='flex flex-col gap-2'>
+              <span className="text-lg font-bold text-center text-white">
+                {orderData.customerName}
+              </span>
+              <FlexRowBetween className='gap-2'>
+                <TagPill className='bg-green-smoke-300/40 ring-2'>{orderData.orderID}</TagPill>
+                <TagPill className='bg-green-smoke-300/40 ring-2'>{orderData.deliveryMethod}</TagPill>
+              </FlexRowBetween>
+            </div>
+            <div className="flex flex-col gap-3 h-full w-full flex-1/2">
+              <SectionTitle>{UNRETRIEVED_TITLE}</SectionTitle>
               <div className='bg-black/10 p-2 rounded-2xl'>
-                <SectionTitle>{UNRETRIEVED_TITLE}</SectionTitle>
-                <ScrollContainer className="flex-row flex-wrap flex-1 max-h-66 w-full">
+                <ScrollContainer className="flex-row flex-wrap max-h-50 w-full">
                   {unretrievedContent}
                 </ScrollContainer>
               </div>
+              <SectionTitle>{RETRIEVED_TITLE}</SectionTitle>
               <div className='bg-black/10 p-2 rounded-2xl'>
-                <SectionTitle>{RETRIEVED_TITLE}</SectionTitle>
-                <ScrollContainer className="flex-row flex-wrap flex-1 max-h-66 w-full">
+                <ScrollContainer className="flex-row flex-wrap max-h-50 w-full">
                   {retrievedContent}
                 </ScrollContainer>
               </div>
@@ -157,7 +171,7 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
           </FlexColCenter>
         </div>
 
-        <div className="hidden md:flex flex-col items-center justify-center bg-black/10 flex-grow min-h-[60vh] h-full w-full rounded-2xl p-5">
+        <div className="hidden md:flex flex-col items-center justify-center bg-black/10 flex-1/2 min-h-[70vh] h-full w-full rounded-2xl p-5">
           {previewContent}
         </div>
       </div>

@@ -29,7 +29,6 @@ interface ImageDisplayProps {
 /**
  * Displays an image with optional click and error handlers.
  * @param {ImageDisplayProps} props - The props for the image display.
- * @returns {JSX.Element}
  */
 const ImageDisplay = memo(({ 
   imageUrl, 

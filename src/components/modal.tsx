@@ -15,7 +15,7 @@ import { useOrderDisplay } from '../context/useContext';
  * Button component for modal actions.
  * @param label - The button label text.
  * @param icon - Optional icon element.
- * @param className - Additional CSS classes.
+ * @param className - Additional CSS classes for the button.
  * @param ...props - Standard button props.
  */
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -24,10 +24,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
 }
 
-const Button = ({ label, icon, ...props }: ButtonProps) => (
+const Button = ({ label, icon, className = '', ...props }: ButtonProps) => (
   <button
     type='button'
-    className="inline-flex items-center justify-center gap-2 px-2 py-1 rounded-md font-bold text-white bg-green-smoke-700/60 border border-green-smoke-900 shadow-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-green-smoke-800 focus:ring-offset-2 hover:from-green-smoke-600 hover:to-green-smoke-400 disabled:bg-gray-300 disabled:text-gray-400 disabled:border-gray-300 disabled:cursor-not-allowed disabled:opacity-80 cursor-pointer w-fit max-w-30"
+    className={`inline-flex items-center justify-center gap-2 px-2 py-1 rounded-md font-bold text-white bg-green-smoke-700/60 border border-green-smoke-900 shadow-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-green-smoke-800 focus:ring-offset-2 hover:from-green-smoke-600 hover:to-green-smoke-400 disabled:bg-gray-300 disabled:text-gray-400 disabled:border-gray-300 disabled:cursor-not-allowed disabled:opacity-80 cursor-pointer w-fit max-w-30 ${className}`}
     {...props}
   >
     {icon}
@@ -39,13 +39,11 @@ const Button = ({ label, icon, ...props }: ButtonProps) => (
 
 /**
  * Tags component displays item tags (quantity, printing, box, rarity, set).
+ * Shows: quantity, printing (abbreviated), rarity, set, and box (if available).
  * @param item - The item to display tags for.
  * @param className - Additional CSS classes.
  */
-const Tags: React.FC<PropsWithChildren<{
-  item: ItemData,
-  className?: string
-}>> = ({ item, className = '' }) => {
+const Tags = ({ item, className = '' }: {item: ItemData, className?: string}) => {
   const { orderDisplay } = useOrderDisplay();
 
   const tags: { value: string; icon?: string; alt?: string }[] = [];
@@ -77,7 +75,7 @@ const Tags: React.FC<PropsWithChildren<{
     <div className="flex flex-row flex-wrap gap-2">
       {tags.map((tag) => (
         <span
-          key={tag.value + tag.icon || ''}
+          key={`${tag.value}-${tag.icon || ''}-${item.itemID || item.orderID || ''}`}
           className={`bg-green-900 text-white py-0.5 px-1.5 rounded-2xl ring-2 ring-green-950 text-xs font-semibold text-center flex items-center gap-1 ${className}`}
         >
           {tag.icon && (
@@ -100,7 +98,7 @@ const Tags: React.FC<PropsWithChildren<{
  * @param className - Additional CSS classes (e.g., for color).
  */
 const SectionTitle = ({ children, className = '' }: { children: React.ReactNode, className?: string }) => (
-  <h2 className={`text-2xl font-bold text-green-smoke-300 ${className}`}>{children}</h2>
+  <h2 className={`text-lg font-bold text-green-smoke-300 ${className}`}>{children}</h2>
 );
 
 /**

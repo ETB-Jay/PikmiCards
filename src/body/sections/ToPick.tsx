@@ -3,7 +3,7 @@ import React, { useMemo, memo, useCallback } from 'react';
 
 import { useOrderDisplay, useOrders } from '../../context/useContext';
 import { ScrollContainer } from '../../components/containers';
-import OrderCard from '../../components/OrderCard';
+import OrderCardToPick from '../../components/OrderCardToPick';
 import { ItemData, ItemID, OrderID } from '../../types';
 import { findItemByID } from '../../context/orderFunctions';
 import { Button } from '../../components/modal';
@@ -24,7 +24,7 @@ const CLEAR_BUTTON_TEXT = "Clear Items";
 
 const ToPick = (): React.ReactElement => {
     const { orders } = useOrders();
-    const { orderDisplay, selectedItems, handleConfirm, handleClear } = useOrderDisplay();
+    const { orderDisplay, selectedItems, handleConfirm, handleClear, handleSelect } = useOrderDisplay();
 
     const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
 
@@ -41,14 +41,14 @@ const ToPick = (): React.ReactElement => {
         const itemKey = getItemKey(itemData, index);
         const selected = selectedItems.has(item.itemID);
         return (
-            <OrderCard
+            <OrderCardToPick
               key={itemKey}
               item={itemData}
               selected={selected}
-              large
+              onCardClick={() => handleSelect(item.itemID)}
             />
         );
-    }, [orders, selectedItems]);
+    }, [orders, selectedItems, handleSelect]);
 
     const cards = useMemo(() =>
         itemsToPick.map(renderItem),

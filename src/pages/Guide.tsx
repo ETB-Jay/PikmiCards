@@ -90,8 +90,6 @@ function Guide(): React.ReactElement {
           <h1 className="text-4xl font-extrabold text-center text-green-300 drop-shadow">{GUIDE_TEXT.title}</h1>
           <h2 className="text-lg text-center text-green-200">{GUIDE_TEXT.subtitle}</h2>
         </div>
-
-        {/* Pick List Section */}
         <div className='flex flex-col'>
           <SectionTitle>{GUIDE_TEXT.keywords.picklist}</SectionTitle>
           <p className="text-green-smoke-200 font-semibold mb-2">
@@ -103,8 +101,6 @@ function Guide(): React.ReactElement {
             ))}
           </ul>
         </div>
-
-        {/* Queue Pile Section */}
         <div className='flex flex-col'>
           <SectionTitle>{GUIDE_TEXT.keywords.queue}</SectionTitle>
           <p className="text-green-smoke-200 font-semibold mb-2">
@@ -116,8 +112,6 @@ function Guide(): React.ReactElement {
             ))}
           </ul>
         </div>
-
-        {/* Box Grid Section */}
         <div className='flex flex-col'>
           <SectionTitle>{GUIDE_TEXT.keywords.box}</SectionTitle>
           <p className="text-green-smoke-200 font-semibold mb-2">

@@ -3,7 +3,7 @@ import React, { memo, useCallback, useMemo } from 'react';
 
 import { useOrderDisplay, useOrders } from '../../context/useContext';
 import { ScrollContainer, FlexColCenter } from '../../components/containers';
-import OrderCard from '../../components/OrderCard';
+import OrderCardQueuePile from '../../components/OrderCardQueuePile';
 import { ItemData } from '../../types';
 
 /**
@@ -20,7 +20,7 @@ const EMPTY_QUEUE_TEXT = "Queue is empty";
  * QueuePile is a memoized component that renders the queue pile of items to pick.
  */
 const QueuePile = (): React.ReactElement => {
-  const { selectedItems } = useOrderDisplay();
+  const { selectedItems, handleSelect } = useOrderDisplay();
   const { orders } = useOrders();
 
   const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
@@ -35,14 +35,14 @@ const QueuePile = (): React.ReactElement => {
     const itemKey = getItemKey(itemData, index);
     const selected = selectedItems.has(itemID);
     return (
-      <OrderCard
+      <OrderCardQueuePile
         key={itemKey}
         item={itemData}
         selected={selected}
-        large={false}
+        onCardClick={() => handleSelect(itemID)}
       />
     );
-  }, [orders, selectedItems]);
+  }, [orders, selectedItems, handleSelect]);
 
   const { orderDisplay } = useOrderDisplay();
   const queueItemIDs = orderDisplay.flatMap(order =>

@@ -47,7 +47,7 @@ const Sidebar = ({ open, closeSidebar }: { open: boolean; closeSidebar: () => vo
 
   const Field = ({ label, onClick }: FieldProps) => (
     <div
-      className='flex flex-col w-full text-white hover:bg-white/10 cursor-pointer text-start p-2'
+      className='flex flex-col w-full text-white hover:bg-white/10 cursor-pointer text-start p-2 transition-all'
       onClick={onClick}
       tabIndex={0}
       role="button"
@@ -62,7 +62,7 @@ const Sidebar = ({ open, closeSidebar }: { open: boolean; closeSidebar: () => vo
   );
 
   return (
-    <div className={`fixed top-0 left-0 h-screen w-[30vw] min-w-40 max-w-60 bg-black/90 z-100 flex flex-col py-3 px-1.5 gap-7 shadow-lg transition-all duration-300 transform ${open ? 'translate-x-0' : '-translate-x-full'}`}>
+    <div className={`fixed top-0 left-0 h-screen w-[30vw] min-w-40 max-w-60 bg-black/90 z-100 flex flex-col py-3 px-1.5 gap-7 shadow-lg transition-all transform ${open ? 'translate-x-0' : '-translate-x-full'}`}>
       <div className='flex flex-row items-center justify-between px-3'>
         <Button
           onClick={closeSidebar}

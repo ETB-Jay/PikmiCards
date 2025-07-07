@@ -47,16 +47,20 @@ const Pick = memo((): React.ReactElement => {
 
   useEffect(() => {
     const loadOrders = async () => {
-      try { await fetchOrders(); } 
-      catch (err) { setError(`Failed to fetch orders ${err}`); 
-    }};
+      try {
+        await fetchOrders();
+      } catch (err) {
+        setError(`Failed to fetch orders ${err}`);
+      }
+    };
     loadOrders();
-  }, []);
+  }, [location]);
 
   useEffect(() => {
-    if (orders.length === 0) { return; }
-    const filteredOrders = fromOrderDataToOrder(orders, location);
-    setOrderDisplay(filteredOrders);
+    if (orders.length > 0) {
+      const filteredOrders = fromOrderDataToOrder(orders, location);
+      setOrderDisplay(filteredOrders);
+    }
   }, [orders, location]);
 
   const content = orderDisplay.length === 0

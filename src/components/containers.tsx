@@ -133,7 +133,7 @@ const FlexColCenter = ({ children, className = '' }: { children: React.ReactNode
  * @param className - Additional CSS classes.
  */
 const ErrorBox = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`bg-red-100 border border-red-300 text-red-900 text-center font-semibold rounded-lg py-2 px-3 animate-shake ${className}`}>
+  <div className={`bg-red-800/40 ring-3 ring-red-950 text-red-100 text-center font-semibold rounded-lg py-2 px-3 animate-shake ${className}`}>
     {children}
   </div>
 );
