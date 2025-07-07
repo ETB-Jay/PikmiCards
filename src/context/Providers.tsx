@@ -11,20 +11,13 @@ import {
   OrderDisplayContext,
   ConfirmContext,
   LocationContext,
-  AuthContext
+  AuthContext,
 } from './Context';
 import useLocalStorage from './useLocalStorage';
 
 interface ProviderProps {
   children: ReactNode;
 }
-
-/**
- * Context providers for PikmiCards application state.
- * Provides Orders, OrderDisplay, Fullscreen, and Confirm contexts.
- *
- * @module Providers
- */
 
 /**
  * OrdersProvider provides order data and fetch logic to the app.
@@ -38,7 +31,9 @@ const OrdersProvider = ({ children }: ProviderProps) => {
     setError(null);
     try {
       const response = await fetch('/api/orders');
-      if (!response.ok) { throw new Error('Failed to fetch orders'); }
+      if (!response.ok) {
+        throw new Error('Failed to fetch orders');
+      }
       const orders = await response.json();
       setOrders(orders);
     } catch (err) {
@@ -47,19 +42,21 @@ const OrdersProvider = ({ children }: ProviderProps) => {
   }, []);
 
   const fromOrderDataToOrder = useCallback((orders: OrderData[], location: Location): Order[] => {
-    const transformed = orders.map(order => ({
-      orderID: order.orderID,
-      location,
-      box: null,
-      items: order.items
-        .filter(item => item.itemLocation.includes(location))
-        .map(item => ({
-          itemID: item.itemID,
-          orderID: item.orderID,
-          status: 'unPicked' as Status,
-          box: null
-        }))
-    })).filter(order => order.items.length > 0);
+    const transformed = orders
+      .map((order) => ({
+        orderID: order.orderID,
+        location,
+        box: null,
+        items: order.items
+          .filter((item) => item.itemLocation.includes(location))
+          .map((item) => ({
+            itemID: item.itemID,
+            orderID: item.orderID,
+            status: 'unPicked' as Status,
+            box: null,
+          })),
+      }))
+      .filter((order) => order.items.length > 0);
     return assignBoxes(transformed);
   }, []);
 
@@ -69,10 +66,10 @@ const OrdersProvider = ({ children }: ProviderProps) => {
       return {
         ...order,
         box: boxNum,
-        items: order.items.map(item => ({
+        items: order.items.map((item) => ({
           ...item,
-          box: boxNum
-        }))
+          box: boxNum,
+        })),
       };
     });
   };
@@ -82,9 +79,7 @@ const OrdersProvider = ({ children }: ProviderProps) => {
     [orders, setOrders, fetchOrders, fromOrderDataToOrder, error]
   );
 
-  return <OrdersContext.Provider value={value}>
-    {children}
-  </OrdersContext.Provider>;
+  return <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>;
 };
 
 /**
@@ -96,10 +91,13 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
   const [selectedItems, setSelectedItems] = useState<Set<ItemID>>(new Set());
 
   const handleSelect = useCallback((itemID: ItemID) => {
-    setSelectedItems(prev => {
+    setSelectedItems((prev) => {
       const newSet = new Set(prev);
-      if (newSet.has(itemID)) { newSet.delete(itemID); }
-      else { newSet.add(itemID); }
+      if (newSet.has(itemID)) {
+        newSet.delete(itemID);
+      } else {
+        newSet.add(itemID);
+      }
       return newSet;
     });
   }, []);
@@ -110,24 +108,19 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
 
   const handleConfirm = useCallback(() => {
     const displayedOrderIDs = new Set(
-      orderDisplay
-        .filter(order => order.box !== null)
-        .map(order => order.orderID)
+      orderDisplay.filter((order) => order.box !== null).map((order) => order.orderID)
     );
 
-    const updatedOrderDisplay = orderDisplay.map(order => ({
+    const updatedOrderDisplay = orderDisplay.map((order) => ({
       ...order,
-      items: order.items.map(item =>
+      items: order.items.map((item) =>
         selectedItems.has(item.itemID)
           ? {
-            ...item,
-            status: (
-              displayedOrderIDs.has(item.orderID) ?
-                'inBox' : 'queue'
-            ) as Status
-          }
+              ...item,
+              status: (displayedOrderIDs.has(item.orderID) ? 'inBox' : 'queue') as Status,
+            }
           : item
-      )
+      ),
     }));
     setOrderDisplay(updatedOrderDisplay);
     setSelectedItems(new Set());
@@ -150,15 +143,11 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
       setSelectedItems,
       handleSelect,
       handleConfirm,
-      handleClear
+      handleClear,
     ]
   );
 
-  return (
-    <OrderDisplayContext.Provider value={value}>
-      {children}
-    </OrderDisplayContext.Provider>
-  );
+  return <OrderDisplayContext.Provider value={value}>{children}</OrderDisplayContext.Provider>;
 };
 
 /**
@@ -184,12 +173,7 @@ const FullscreenProvider = ({ children }: ProviderProps) => {
   return (
     <FullscreenContext.Provider value={value}>
       {children}
-      {fullScreen && (
-        <FullscreenModal
-          image={fullScreen}
-          onClose={closeFullscreen}
-        />
-      )}
+      {fullScreen && <FullscreenModal image={fullScreen} onClose={closeFullscreen} />}
     </FullscreenContext.Provider>
   );
 };
@@ -209,28 +193,18 @@ const ConfirmProvider = ({ children }: ProviderProps) => {
     () => ({ confirm, openConfirm, confirmConfirm, closeConfirm }),
     [confirm, openConfirm, confirmConfirm, closeConfirm]
   );
-  return <ConfirmContext.Provider value={value}>
-    {children}
-    {confirm && (
-      <ConfirmModal
-        order={confirm}
-        onClose={closeConfirm}
-      />
-    )}
-  </ConfirmContext.Provider>;
+  return (
+    <ConfirmContext.Provider value={value}>
+      {children}
+      {confirm && <ConfirmModal order={confirm} onClose={closeConfirm} />}
+    </ConfirmContext.Provider>
+  );
 };
 
 const LocationProvider = ({ children }: ProviderProps) => {
   const [location, setLocation] = useState<Location>('Oakville');
-  const value = useMemo(
-    () => ({ location, setLocation }),
-    [location, setLocation]
-  );
-  return (
-    <LocationContext.Provider value={value}>
-      {children}
-    </LocationContext.Provider>
-  );
+  const value = useMemo(() => ({ location, setLocation }), [location, setLocation]);
+  return <LocationContext.Provider value={value}>{children}</LocationContext.Provider>;
 };
 
 const AuthProvider = ({ children }: ProviderProps) => {
@@ -243,13 +217,9 @@ const AuthProvider = ({ children }: ProviderProps) => {
 
   const logout = () => {
     setUser(null);
-    window.location.href = '/login';
   };
 
-  const value = useMemo(
-    () => ({ user, login, logout }),
-    [user, login, logout]
-  );
+  const value = useMemo(() => ({ user, login, logout }), [user, login, logout]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
@@ -264,9 +234,7 @@ const Providers = ({ children }: ProviderProps) => {
         <OrderDisplayProvider>
           <ConfirmProvider>
             <FullscreenProvider>
-              <LocationProvider>
-                {children}
-              </LocationProvider>
+              <LocationProvider>{children}</LocationProvider>
             </FullscreenProvider>
           </ConfirmProvider>
         </OrderDisplayProvider>

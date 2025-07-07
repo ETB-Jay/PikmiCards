@@ -22,18 +22,17 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   icon?: React.ReactNode;
   className?: string;
+  hideSmall?: boolean;
 }
 
-const Button = ({ label, icon, className = '', ...props }: ButtonProps) => (
+const Button = ({ label, icon, className = '', hideSmall = false, ...props }: ButtonProps) => (
   <button
-    type='button'
-    className={`inline-flex items-center justify-center gap-2 px-2 py-1 rounded-md font-bold text-white bg-green-smoke-700/60 border border-green-smoke-900 shadow-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-green-smoke-800 focus:ring-offset-2 hover:from-green-smoke-600 hover:to-green-smoke-400 disabled:bg-gray-300 disabled:text-gray-400 disabled:border-gray-300 disabled:cursor-not-allowed disabled:opacity-80 cursor-pointer w-fit max-w-30 ${className}`}
+    type="button"
+    className={`bg-green-smoke-700/60 border-green-smoke-900 focus:ring-green-smoke-800 hover:from-green-smoke-600 hover:to-green-smoke-400 inline-flex w-fit max-w-30 cursor-pointer items-center justify-center gap-2 rounded-md border px-2 py-1 font-bold text-white shadow-lg transition-all duration-150 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300 disabled:text-gray-400 disabled:opacity-80 ${className}`}
     {...props}
   >
     {icon}
-    <span className="font-bold text-sm BFont">
-      {label}
-    </span>
+    <span className={`BFont text-xs font-bold ${hideSmall && 'hidden sm:flex'}`}>{label}</span>
   </button>
 );
 
@@ -43,31 +42,38 @@ const Button = ({ label, icon, className = '', ...props }: ButtonProps) => (
  * @param item - The item to display tags for.
  * @param className - Additional CSS classes.
  */
-const Tags = ({ item, className = '' }: {item: ItemData, className?: string}) => {
+const Tags = ({ item, className = '' }: { item: ItemData; className?: string }) => {
   const { orderDisplay } = useOrderDisplay();
 
   const tags: { value: string; icon?: string; alt?: string }[] = [];
   tags.push({
     icon: '/Cart.svg',
     alt: 'Cart',
-    value: String(item.itemQuantity)
+    value: String(item.itemQuantity),
   });
   if (item.itemPrinting) {
     tags.push({
-      value: item.itemPrinting.split(/\s+/).map(tag => tag[0]).join('')
+      value: item.itemPrinting
+        .split(/\s+/)
+        .map((tag) => tag[0])
+        .join(''),
     });
   }
-  if (item.itemRarity) { tags.push({ value: item.itemRarity }); }
-  if (item.itemSet) { tags.push({ value: item.itemSet }); }
+  if (item.itemRarity) {
+    tags.push({ value: item.itemRarity });
+  }
+  if (item.itemSet) {
+    tags.push({ value: item.itemSet });
+  }
 
-  const order = orderDisplay.find((order): order is import('../types').Order =>
-    order.orderID === item.orderID
+  const order = orderDisplay.find(
+    (order): order is import('../types').Order => order.orderID === item.orderID
   );
   if (order && order.box) {
     tags.push({
       icon: '/ClosedBox.svg',
       alt: 'Box',
-      value: String(order.box)
+      value: String(order.box),
     });
   }
 
@@ -76,15 +82,9 @@ const Tags = ({ item, className = '' }: {item: ItemData, className?: string}) =>
       {tags.map((tag) => (
         <span
           key={`${tag.value}-${tag.icon || ''}-${item.itemID || item.orderID || ''}`}
-          className={`bg-green-900 text-white py-0.5 px-1.5 rounded-2xl ring-2 ring-green-950 text-xs font-semibold text-center flex items-center gap-1 ${className}`}
+          className={`flex items-center gap-1 rounded-2xl bg-green-900 px-1.5 py-0.5 text-center text-xs font-semibold text-white ring-2 ring-green-950 ${className}`}
         >
-          {tag.icon && (
-            <img
-              src={tag.icon}
-              alt={tag.alt || ''}
-              className="inline w-3 h-3 mr-1"
-            />
-          )}
+          {tag.icon && <img src={tag.icon} alt={tag.alt || ''} className="mr-1 inline h-3 w-3" />}
           {tag.value}
         </span>
       ))}
@@ -97,20 +97,32 @@ const Tags = ({ item, className = '' }: {item: ItemData, className?: string}) =>
  * @param children - The section title content.
  * @param className - Additional CSS classes (e.g., for color).
  */
-const SectionTitle = ({ children, className = '' }: { children: React.ReactNode, className?: string }) => (
-  <h2 className={`text-lg font-bold text-green-smoke-300 ${className}`}>{children}</h2>
-);
+const SectionTitle = ({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => <h2 className={`text-green-smoke-300 text-lg font-bold ${className}`}>{children}</h2>;
 
 /**
  * TagPill component for displaying tags, pills, or highlighted text.
  * @param children - The tag content.
  * @param className - Additional CSS classes.
  */
-const TagPill = ({ children, className = '' }: { children: React.ReactNode, className?: string }) => (
-  <span className={`rounded-2xl px-1.5 py-0.5 text-xs font-semibold text-center block text-wrap mb-1.5 ${className}`}>
+const TagPill = ({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <span
+    className={`mb-1.5 block rounded-2xl px-1.5 py-0.5 text-center text-xs font-semibold text-wrap ${className}`}
+  >
     {children}
   </span>
 );
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
-export { Button, Tags, SectionTitle, TagPill }; 
+export { Button, Tags, SectionTitle, TagPill };

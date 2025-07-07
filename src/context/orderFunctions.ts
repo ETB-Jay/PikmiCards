@@ -2,12 +2,6 @@
 import { OrderData, OrderID, ItemData, ItemID, Order, Status } from '../types';
 
 // ─ Utility Functions ─────────────────────────────────────────────────────────────────────────────────
-/**
- * Utility functions for manipulating and querying order and item data in PikmiCards.
- * Includes find, filter, and key extraction helpers.
- *
- * @module orderFunctions
- */
 
 /**
  * Finds an order by its ID.
@@ -16,7 +10,7 @@ import { OrderData, OrderID, ItemData, ItemID, Order, Status } from '../types';
  * @returns The matching OrderData or undefined.
  */
 const findOrderByID = (orders: OrderData[] | null, orderID: OrderID): OrderData | undefined => {
-    return orders?.find(order => order.orderID === orderID);
+  return orders?.find((order) => order.orderID === orderID);
 };
 
 /**
@@ -25,7 +19,7 @@ const findOrderByID = (orders: OrderData[] | null, orderID: OrderID): OrderData 
  * @returns Array of item IDs.
  */
 const getItemKeys = (order: OrderData): ItemID[] => {
-    return order.items.map((item: ItemData) => item.itemID);
+  return order.items.map((item: ItemData) => item.itemID);
 };
 
 /**
@@ -34,19 +28,19 @@ const getItemKeys = (order: OrderData): ItemID[] => {
  * @returns Array of Order objects.
  */
 const getOrderKeys = (orders: OrderData[]): Order[] => {
-    return orders.map((order: OrderData) => {
-        return {
-            orderID: order.orderID,
-            location: order.items[0]?.itemLocation,
-            box: null,
-            items: order.items.map(item => ({
-                itemID: item.itemID,
-                orderID: order.orderID,
-                status: 'unPicked' as Status,
-                box: null
-            }))
-        };
-    });
+  return orders.map((order: OrderData) => {
+    return {
+      orderID: order.orderID,
+      location: order.items[0]?.itemLocation,
+      box: null,
+      items: order.items.map((item) => ({
+        itemID: item.itemID,
+        orderID: order.orderID,
+        status: 'unPicked' as Status,
+        box: null,
+      })),
+    };
+  });
 };
 
 /**
@@ -57,12 +51,12 @@ const getOrderKeys = (orders: OrderData[]): Order[] => {
  * @returns The matching ItemData or undefined.
  */
 const findItemByID = (
-    orders: OrderData[], 
-    orderID: OrderID, 
-    itemID: ItemID
+  orders: OrderData[],
+  orderID: OrderID,
+  itemID: ItemID
 ): ItemData | undefined => {
-    const order = findOrderByID(orders, orderID);
-    return order?.items.find(item => item.itemID === itemID);
+  const order = findOrderByID(orders, orderID);
+  return order?.items.find((item) => item.itemID === itemID);
 };
 
 // ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────

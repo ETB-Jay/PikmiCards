@@ -17,9 +17,9 @@ import { Location } from '../../types';
  * @property prompt - Function to toggle the prompt visibility.
  */
 interface DetermineLocationProps {
-    location: Location;
-    setLocation: (location: Location) => void;
-    prompt: (active: boolean) => void
+  location: Location;
+  setLocation: (location: Location) => void;
+  prompt: (active: boolean) => void;
 }
 
 /**
@@ -28,38 +28,36 @@ interface DetermineLocationProps {
  * @param currentLocation - The currently selected location.
  * @param onSelect - Function to select this location.
  */
-const LocationOption = ({ 
-    newLocation, 
-    currentLocation, 
-    onSelect 
+const LocationOption = ({
+  newLocation,
+  currentLocation,
+  onSelect,
 }: {
-    newLocation: Location;
-    currentLocation: Location;
-    onSelect: (location: Location) => void;
+  newLocation: Location;
+  currentLocation: Location;
+  onSelect: (location: Location) => void;
 }) => {
-    const handleClick = () => {
-        if (currentLocation !== newLocation) {
-            onSelect(newLocation);
-        }
-    };
+  const handleClick = () => {
+    if (currentLocation !== newLocation) {
+      onSelect(newLocation);
+    }
+  };
 
-    return (
-        <div
-          className="hover:bg-black/10 rounded px-3 transition-colors cursor-pointer"
-          onClick={handleClick}
-          tabIndex={0}
-          role="button"
-          onKeyDown={event => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              handleClick();
-            }
-          }}
-        >
-            <span className="font-semibold text-green-950 text-sm BFont">
-                {newLocation}
-            </span>
-        </div>
-    );
+  return (
+    <div
+      className="cursor-pointer rounded px-3 transition-colors hover:bg-black/10"
+      onClick={handleClick}
+      tabIndex={0}
+      role="button"
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          handleClick();
+        }
+      }}
+    >
+      <span className="BFont text-sm font-semibold text-green-950">{newLocation}</span>
+    </div>
+  );
 };
 
 LocationOption.displayName = 'LocationOption';
@@ -70,44 +68,46 @@ LocationOption.displayName = 'LocationOption';
  * @param setLocation - Function to update the location.
  * @param prompt - Function to toggle the prompt visibility.
  */
-const DetermineLocation = ({ 
-    location, 
-    setLocation, 
-    prompt 
+const DetermineLocation = ({
+  location,
+  setLocation,
+  prompt,
 }: DetermineLocationProps): React.ReactElement => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const handleClickOutside = (event: Event) => {
+    if (ref.current && !ref.current.contains(event.target as Node)) {
+      prompt(false);
+    }
+  };
 
-    const ref = React.useRef<HTMLDivElement>(null);
-    const handleClickOutside = (event: Event) => {
-        if (ref.current && !ref.current.contains(event.target as Node)) {
-            prompt(false);
-        };
+  const handleLocationSelect = (newLocation: Location) => {
+    setLocation(newLocation);
+  };
+
+  React.useEffect(() => {
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
     };
+  }, []);
 
-    const handleLocationSelect = (newLocation: Location) => {
-        setLocation(newLocation);
-    };
-
-    React.useEffect(() => {
-        document.addEventListener('click', handleClickOutside, true);
-        return () => {
-            document.removeEventListener('click', handleClickOutside, true);
-        };
-    }, []);
-
-    return (
-        <div ref={ref} className="absolute flex flex-col bg-green-smoke-200 border-1 shadow-2xl py-1 rounded z-100 w-fit text-sm font-semibold top-10">
-            <LocationOption
-              newLocation="Oakville"
-              currentLocation={location}
-              onSelect={handleLocationSelect}
-            />
-            <LocationOption
-              newLocation="Newmarket"
-              currentLocation={location}
-              onSelect={handleLocationSelect}
-            />
-        </div>
-    );
+  return (
+    <div
+      ref={ref}
+      className="bg-green-smoke-200 absolute top-10 z-100 flex w-fit flex-col rounded border-1 py-1 text-sm font-semibold shadow-2xl"
+    >
+      <LocationOption
+        newLocation="Oakville"
+        currentLocation={location}
+        onSelect={handleLocationSelect}
+      />
+      <LocationOption
+        newLocation="Newmarket"
+        currentLocation={location}
+        onSelect={handleLocationSelect}
+      />
+    </div>
+  );
 };
 
 DetermineLocation.displayName = 'DetermineLocation';

@@ -8,36 +8,44 @@ import { MainContainer, FlexColCenter } from '../components/containers';
 import { LocationContext } from '../context/Context';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
-const SPACESHIP_ALT = "Spaceship illustration";
-const LOADING_TEXT = "Loading Orders";
+const SPACESHIP_ALT = 'Spaceship illustration';
+const LOADING_TEXT = 'Loading Orders';
 
 /**
- * @description LoadingSpinner displays an animated loading indicator for orders
- * @returns Loading Spinner component
+ * @description LoadingSpinner renders an animated loading indicator for orders
+ * @returns The loading spinner
  */
-const LoadingSpinner = memo((): React.ReactElement => (
-  <FlexColCenter className="gap-4 h-full w-full">
-    <div className="animate-float-spin">
-      <div className="relative flex flex-row items-center justify-center animate-fly-horizontal">
-        <div className="spaceship-fire spaceship-fire-horizontal" />
-        <img
-          src="/spaceship.png"
-          alt={SPACESHIP_ALT}
-          className="relative z-10 h-20 w-auto drop-shadow-xl"
-        />
+const LoadingSpinner = memo(
+  (): React.ReactElement => (
+    <FlexColCenter className="h-full w-full gap-4">
+      <div className="animate-float-spin">
+        <div className="animate-fly-horizontal relative flex flex-row items-center justify-center">
+          <div className="spaceship-fire spaceship-fire-horizontal" />
+          <img
+            src="/spaceship.png"
+            alt={SPACESHIP_ALT}
+            className="relative z-10 h-20 w-auto drop-shadow-xl"
+            draggable={false}
+          />
+        </div>
       </div>
-    </div>
-    <span className="text-xl font-bold text-green-smoke-900 drop-shadow-sm tracking-wide">
-      {LOADING_TEXT}
-      <span className="loading-dots" />
-    </span>
-  </FlexColCenter>
-));
-LoadingSpinner.displayName = "LoadingSpinner"
+      <span className="text-green-smoke-900 text-xl font-bold tracking-wide drop-shadow-sm">
+        {LOADING_TEXT}
+        <span className="loading-dots" />
+      </span>
+    </FlexColCenter>
+  )
+);
+LoadingSpinner.displayName = 'LoadingSpinner';
 
 /**
- * @description Pick is the main page for picking orders
- * Handles order loading, filtering, and layout
+ * @description Pick returns a React.ReactElement that renders the card picker.
+ * - Fetches Orders from Shopify
+ * - Formats the OrderData into Orders
+ * - Renders the Loading Spinner while waiting for the OrderDisplay
+ * - Renders the content once the OrderDisplay has loaded
+ *
+ * @returns The main card picking interface.
  */
 const Pick = memo((): React.ReactElement => {
   const { orders, fetchOrders, fromOrderDataToOrder } = useOrders();
@@ -63,8 +71,8 @@ const Pick = memo((): React.ReactElement => {
     }
   }, [orders, location]);
 
-  const content = orderDisplay.length === 0
-    ? (
+  const content =
+    orderDisplay.length === 0 ? (
       <LoadingSpinner />
     ) : (
       <>
@@ -76,12 +84,12 @@ const Pick = memo((): React.ReactElement => {
   return (
     <MainContainer>
       {content}
-      {error && <div className='absolute bottom-5 right-1/2'>{error}</div>}
+      {error && <div className="absolute right-1/2 bottom-5">{error}</div>}
     </MainContainer>
   );
 });
 
-Pick.displayName = "Pick"
+Pick.displayName = 'Pick';
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default Pick;

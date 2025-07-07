@@ -21,7 +21,7 @@ const OrderCardToPick = ({ item, selected, onCardClick }: OrderCardToPickProps) 
       onClick={onCardClick}
       tabIndex={0}
       role="button"
-      onKeyDown={event => {
+      onKeyDown={(event) => {
         if (onCardClick && (event.key === 'Enter' || event.key === ' ')) {
           onCardClick();
         }
@@ -31,15 +31,13 @@ const OrderCardToPick = ({ item, selected, onCardClick }: OrderCardToPickProps) 
         <ImageDisplay
           imageUrl={item.imageUrl}
           alt={item.itemName || 'Unnamed'}
-          className="h-full w-full object-contain max-w-full max-h-full"
+          className="h-full max-h-full w-full max-w-full object-contain"
           onClick={() => openFullscreen(item.imageUrl)}
         />
       </div>
-      <div className="flex flex-col h-full w-full max-w-[calc(100%-6.5rem)] min-w-0">
-        <div className="font-semibold mb-2 text-silver-100 text-sm md:text-md">
-          {item.itemName}
-        </div>
-        <div className="flex flex-row flex-wrap min-w-0 gap-2 sm:gap-3">
+      <div className="flex h-full w-full max-w-[calc(100%-6.5rem)] min-w-0 flex-col">
+        <div className="text-silver-100 md:text-md mb-2 text-sm font-semibold">{item.itemName}</div>
+        <div className="flex min-w-0 flex-row flex-wrap gap-2 sm:gap-3">
           <Tags item={item} />
         </div>
       </div>
@@ -47,4 +45,4 @@ const OrderCardToPick = ({ item, selected, onCardClick }: OrderCardToPickProps) 
   );
 };
 
-export default OrderCardToPick; 
+export default OrderCardToPick;

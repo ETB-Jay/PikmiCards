@@ -1,29 +1,22 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { useContext } from 'react';
 
-import { 
-    OrdersContext, 
-    FullscreenContext, 
-    OrderDisplayContext, 
-    ConfirmContext, 
-    AuthContext 
+import {
+  OrdersContext,
+  FullscreenContext,
+  OrderDisplayContext,
+  ConfirmContext,
+  AuthContext,
 } from './Context';
 
 // ─ Custom Hooks ────────────────────────────────────────────────────────────────────────────────────
-/**
- * Custom React hooks for accessing PikmiCards context values.
- * Provides hooks for orders, display, box orders, queue pile, fullscreen, confirmation, and authentication.
- *
- * @module useContext
- */
-
 /**
  * useOrders returns the OrdersContext value.
  * @throws Error if used outside OrdersProvider.
  */
 const useOrders = () => {
-    const context = useContext(OrdersContext);
-    return context;
+  const context = useContext(OrdersContext);
+  return context;
 };
 
 /**
@@ -31,8 +24,8 @@ const useOrders = () => {
  * @throws Error if used outside OrderDisplayProvider.
  */
 const useOrderDisplay = () => {
-    const context = useContext(OrderDisplayContext);
-    return context;
+  const context = useContext(OrderDisplayContext);
+  return context;
 };
 
 /**
@@ -40,8 +33,8 @@ const useOrderDisplay = () => {
  * @throws Error if used outside FullscreenProvider.
  */
 const useFullscreen = () => {
-    const context = useContext(FullscreenContext);
-    return context;
+  const context = useContext(FullscreenContext);
+  return context;
 };
 
 /**
@@ -49,8 +42,8 @@ const useFullscreen = () => {
  * @throws Error if used outside ConfirmProvider.
  */
 const useConfirm = () => {
-    const context = useContext(ConfirmContext);
-    return context;
+  const context = useContext(ConfirmContext);
+  return context;
 };
 
 /**
@@ -58,15 +51,9 @@ const useConfirm = () => {
  * @throws Error if used otuside AuthProvider
  */
 const useAuth = () => {
-    const context = useContext(AuthContext);
-    return context;
+  const context = useContext(AuthContext);
+  return context;
 };
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
-export { 
-    useOrders, 
-    useFullscreen, 
-    useOrderDisplay, 
-    useConfirm, 
-    useAuth 
-};
+export { useOrders, useFullscreen, useOrderDisplay, useConfirm, useAuth };

@@ -1,9 +1,3 @@
-/**
- * RefreshButton component for reloading orders from the server.
- * Used in the header for manual refresh.
- *
- * @module RefreshButton
- */
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { memo, useCallback } from 'react';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -23,7 +17,7 @@ const RefreshButton = memo(() => {
     try {
       setOrderDisplay([]);
       await fetchOrders();
-    } catch { 
+    } catch {
       // ignore
     }
   }, [fetchOrders, setOrderDisplay]);
@@ -33,8 +27,11 @@ const RefreshButton = memo(() => {
       <Button
         label="Refresh"
         icon={<RefreshIcon />}
-        onClick={() => { refresh(); }}
+        onClick={() => {
+          refresh();
+        }}
         disabled={!orderDisplay}
+        hideSmall
       />
     </>
   );

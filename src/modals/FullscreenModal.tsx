@@ -3,15 +3,8 @@ import React, { memo, useCallback } from 'react';
 
 import { ModalContainer } from '../components/containers';
 
-/**
- * FullscreenModal component for displaying images in fullscreen overlay.
- * Used for item image previews.
- *
- * @module FullscreenModal
- */
-
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
-const FULLSCREEN_MODAL_ALT = "Fullscreen Modal Image";
+const FULLSCREEN_MODAL_ALT = 'Fullscreen Modal Image';
 
 /**
  * Props for the FullscreenModal component.
@@ -20,9 +13,9 @@ const FULLSCREEN_MODAL_ALT = "Fullscreen Modal Image";
  * @property children - Optional additional content.
  */
 interface FullscreenModalProps {
-    image?: string;
-    onClose: () => void;
-    children?: React.ReactNode;
+  image?: string;
+  onClose: () => void;
+  children?: React.ReactNode;
 }
 
 /**
@@ -32,50 +25,48 @@ interface FullscreenModalProps {
  * @param children - Optional additional content.
  * @returns {JSX.Element}
  */
-const FullscreenModal: React.FC<FullscreenModalProps> = memo(({ 
-    image, 
-    onClose, 
-    children 
-}: FullscreenModalProps) => {
+const FullscreenModal = memo(
+  ({ image, onClose, children }: FullscreenModalProps) => {
     const handleModalClick = useCallback(() => {
-        onClose();
+      onClose();
     }, [onClose]);
 
     const handleImageClick = (event: React.MouseEvent<HTMLImageElement>) => {
-        event.stopPropagation();
+      event.stopPropagation();
     };
 
     return (
-        <ModalContainer
-          className="flex flex-col gap-4 items-center justify-center"
-          onClick={event => event.stopPropagation()}
-          onClose={handleModalClick}
-        >
-            {image && (
-                <div
-                  className="max-h-[70vh] w-auto object-contain rounded-3xl ring-2 ring-offset-2 shadow-[0_0_30px_4px_black]"
-                  onClick={handleImageClick}
-                  tabIndex={0}
-                  role="button"
-                  onKeyDown={event => {
-                      if (event.key === 'Enter' || event.key === ' ') {
-                          handleImageClick(event as any);
-                      }
-                  }}
-                >
-                    <img
-                      src={image}
-                      className="max-h-[70vh] w-auto object-contain rounded-3xl ring-2 ring-offset-2 shadow-[0_0_30px_4px_black]"
-                      alt={FULLSCREEN_MODAL_ALT}
-                    />
-                </div>
-            )}
-            {children}
-        </ModalContainer>
+      <ModalContainer
+        className="flex flex-col items-center justify-center gap-4"
+        onClick={(event) => event.stopPropagation()}
+        onClose={handleModalClick}
+      >
+        {image && (
+          <div
+            className="max-h-[70vh] w-auto rounded-3xl object-contain shadow-[0_0_30px_4px_black] ring-2 ring-offset-2"
+            onClick={handleImageClick}
+            tabIndex={0}
+            role="button"
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                handleImageClick(event as any);
+              }
+            }}
+          >
+            <img
+              src={image}
+              className="max-h-[70vh] w-auto rounded-3xl object-contain shadow-[0_0_30px_4px_black] ring-2 ring-offset-2"
+              alt={FULLSCREEN_MODAL_ALT}
+            />
+          </div>
+        )}
+        {children}
+      </ModalContainer>
     );
-});
+  }
+);
 
 FullscreenModal.displayName = 'FullscreenModal';
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
-export default FullscreenModal; 
+export default FullscreenModal;

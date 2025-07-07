@@ -85,7 +85,9 @@ const Iridescence = ({
   const mousePos = useRef({ x: 0.5, y: 0.5 });
 
   useEffect(() => {
-    if (!ctnDom.current) { return; }
+    if (!ctnDom.current) {
+      return;
+    }
     const ctn = ctnDom.current;
     const renderer = new Renderer();
     const gl = renderer.gl;
@@ -98,19 +100,15 @@ const Iridescence = ({
         uTime: { value: 0 },
         uColor: { value: new Color(...color) },
         uResolution: {
-          value: new Color(
-            gl.canvas.width,
-            gl.canvas.height,
-            gl.canvas.width / gl.canvas.height
-          ),
+          value: new Color(gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height),
         },
-        uMouse: { 
-          value: new Float32Array([mousePos.current.x, mousePos.current.y]) 
+        uMouse: {
+          value: new Float32Array([mousePos.current.x, mousePos.current.y]),
         },
         uAmplitude: { value: amplitude },
         uSpeed: { value: speed },
       },
-    });;
+    });
 
     function resize() {
       const scale = 1;
@@ -160,13 +158,7 @@ const Iridescence = ({
     };
   }, [color, speed, amplitude, mouseReact]);
 
-  return (
-    <div
-      ref={ctnDom}
-      className={`w-full h-full ${className}`}
-      {...rest}
-    />
-  );
+  return <div ref={ctnDom} className={`h-full w-full ${className}`} {...rest} />;
 };
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────

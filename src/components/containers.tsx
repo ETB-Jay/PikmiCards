@@ -4,13 +4,6 @@ import React, { ReactNode, PropsWithChildren } from 'react';
 import Iridescence from './Iridescence';
 
 /**
- * Container components for layout and modals in PikmiCards.
- * Includes MainContainer, ModalContainer, ScrollContainer, FlexRowBetween, FlexColCenter, and ErrorBox.
- *
- * @module containers
- */
-
-/**
  * Props for the Container component.
  * @property {string} [className] - Additional CSS classes for the container.
  * @property {ReactNode} children - The content to render inside the container.
@@ -41,7 +34,7 @@ const MainContainer = ({ children }: ContainerProps) => (
       speed={0.2}
       className="fixed inset-0 -z-1 opacity-70"
     />
-    <div className="min-h-screen w-screen relative flex flex-col items-center justify-center gap-5 p-5 select-none">
+    <div className="relative flex min-h-screen w-screen flex-col items-center justify-center gap-5 p-5 select-none">
       {children}
     </div>
   </>
@@ -54,44 +47,41 @@ const MainContainer = ({ children }: ContainerProps) => (
  * @param onClick - Click handler for the modal content.
  * @param onClose - Click handler for closing the modal.
  */
-const ModalContainer = ({ 
-  children, 
-  className, 
-  onClick, 
-  onClose 
-}: ModalContainerProps) => (
+const ModalContainer = ({ children, className, onClick, onClose }: ModalContainerProps) => (
   <div
-    className={`fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center w-screen h-screen cursor-pointer select-none${className}`}
+    className={`fixed inset-0 z-50 flex h-screen w-screen cursor-pointer items-center justify-center bg-black/50 backdrop-blur-sm select-none${className}`}
     onClick={onClose}
     tabIndex={0}
     role="button"
-    onKeyDown={event => {
+    onKeyDown={(event) => {
       if (event.key === 'Enter' || event.key === ' ') {
-        if (onClose) { 
-          onClose(event as unknown as React.MouseEvent<HTMLDivElement>); 
+        if (onClose) {
+          onClose(event as unknown as React.MouseEvent<HTMLDivElement>);
         }
       }
     }}
   >
     <div
-      className={`relative rounded-lg bg-green-smoke-50/10 shadow-2xl p-4 z-60 flex flex-col items-center justify-center gap-2 h-fit w-fit max-h-[90vh] max-w-[80vw] cursor-default prompt-animate ${className}`}
-      onClick={event => {
+      className={`bg-green-smoke-50/10 prompt-animate relative z-60 flex h-fit max-h-[90vh] w-fit max-w-[80vw] cursor-default flex-col items-center justify-center gap-2 rounded-lg p-4 shadow-2xl ${className}`}
+      onClick={(event) => {
         event.stopPropagation();
-        if (onClick) { onClick(event); }
+        if (onClick) {
+          onClick(event);
+        }
       }}
       tabIndex={0}
       role="button"
-      onKeyDown={event => {
+      onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
-          if (onClick) { 
-            onClick(event as unknown as React.MouseEvent<HTMLDivElement>); 
+          if (onClick) {
+            onClick(event as unknown as React.MouseEvent<HTMLDivElement>);
           }
         }
       }}
     >
       {children}
     </div>
-  </div >
+  </div>
 );
 
 /**
@@ -100,7 +90,7 @@ const ModalContainer = ({
  * @param className - Additional CSS classes.
  */
 const ScrollContainer = ({ children, className = '' }: ScrollContainerProps) => (
-  <div className={`flex flex-col gap-2 h-full overflow-y-scroll rounded-lg p-1 ${className}`}>
+  <div className={`flex h-full flex-col gap-2 overflow-y-scroll rounded-lg p-1 ${className}`}>
     {children}
   </div>
 );
@@ -110,10 +100,14 @@ const ScrollContainer = ({ children, className = '' }: ScrollContainerProps) => 
  * @param children - The content to render inside the row.
  * @param className - Additional CSS classes.
  */
-const FlexRowBetween = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`flex flex-row w-full justify-between items-center ${className}`}>
-    {children}
-  </div>
+const FlexRowBetween = ({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <div className={`flex w-full flex-row items-center justify-between ${className}`}>{children}</div>
 );
 
 /**
@@ -121,10 +115,14 @@ const FlexRowBetween = ({ children, className = '' }: { children: React.ReactNod
  * @param children - The content to render inside the column.
  * @param className - Additional CSS classes.
  */
-const FlexColCenter = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`flex flex-col items-center justify-center w-full ${className}`}>
-    {children}
-  </div>
+const FlexColCenter = ({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <div className={`flex w-full flex-col items-center justify-center ${className}`}>{children}</div>
 );
 
 /**
@@ -132,8 +130,16 @@ const FlexColCenter = ({ children, className = '' }: { children: React.ReactNode
  * @param children - The message content.
  * @param className - Additional CSS classes.
  */
-const ErrorBox = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`bg-red-800/40 ring-3 ring-red-950 text-red-100 text-center font-semibold rounded-lg py-2 px-3 animate-shake ${className}`}>
+const ErrorBox = ({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <div
+    className={`animate-shake rounded-lg bg-red-800/40 px-3 py-2 text-center font-semibold text-red-100 ring-3 ring-red-950 ${className}`}
+  >
     {children}
   </div>
 );

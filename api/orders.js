@@ -75,49 +75,68 @@ const getOrders = async (client) => {
       throw new Error('Invalid response from Shopify API');
     }
 
-    const temp = ordersData.edges.map((edge) => {
-      const order = edge.node;
+    const temp = ordersData.edges
+      .map((edge) => {
+        const order = edge.node;
 
-      const toTitleCase = (str) => str
-        .replace(/\w\S*/g, (text) => text.charAt(0)
-          .toUpperCase() + text.substring(1)
-            .toLowerCase());
+        const toTitleCase = (str) =>
+          str.replace(
+            /\w\S*/g,
+            (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+          );
 
-      if (!order) {
-        return null;
-      }
+        if (!order) {
+          return null;
+        }
 
-      return {
-        orderID: order.id,
-        customerName: order.customer?.displayName ? toTitleCase(order.customer.displayName) : null,
-        numberItems: order.currentSubtotalLineItemsQuantity,
-        deliveryMethod: order.shippingLines?.edges?.[0]?.node?.title,
-        items: order.fulfillmentOrders?.edges?.flatMap((fulfillEdge) => {
-          if (!fulfillEdge?.node) {
-            return [];
-          }
-          const locationName = fulfillEdge.node?.assignedLocation?.location?.name;
-          return fulfillEdge.node?.lineItems?.edges?.map((itemEdge) => {
-            const item = itemEdge.node?.lineItem;
-            const tags = item?.product?.tags;
-            if (!item) {
-              return null;
-            }
-            return {
-              itemID: item.id,
-              orderID: order.id,
-              itemName: item.name?.split(' - ').slice(0, -1).join(' - ') || item.name,
-              itemQuantity: item.quantity,
-              itemLocation: locationName,
-              itemSet: tags?.find((tag) => tag.startsWith('Set_'))?.replace('Set_', '') || null,
-              itemRarity: tags?.find((tag) => tag.startsWith('Rarity_'))?.replace('Rarity_', '') || null,
-              itemPrinting: item.variant?.title === 'Default Title' ? null : item.variant?.title,
-              imageUrl: item.variant?.image?.url || item.product?.featuredImage?.url || 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png'
-            };
-          }).filter(Boolean) || [];
-        }).filter(Boolean) || []
-      };
-    }).filter(Boolean);
+        return {
+          orderID: order.id,
+          customerName: order.customer?.displayName
+            ? toTitleCase(order.customer.displayName)
+            : null,
+          numberItems: order.currentSubtotalLineItemsQuantity,
+          deliveryMethod: order.shippingLines?.edges?.[0]?.node?.title,
+          items:
+            order.fulfillmentOrders?.edges
+              ?.flatMap((fulfillEdge) => {
+                if (!fulfillEdge?.node) {
+                  return [];
+                }
+                const locationName = fulfillEdge.node?.assignedLocation?.location?.name;
+                return (
+                  fulfillEdge.node?.lineItems?.edges
+                    ?.map((itemEdge) => {
+                      const item = itemEdge.node?.lineItem;
+                      const tags = item?.product?.tags;
+                      if (!item) {
+                        return null;
+                      }
+                      return {
+                        itemID: item.id,
+                        orderID: order.id,
+                        itemName: item.name?.split(' - ').slice(0, -1).join(' - ') || item.name,
+                        itemQuantity: item.quantity,
+                        itemLocation: locationName,
+                        itemSet:
+                          tags?.find((tag) => tag.startsWith('Set_'))?.replace('Set_', '') || null,
+                        itemRarity:
+                          tags?.find((tag) => tag.startsWith('Rarity_'))?.replace('Rarity_', '') ||
+                          null,
+                        itemPrinting:
+                          item.variant?.title === 'Default Title' ? null : item.variant?.title,
+                        imageUrl:
+                          item.variant?.image?.url ||
+                          item.product?.featuredImage?.url ||
+                          'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png',
+                      };
+                    })
+                    .filter(Boolean) || []
+                );
+              })
+              .filter(Boolean) || [],
+        };
+      })
+      .filter(Boolean);
 
     orders = [...orders, ...temp];
     hasNextPage = ordersData.pageInfo.hasNextPage;
@@ -126,7 +145,7 @@ const getOrders = async (client) => {
     }
   }
   return orders;
-}; 
+};
 
 async function handler(req, res) {
   try {

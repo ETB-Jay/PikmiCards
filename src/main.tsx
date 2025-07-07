@@ -16,24 +16,27 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Navigate to="/login" replace />,
-  }, {
+  },
+  {
     path: '/login',
-    element: <Login />
-  }, {
+    element: <Login />,
+  },
+  {
     path: '/pick',
     element: (
       <ProtectedRoute>
         <Pick />
       </ProtectedRoute>
-    )
-  }, {
+    ),
+  },
+  {
     path: '/guide',
     element: (
       <ProtectedRoute>
         <Guide />
       </ProtectedRoute>
-    )
-  }
+    ),
+  },
 ]);
 
 // ─ Render ───────────────────────────────────────────────────────────────────────────────────────
