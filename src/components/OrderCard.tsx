@@ -1,4 +1,4 @@
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import React, { useCallback, memo } from 'react';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -7,7 +7,7 @@ import { useFullscreen, useOrderDisplay } from '../context/useContext';
 import { ItemData } from '../types';
 
 import { ImageDisplay } from './ImageDisplay';
-import { Tags } from './modal';
+import { Tags, TagPill } from './modal';
 
 /**
  * Props for the OrderCard component.
@@ -86,16 +86,16 @@ const OrderCard = memo(({ item, selected, large, onImageClick }: CardProps) => {
     let itemNameSpan = null;
     if (large && item.itemName) {
       itemNameSpan = (
-        <span className="block text-wrap rounded-2xl mb-1.5 text-silver-100 text-sm md:text-md font-semibold">
+        <div className="font-semibold mb-2 text-silver-100 text-sm md:text-md">
           {item.itemName}
-        </span>
+        </div>
       );
     }
 
     let largeDetails = null;
     if (large) {
       largeDetails = (
-        <div className="flex flex-col h-full w-fit max-w-[calc(100%-6.5rem)] min-w-0">
+        <div className="flex flex-col h-full w-full max-w-[calc(100%-6.5rem)] min-w-0">
           {itemNameSpan}
           <div className="flex flex-row flex-wrap min-w-0 gap-2 sm:gap-3">
             <Tags item={item} />
@@ -133,4 +133,5 @@ const OrderCard = memo(({ item, selected, large, onImageClick }: CardProps) => {
 
 OrderCard.displayName = "OrderCard";
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export default OrderCard;

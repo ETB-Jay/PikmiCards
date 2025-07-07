@@ -1,4 +1,4 @@
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import React, { memo, useCallback } from 'react';
 
 import { ModalContainer } from '../components/containers';
@@ -10,7 +10,7 @@ import { ModalContainer } from '../components/containers';
  * @module FullscreenModal
  */
 
-// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
+// ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const FULLSCREEN_MODAL_ALT = "Fullscreen Modal Image";
 
 /**
@@ -32,7 +32,11 @@ interface FullscreenModalProps {
  * @param children - Optional additional content.
  * @returns {JSX.Element}
  */
-const FullscreenModal: React.FC<FullscreenModalProps> = memo(({ image, onClose, children }: FullscreenModalProps) => {
+const FullscreenModal: React.FC<FullscreenModalProps> = memo(({ 
+    image, 
+    onClose, 
+    children 
+}: FullscreenModalProps) => {
     const handleModalClick = useCallback(() => {
         onClose();
     }, [onClose]);
@@ -73,4 +77,5 @@ const FullscreenModal: React.FC<FullscreenModalProps> = memo(({ image, onClose, 
 
 FullscreenModal.displayName = 'FullscreenModal';
 
+// ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default FullscreenModal; 

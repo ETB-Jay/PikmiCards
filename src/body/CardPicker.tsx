@@ -4,7 +4,7 @@
  *
  * @module CardPicker
  */
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import React, { ReactNode } from 'react';
 
 import ToPick from './sections/ToPick';
@@ -16,7 +16,13 @@ import CardGridDisplay from './sections/CardGridDisplay';
  * @param content - The content to display inside the container.
  * @param className - Additional CSS classes for the container.
  */
-const GridContainer = ({ content, className='' }: { content: ReactNode, className: string | undefined }) => {
+const GridContainer = ({ 
+  content, 
+  className='' 
+}: { 
+  content: ReactNode, 
+  className: string | undefined 
+}) => {
     return (
         <div className={`flex flex-col bg-white/20 p-2 rounded-2xl ${className}`}>
             {content}
@@ -31,7 +37,10 @@ const GridContainer = ({ content, className='' }: { content: ReactNode, classNam
 const CardPicker = (): React.ReactElement => {
     return (
         <div className='h-full w-full max-h-[calc(95vh-3.75rem)] grid grid-cols-1 lg:grid-cols-[45%_54.5%] xl:grid-cols-[39%_60.5%] lg:grid-rows-[calc(99.5%-8rem)_8rem] gap-2 lg:gap-[0.5%]'>
-            <GridContainer content={<ToPick />} className='row-span-2 max-h-[70vh] lg:max-h-none' />
+            <GridContainer 
+              content={<ToPick />} 
+              className='row-span-2 max-h-[70vh] lg:max-h-none' 
+            />
             <GridContainer content={<CardGridDisplay />} className='' />
             <GridContainer content={<QueuePile />} className='' />
         </div>
@@ -40,5 +49,5 @@ const CardPicker = (): React.ReactElement => {
 
 CardPicker.displayName = 'CardPicker';
 
+// ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default CardPicker;
-// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────

@@ -28,7 +28,11 @@ interface DetermineLocationProps {
  * @param currentLocation - The currently selected location.
  * @param onSelect - Function to select this location.
  */
-const LocationOption = ({ newLocation, currentLocation, onSelect }: {
+const LocationOption = ({ 
+    newLocation, 
+    currentLocation, 
+    onSelect 
+}: {
     newLocation: Location;
     currentLocation: Location;
     onSelect: (location: Location) => void;
@@ -51,7 +55,9 @@ const LocationOption = ({ newLocation, currentLocation, onSelect }: {
             }
           }}
         >
-            <span className="font-semibold text-green-950 text-sm BFont">{newLocation}</span>
+            <span className="font-semibold text-green-950 text-sm BFont">
+                {newLocation}
+            </span>
         </div>
     );
 };
@@ -64,7 +70,11 @@ LocationOption.displayName = 'LocationOption';
  * @param setLocation - Function to update the location.
  * @param prompt - Function to toggle the prompt visibility.
  */
-const DetermineLocation = ({ location, setLocation, prompt }: DetermineLocationProps): React.ReactElement => {
+const DetermineLocation = ({ 
+    location, 
+    setLocation, 
+    prompt 
+}: DetermineLocationProps): React.ReactElement => {
 
     const ref = React.useRef<HTMLDivElement>(null);
     const handleClickOutside = (event: Event) => {
@@ -102,4 +112,5 @@ const DetermineLocation = ({ location, setLocation, prompt }: DetermineLocationP
 
 DetermineLocation.displayName = 'DetermineLocation';
 
+// ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default DetermineLocation;

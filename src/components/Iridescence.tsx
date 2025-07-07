@@ -1,8 +1,8 @@
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { Renderer, Program, Mesh, Color, Triangle } from 'ogl';
 import React, { useEffect, useRef } from 'react';
 
-// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
+// ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const vertexShader = `
 attribute vec2 uv;
 attribute vec2 position;
@@ -46,7 +46,7 @@ void main() {
 }
 `;
 
-// ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────────
+// ─ Interfaces ──────────────────────────────────────────────────────────────────────────────────=
 /**
  * Props for the Iridescence component.
  * @property color - RGB color array for the effect.
@@ -63,7 +63,7 @@ interface IridescenceProps {
   className?: string;
 }
 
-// ─ Components ────────────────────────────────────────────────────────────────────────────────────────
+// ─ Components ───────────────────────────────────────────────────────────────────────────────────
 /**
  * Iridescence renders an animated background using a custom WebGL shader.
  * @param color - RGB color array for the effect.
@@ -104,7 +104,9 @@ const Iridescence = ({
             gl.canvas.width / gl.canvas.height
           ),
         },
-        uMouse: { value: new Float32Array([mousePos.current.x, mousePos.current.y]) },
+        uMouse: { 
+          value: new Float32Array([mousePos.current.x, mousePos.current.y]) 
+        },
         uAmplitude: { value: amplitude },
         uSpeed: { value: speed },
       },
@@ -167,5 +169,5 @@ const Iridescence = ({
   );
 };
 
-// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
+// ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default Iridescence;

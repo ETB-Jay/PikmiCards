@@ -1,10 +1,12 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import React, { useMemo, memo, useCallback } from 'react';
+
 import { useOrderDisplay, useOrders } from '../../context/useContext';
 import { ScrollContainer } from '../../components/containers';
 import OrderCard from '../../components/OrderCard';
 import { ItemData, ItemID, OrderID } from '../../types';
 import { findItemByID } from '../../context/orderFunctions';
+import { Button } from '../../components/modal';
 
 /**
  * ToPick section component.
@@ -59,20 +61,16 @@ const ToPick = (): React.ReactElement => {
 
         return (
             <>
-                <button
+                <Button
                   onClick={handleConfirm}
                   className="py-1.5 px-3 w-fit rounded-full bg-teal-600/50 hover:bg-teal-700/50 active:bg-teal-800/50 ring-2 text-white ring-teal-900 font-medium text-xs shadow transition-all duration-150 cursor-pointer"
-                  type="button"
-                >
-                    {CONFIRM_BUTTON_TEXT} {selectedItems.size} {itemLabel}
-                </button>
-                <button
+                  label={`${CONFIRM_BUTTON_TEXT} ${selectedItems.size} ${itemLabel}`}
+                />
+                <Button
                   onClick={handleClear}
                   className="py-1.5 px-3 w-fit rounded-full bg-red-500/50 hover:bg-red-600/50 active:bg-red-700/50 ring-2 ring-red-900 text-white font-medium text-xs shadow transition-all duration-150 cursor-pointer"
-                  type="button"
-                >
-                    {CLEAR_BUTTON_TEXT}
-                </button>
+                  label={CLEAR_BUTTON_TEXT}
+                />
             </>
         );
     }, [selectedItems.size, handleConfirm, handleClear, itemLabel]);
@@ -93,4 +91,5 @@ const ToPick = (): React.ReactElement => {
 
 ToPick.displayName = 'ToPick';
 
+// ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default memo(ToPick);

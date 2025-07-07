@@ -1,4 +1,4 @@
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import React, { useState } from 'react';
 
 import Hamburger from './buttons/Hamburger';
@@ -7,7 +7,7 @@ import RefreshButton from './buttons/RefreshButton';
 import Sidebar from './Sidebar';
 
 /**
- * Header displays the top navigation bar with sidebar, location, and refresh controls.
+ * @description Header displays the top navigation bar with sidebar, location, and refresh controls.
  */
 const Header = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
@@ -38,6 +38,5 @@ const Header = () => {
 
 Header.displayName = 'Header';
 
+// ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default Header;
-
-// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────

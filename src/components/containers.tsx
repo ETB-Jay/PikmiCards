@@ -1,11 +1,11 @@
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import React, { ReactNode, PropsWithChildren } from 'react';
 
 import Iridescence from './Iridescence';
 
 /**
  * Container components for layout and modals in PikmiCards.
- * Includes MainContainer, ModalContainer, and ScrollContainer.
+ * Includes MainContainer, ModalContainer, ScrollContainer, FlexRowBetween, FlexColCenter, and ErrorBox.
  *
  * @module containers
  */
@@ -39,7 +39,7 @@ const MainContainer = ({ children }: ContainerProps) => (
       color={[0, 0.7, 1]}
       mouseReact={false}
       speed={0.2}
-      className="absolute inset-0 -z-1 opacity-70"
+      className="fixed inset-0 -z-1 opacity-70"
     />
     <div className="min-h-screen w-screen relative flex flex-col items-center justify-center gap-5 p-5 select-none">
       {children}
@@ -54,7 +54,12 @@ const MainContainer = ({ children }: ContainerProps) => (
  * @param onClick - Click handler for the modal content.
  * @param onClose - Click handler for closing the modal.
  */
-const ModalContainer = ({ children, className, onClick, onClose }: ModalContainerProps) => (
+const ModalContainer = ({ 
+  children, 
+  className, 
+  onClick, 
+  onClose 
+}: ModalContainerProps) => (
   <div
     className={`fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center w-screen h-screen cursor-pointer select-none${className}`}
     onClick={onClose}
@@ -62,7 +67,9 @@ const ModalContainer = ({ children, className, onClick, onClose }: ModalContaine
     role="button"
     onKeyDown={event => {
       if (event.key === 'Enter' || event.key === ' ') {
-        if (onClose) { onClose(event as unknown as React.MouseEvent<HTMLDivElement>); }
+        if (onClose) { 
+          onClose(event as unknown as React.MouseEvent<HTMLDivElement>); 
+        }
       }
     }}
   >
@@ -76,7 +83,9 @@ const ModalContainer = ({ children, className, onClick, onClose }: ModalContaine
       role="button"
       onKeyDown={event => {
         if (event.key === 'Enter' || event.key === ' ') {
-          if (onClick) { onClick(event as unknown as React.MouseEvent<HTMLDivElement>); }
+          if (onClick) { 
+            onClick(event as unknown as React.MouseEvent<HTMLDivElement>); 
+          }
         }
       }}
     >
@@ -96,4 +105,38 @@ const ScrollContainer = ({ children, className = '' }: ScrollContainerProps) => 
   </div>
 );
 
-export { MainContainer, ModalContainer, ScrollContainer };
+/**
+ * FlexRowBetween provides a flex row with justify-between and full width.
+ * @param children - The content to render inside the row.
+ * @param className - Additional CSS classes.
+ */
+const FlexRowBetween = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <div className={`flex flex-row w-full justify-between items-center ${className}`}>
+    {children}
+  </div>
+);
+
+/**
+ * FlexColCenter provides a flex column with centered alignment and optional gap.
+ * @param children - The content to render inside the column.
+ * @param className - Additional CSS classes.
+ */
+const FlexColCenter = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <div className={`flex flex-col items-center justify-center w-full ${className}`}>
+    {children}
+  </div>
+);
+
+/**
+ * ErrorBox provides a styled box for error or info messages.
+ * @param children - The message content.
+ * @param className - Additional CSS classes.
+ */
+const ErrorBox = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <div className={`bg-red-100 border border-red-300 text-red-900 text-center font-semibold rounded-lg py-2 px-3 animate-shake ${className}`}>
+    {children}
+  </div>
+);
+
+// ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
+export { MainContainer, ModalContainer, ScrollContainer, FlexRowBetween, FlexColCenter, ErrorBox };

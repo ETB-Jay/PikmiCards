@@ -15,7 +15,11 @@ const HAMBURGER_ALT = "Hamburger Icon";
  * Hamburger displays a clickable hamburger icon for toggling the sidebar.
  * @param loadSidebar - Function to toggle the sidebar open/close state.
  */
-const Hamburger = ({ loadSidebar }: { loadSidebar: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const Hamburger = ({ 
+  loadSidebar 
+}: { 
+  loadSidebar: React.Dispatch<React.SetStateAction<boolean>> 
+}) => {
     const handleClick = () => {
         loadSidebar(prev => !prev);
     };
@@ -28,7 +32,7 @@ const Hamburger = ({ loadSidebar }: { loadSidebar: React.Dispatch<React.SetState
           tabIndex={0}
           role="button"
           onKeyDown={event => {
-              if (event.key === 'Enter' || event.key === ' ') {
+              if (event.key === 'Tab' || event.key === ' ') {
                   handleClick();
               }
           }}
@@ -38,4 +42,5 @@ const Hamburger = ({ loadSidebar }: { loadSidebar: React.Dispatch<React.SetState
     );
 };
 
+// ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default Hamburger;

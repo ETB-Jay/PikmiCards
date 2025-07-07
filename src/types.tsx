@@ -2,7 +2,7 @@
 /**
  * @description OrderData represents a Shopify Order with its associated data.
  * 
- * @property {OrderID} orderID - The Order's unique identifier.
+ * @property {OrderID} orderID - The order's unique identifier.
  * @property {string} customerName - The customer's name.
  * @property {string} deliveryMethod - The order's delivery method.
  * @property {number} numberItems - The number of individual items purchased by the Customer

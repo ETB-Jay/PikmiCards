@@ -56,7 +56,11 @@ const getOrderKeys = (orders: OrderData[]): Order[] => {
  * @param itemID - The item ID.
  * @returns The matching ItemData or undefined.
  */
-const findItemByID = (orders: OrderData[], orderID: OrderID, itemID: ItemID): ItemData | undefined => {
+const findItemByID = (
+    orders: OrderData[], 
+    orderID: OrderID, 
+    itemID: ItemID
+): ItemData | undefined => {
     const order = findOrderByID(orders, orderID);
     return order?.items.find(item => item.itemID === itemID);
 };

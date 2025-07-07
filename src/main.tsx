@@ -1,4 +1,4 @@
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ import ProtectedRoute from './context/ProtectedRoute';
 
 import './root.css';
 
-// ─ Router ───────────────────────────────────────────────────────────────────────────────────────────
+// ─ Router ───────────────────────────────────────────────────────────────────────────────────────
 const router = createBrowserRouter([
   {
     path: '/',
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
   }
 ]);
 
-// ─ Render ───────────────────────────────────────────────────────────────────────────────────────────
+// ─ Render ───────────────────────────────────────────────────────────────────────────────────────
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Providers>

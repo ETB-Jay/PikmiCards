@@ -31,7 +31,13 @@ interface ImageDisplayProps {
  * @param {ImageDisplayProps} props - The props for the image display.
  * @returns {JSX.Element}
  */
-const ImageDisplay = memo(({ imageUrl, alt, onClick, className = '', onError }: ImageDisplayProps) => {
+const ImageDisplay = memo(({ 
+  imageUrl, 
+  alt, 
+  onClick, 
+  className = '', 
+  onError 
+}: ImageDisplayProps) => {
   const imageClass = useMemo(() =>
     `h-full cursor-pointer rounded-lg hover:brightness-50 hover:shadow-lg transition-all ${className}`,
     [className]
@@ -65,4 +71,5 @@ const ImageDisplay = memo(({ imageUrl, alt, onClick, className = '', onError }: 
 
 ImageDisplay.displayName = "ImageDisplay";
 
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
 export { ImageDisplay }; 

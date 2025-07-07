@@ -1,25 +1,24 @@
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import React, { useEffect, memo, useContext, useState } from 'react';
 
 import Header from '../header/Header';
 import CardPicker from '../body/CardPicker';
 import { useOrders, useOrderDisplay } from '../context/useContext';
-import { MainContainer } from '../components/containers';
+import { MainContainer, FlexColCenter } from '../components/containers';
 import { LocationContext } from '../context/Context';
 
-// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
+// ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const SPACESHIP_ALT = "Spaceship illustration";
 const LOADING_TEXT = "Loading Orders";
 
-// ─ Loading Spinner ───────────────────────────────────────────────────────────────────────────────────
 /**
- * LoadingSpinner displays an animated loading indicator for orders.
+ * @description LoadingSpinner displays an animated loading indicator for orders
  * @returns Loading Spinner component
  */
 const LoadingSpinner = memo((): React.ReactElement => (
-  <div className="flex flex-col items-center justify-center gap-4 h-full w-full">
+  <FlexColCenter className="gap-4 h-full w-full">
     <div className="animate-float-spin">
-      <div className="relative flex flex-row flex-nowrap items-center justify-center animate-fly-horizontal">
+      <div className="relative flex flex-row items-center justify-center animate-fly-horizontal">
         <div className="spaceship-fire spaceship-fire-horizontal" />
         <img
           src="/spaceship.png"
@@ -32,15 +31,13 @@ const LoadingSpinner = memo((): React.ReactElement => (
       {LOADING_TEXT}
       <span className="loading-dots" />
     </span>
-  </div>
+  </FlexColCenter>
 ));
 LoadingSpinner.displayName = "LoadingSpinner"
 
-// ─ Pick Page ─────────────────────────────────────────────────────────────────────────────────────────
 /**
- * Pick is the main page for picking orders.
- * Handles order loading, filtering, and layout.
- * @returns Order Picking component
+ * @description Pick is the main page for picking orders
+ * Handles order loading, filtering, and layout
  */
 const Pick = memo((): React.ReactElement => {
   const { orders, fetchOrders, fromOrderDataToOrder } = useOrders();
@@ -50,12 +47,9 @@ const Pick = memo((): React.ReactElement => {
 
   useEffect(() => {
     const loadOrders = async () => {
-      try {
-        await fetchOrders();
-      } catch (err) {
-        setError(`Failed to fetch orders ${err}`);
-      }
-    };
+      try { await fetchOrders(); } 
+      catch (err) { setError(`Failed to fetch orders ${err}`); 
+    }};
     loadOrders();
   }, []);
 
@@ -66,8 +60,9 @@ const Pick = memo((): React.ReactElement => {
   }, [orders, location]);
 
   const content = orderDisplay.length === 0
-    ? <LoadingSpinner />
-    : (
+    ? (
+      <LoadingSpinner />
+    ) : (
       <>
         <Header />
         <CardPicker />
@@ -81,7 +76,8 @@ const Pick = memo((): React.ReactElement => {
     </MainContainer>
   );
 });
+
 Pick.displayName = "Pick"
 
-// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
+// ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default Pick;

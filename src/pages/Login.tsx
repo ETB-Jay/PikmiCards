@@ -1,30 +1,29 @@
 /**
- * Login page for PikmiCards.
- * Provides a login form for user authentication.
+ * Login page for PikmiCards
+ * Provides a login form for user authentication
  *
  * @module Login
  */
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import React, { useState } from 'react';
 import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
 
-import { MainContainer } from '../components/containers';
+import { MainContainer, FlexColCenter, ErrorBox } from '../components/containers';
 import { useAuth } from '../context/useContext';
 
-// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
+// ─ Constants ──────────────────────────────────────────────────────────────────────────────────────
 const LOGIN_TITLE = "Login";
 const LOGIN_BUTTON_TEXT = "Sign In";
 const LOGIN_IMAGE_ALT = "Login Illustration";
 
-// ─ InputField Component ──────────────────────────────────────────────────────────────────────────────
 /**
- * InputField displays a styled input with an icon for the login form.
- * @param label - The input label/placeholder.
- * @param type - The input type (default: text).
- * @param value - The input value.
- * @param onChange - Change handler for the input.
- * @param icon - Icon to display in the input.
+ * InputField displays a styled input with an icon for the login form
+ * @param label - The input label/placeholder
+ * @param type - The input type (default: text)
+ * @param value - The input value
+ * @param onChange - Change handler for the input
+ * @param icon - Icon to display in the input
  */
 const InputField = ({
   label,
@@ -57,9 +56,9 @@ const InputField = ({
   );
 };
 
-// ─ Login Page ────────────────────────────────────────────────────────────────────────────────────────
+
 /**
- * Login page component for user authentication.
+ * @description Login page component for user authentication.
  */
 function Login(): React.ReactElement {
   const [username, setUsername] = useState<string>('');
@@ -97,7 +96,7 @@ function Login(): React.ReactElement {
 
   return (
     <MainContainer>
-      <div className="flex flex-col items-center justify-center w-full max-w-2xl animate-fade-in">
+      <FlexColCenter className="max-w-2xl animate-fade-in">
         <img src="/pikmicard.png" alt={LOGIN_IMAGE_ALT} className="relative top-0 h-24 w-auto mb-6 drop-shadow-2xl z-20" />
         <form onSubmit={handleLogin} className="flex flex-col gap-6 max-w-2xl w-[90vw] sm:w-[400px] backdrop-blur-md rounded-2xl p-10 z-10 shadow-2xl bg-green-smoke-400/60 ring-2 ring-green-smoke-600 border border-green-smoke-300">
           <h1 className="text-3xl font-extrabold text-green-smoke-900 text-center mb-2 tracking-wide drop-shadow">{LOGIN_TITLE}</h1>
@@ -109,7 +108,7 @@ function Login(): React.ReactElement {
             }}
             icon={<PersonIcon />}
           />
-          {error.username && <div className="bg-red-100 border border-red-300 text-red-900 text-center font-semibold rounded-lg py-2 px-3 animate-shake">{error.username}</div>}
+          {error.username && <ErrorBox>{error.username}</ErrorBox>}
           <InputField
             label="Password"
             type="password"
@@ -119,8 +118,8 @@ function Login(): React.ReactElement {
             }}
             icon={<KeyIcon />}
           />
-          {error.password && <div className="bg-red-100 border border-red-300 text-red-900 text-center font-semibold rounded-lg py-2 px-3 animate-shake">{error.password}</div>}
-          {error.general && <div className="bg-red-100 border border-red-300 text-red-900 text-center font-semibold rounded-lg py-2 px-3 animate-shake">{error.general}</div>}
+          {error.password && <ErrorBox>{error.password}</ErrorBox>}
+          {error.general && <ErrorBox>{error.general}</ErrorBox>}
           <button
             className="mt-2 bg-green-smoke-600 hover:bg-green-smoke-700 text-white font-bold py-2 rounded-xl shadow transition-all text-lg tracking-wide focus:outline-none focus:ring-2 focus:ring-green-smoke-800 cursor-pointer"
             type="submit"
@@ -128,10 +127,10 @@ function Login(): React.ReactElement {
             {LOGIN_BUTTON_TEXT}
           </button>
         </form>
-      </div>
+      </FlexColCenter>
     </MainContainer>
   );
 };
 
-// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
+// ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default Login;

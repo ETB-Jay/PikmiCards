@@ -1,40 +1,64 @@
 /**
- * Guide page for PikmiCards.
- * Provides user instructions for picking orders, using the sidebar, and logging out.
+ * Guide page for PikmiCards
+ * Provides user instructions for picking orders, using the sidebar, and logging out
  *
  * @module Guide
  */
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import React, { useState } from 'react';
 
-import { MainContainer } from '../components/containers';
+import { MainContainer, ScrollContainer, FlexRowBetween } from '../components/containers';
 import Hamburger from '../header/buttons/Hamburger';
 import Sidebar from '../header/Sidebar';
+import { SectionTitle } from '../components/modal';
 
-// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
-const GUIDE_TITLE = "Guide";
-const GUIDE_SECTION_1 = "Section 1";
-const GUIDE_SECTION_2 = "Section 2";
-const GUIDE_SECTION_3 = "Logging Out";
-const GUIDE_LIST_ITEM_1 = "First item";
-const GUIDE_LIST_ITEM_2 = "Second item";
-const GUIDE_LIST_ITEM_3 = "Third item";
-const GUIDE_LIST_ITEM_4 = "Fourth item";
-const GUIDE_LIST_ITEM_5 = "Fifth item";
-const GUIDE_LIST_ITEM_6 = "Sixth item";
-const GUIDE_LIST_ITEM_7 = "Seventh item";
-const GUIDE_LIST_ITEM_8 = "Eighth item";
-const GUIDE_LIST_ITEM_9 = "Ninth item";
-const GUIDE_LIST_ITEM_10 = "Tenth item";
-const GUIDE_SPAN_1 = "Span 1";
-const GUIDE_SPAN_2 = "Span 2";
-const GUIDE_SPAN_3 = "Span 3";
-const GUIDE_SPAN_4 = "Span 4";
+// ─ Guide Page Content ─
+const GUIDE_TEXT = {
+  githubAlt: 'Github',
+  title: 'Guide to using PikmiCards',
+  subtitle: 'How to use PikmiCards effectively',
+  keywords: {
+    picklist: 'Picklist',
+    queue: 'Queue Pile',
+    box: 'Box Grid',
 
-// ─ Guide Page ────────────────────────────────────────────────────────────────────────────────────────
-/**
- * Guide page component with user instructions.
- */
+    picker: 'Picker',
+    guide: 'Guide',
+    logout: 'Login Page'
+
+  },
+  header: {
+    hamburger: ['The hamburger icon displays the sidebar, letting the user swap between the', ',', 'and'],
+    location: 'The location can be changed by selecting the location button (defaults to the Oakville location). This will refresh the page so make sure to confirm any orders beforehand',
+    refresh: 'Refresh the order list with the refresh button. This will also reset any progress made.'
+  },
+  pick: {
+    picklist: {
+      subtitle: ['Items in the', 'are displayed in a grid on the left'],
+      features: [
+        "Click on an item's image to see the item more clearly",
+        'Click on the rest of the grid to select the item and confirm it'
+      ]
+    },
+    queue: {
+      subtitle: ['Items in the', 'are displayed in the bottom right'],
+      features: [
+        "Click on an item's image to see the item more clearly",
+        "If an item's order has appeared on the box and is currently in the queue pile, then the item will be highlighted a dark brown and will appear at the front of the list",
+        'Items can be confirmed by clicking the square icon'
+      ]
+    },
+    box: {
+      subtitle: ['Items in the', 'are displayed on the top right'],
+      features: [
+        'Click on a box to see the order details and confirm the order',
+        'Once an order has been confirmed, a new order will take its place'
+      ]
+    }
+  }
+};
+
+/** @description Guide page component with user instructions */
 function Guide(): React.ReactElement {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -55,40 +79,59 @@ function Guide(): React.ReactElement {
       {sidebarVisible && (
         <Sidebar open={sidebarOpen} closeSidebar={closeSidebar} />
       )}
-      <div className="absolute top-4 left-4 z-10">
+      <FlexRowBetween className="relative z-20">
         <Hamburger loadSidebar={openSidebar} />
-      </div>
-      <div className="max-w-2xl mx-auto p-6 text-white">
-        <h1 className="text-3xl font-bold mb-6 text-center">{GUIDE_TITLE}</h1>
-        <section className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">{GUIDE_SECTION_1}</h2>
-          <ul className="list-disc list-inside space-y-1">
-            <li>{GUIDE_LIST_ITEM_1} <span>{GUIDE_SPAN_1}</span></li>
-            <li>{GUIDE_LIST_ITEM_2} <span>{GUIDE_SPAN_2}</span></li>
-            <li>{GUIDE_LIST_ITEM_3} <span>{GUIDE_SPAN_3}</span></li>
-            <li>{GUIDE_LIST_ITEM_4} <span>{GUIDE_SPAN_4}</span></li>
+        <div className='h-8 w-8 hover:brightness-130 cursor-pointer'>
+          <img src='./Github.png' alt={GUIDE_TEXT.githubAlt} />
+        </div>
+      </FlexRowBetween>
+      <ScrollContainer className="relative z-10 max-w-2xl gap-5 w-full mx-auto py-8 px-5 text-white bg-black/30 shadow-2xl border border-indigo-700 backdrop-blur-md">
+        <div className='flex flex-col'>
+          <h1 className="text-4xl font-extrabold text-center text-green-300 drop-shadow">{GUIDE_TEXT.title}</h1>
+          <h2 className="text-lg text-center text-green-200">{GUIDE_TEXT.subtitle}</h2>
+        </div>
+
+        {/* Pick List Section */}
+        <div className='flex flex-col'>
+          <SectionTitle>{GUIDE_TEXT.keywords.picklist}</SectionTitle>
+          <p className="text-green-smoke-200 font-semibold mb-2">
+            {GUIDE_TEXT.pick.picklist.subtitle.map((part) => <span key={part}>{part} </span>)}
+          </p>
+          <ul className="list-disc list-outside ml-8 text-gray-100 break-words whitespace-pre-line">
+            {GUIDE_TEXT.pick.picklist.features.map((feature) => (
+              <li className="ml-6 break-words whitespace-pre-line" key={feature}>{feature}</li>
+            ))}
           </ul>
-        </section>
-        <section className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">{GUIDE_SECTION_2}</h2>
-          <ul className="list-disc list-inside space-y-1">
-            <li>{GUIDE_LIST_ITEM_5} <span>{GUIDE_SPAN_1}</span></li>
-            <li>{GUIDE_LIST_ITEM_6} <span>{GUIDE_SPAN_2}</span></li>
-            <li>{GUIDE_LIST_ITEM_7} <span>{GUIDE_SPAN_3}</span></li>
-            <li>{GUIDE_LIST_ITEM_8} <span>{GUIDE_SPAN_4}</span></li>
+        </div>
+
+        {/* Queue Pile Section */}
+        <div className='flex flex-col'>
+          <SectionTitle>{GUIDE_TEXT.keywords.queue}</SectionTitle>
+          <p className="text-green-smoke-200 font-semibold mb-2">
+            {GUIDE_TEXT.pick.queue.subtitle.map((part) => <span key={part}>{part} </span>)}
+          </p>
+          <ul className="list-disc list-outside ml-8 text-gray-100 break-words whitespace-pre-line">
+            {GUIDE_TEXT.pick.queue.features.map((feature) => (
+              <li className="ml-6 break-words whitespace-pre-line" key={feature}>{feature}</li>
+            ))}
           </ul>
-        </section>
-        <section>
-          <h2 className="text-xl font-semibold mb-2">{GUIDE_SECTION_3}</h2>
-          <ul className="list-disc list-inside space-y-1">
-            <li>{GUIDE_LIST_ITEM_9} <span>{GUIDE_SPAN_1}</span></li>
-            <li>{GUIDE_LIST_ITEM_10} <span>{GUIDE_SPAN_2}</span></li>
+        </div>
+
+        {/* Box Grid Section */}
+        <div className='flex flex-col'>
+          <SectionTitle>{GUIDE_TEXT.keywords.box}</SectionTitle>
+          <p className="text-green-smoke-200 font-semibold mb-2">
+            {GUIDE_TEXT.pick.box.subtitle.map((part) => <span key={part}>{part} </span>)}
+          </p>
+          <ul className="list-disc list-outside ml-8 text-gray-100 break-words whitespace-pre-line">           {GUIDE_TEXT.pick.box.features.map((feature) => (
+            <li className="ml-6 break-words whitespace-pre-line" key={feature}>{feature}</li>
+          ))}
           </ul>
-        </section>
-      </div>
+        </div>
+      </ScrollContainer>
     </MainContainer>
   );
 }
 
-// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
+// ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default Guide;

@@ -5,7 +5,7 @@
  * @module RefreshButton
  */
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback } from 'react';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 import { useOrderDisplay, useOrders } from '../../context/useContext';
@@ -17,29 +17,30 @@ import { Button } from '../../components/modal';
  */
 const RefreshButton = memo(() => {
   const { fetchOrders } = useOrders();
-  const [error, setError] = useState<string>('');
   const { orderDisplay, setOrderDisplay } = useOrderDisplay();
 
   const refresh = useCallback(async () => {
     try {
       setOrderDisplay([]);
       await fetchOrders();
-    } catch {
-      setError('Mistake')
+    } catch { 
+      // ignore
     }
   }, [fetchOrders, setOrderDisplay]);
 
   return (
-    <Button
-      label="Refresh"
-      icon={<RefreshIcon />}
-      onClick={() => { refresh(); }}
-      disabled={!orderDisplay}
-    />
+    <>
+      <Button
+        label="Refresh"
+        icon={<RefreshIcon />}
+        onClick={() => { refresh(); }}
+        disabled={!orderDisplay}
+      />
+    </>
   );
 });
 
 RefreshButton.displayName = 'RefreshButton';
 
-export default RefreshButton;
 // ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
+export default RefreshButton;
