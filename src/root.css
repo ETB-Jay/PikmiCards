@@ -36,6 +36,15 @@ body,
   overflow-x: hidden;
 }
 
+html, body {
+  overflow-x: hidden;
+  /* Hide the main vertical scrollbar */
+  scrollbar-width: none; /* Firefox */
+}
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 .BFont {
   font-family: 'Syne Mono', monospace;
 }
@@ -62,6 +71,18 @@ body {
   --color-silver-800: #6a6a6a;
   --color-silver-900: #585858;
   --color-silver-950: #333333;
+
+  --color-east-bay-50: #f3f6fb;
+  --color-east-bay-100: #e4e8f5;
+  --color-east-bay-200: #cfd7ee;
+  --color-east-bay-300: #aebee2;
+  --color-east-bay-400: #879bd3;
+  --color-east-bay-500: #6a7cc7;
+  --color-east-bay-600: #5764b9;
+  --color-east-bay-700: #4c54a9;
+  --color-east-bay-800: #43478b;
+  --color-east-bay-900: #393d6f;
+  --color-east-bay-950: #262745;
 
   --color-green-smoke-50: #f7f7ee;
   --color-green-smoke-100: #ededda;

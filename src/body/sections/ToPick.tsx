@@ -7,15 +7,12 @@ import OrderCardToPick from '../../components/OrderCardToPick';
 import { ItemData, ItemID, OrderID } from '../../types';
 import { findItemByID } from '../../context/orderFunctions';
 import { Button } from '../../components/modal';
+import { returnLarger } from '../../components/sort';
 
 /**
  * ToPick section component.
  * Displays a list of items that need to be picked, with selection and confirmation controls.
  *
- * @module ToPick
- */
-
-/**
  * @description ToPick is a memoized component that renders the list of items to pick and confirmation controls.
  */
 // ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
@@ -32,7 +29,7 @@ const ToPick = (): React.ReactElement => {
   const itemsToPick = useMemo(() => {
     return orderDisplay.flatMap((order) =>
       order.items.filter((item) => item.status === 'unPicked')
-    );
+    ).sort(returnLarger);
   }, [orderDisplay]);
 
   const renderItem = useCallback(
@@ -58,10 +55,7 @@ const ToPick = (): React.ReactElement => {
   const cards = useMemo(() => itemsToPick.map(renderItem), [itemsToPick, renderItem]);
 
   const itemLabel = selectedItems.size === 1 ? 'Item' : 'Items';
-  const confirmButton = useMemo(() => {
-    if (selectedItems.size === 0) {
-      return null;
-    }
+  const confirmButton = useMemo(() => { if (selectedItems.size === 0) { return null; }
 
     return (
       <>
@@ -81,7 +75,9 @@ const ToPick = (): React.ReactElement => {
 
   return (
     <div className="flex h-full w-full flex-col">
-      <ScrollContainer className="flex-1 overflow-y-auto px-2 py-1">{cards}</ScrollContainer>
+      <ScrollContainer className="flex-1 overflow-y-auto px-2 py-1">
+        {cards}
+      </ScrollContainer>
       {confirmButton && (
         <div className="bg-green-smoke-800/80 border-black-olive-900 sticky bottom-0 z-20 flex flex-row justify-center gap-3 rounded-b-2xl border-t p-2 shadow-lg backdrop-blur-md">
           {confirmButton}

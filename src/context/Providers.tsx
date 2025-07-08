@@ -53,6 +53,7 @@ const OrdersProvider = ({ children }: ProviderProps) => {
             itemID: item.itemID,
             orderID: item.orderID,
             status: 'unPicked' as Status,
+            set: item.itemSet ?? "",
             box: null,
           })),
       }))

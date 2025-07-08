@@ -1,14 +1,7 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Location } from '../../types';
-
-/**
- * DetermineLocation dropdown component for selecting a location.
- * Used in the header for location selection.
- *
- * @module DetermineLocation
- */
 
 /**
  * Props for the DetermineLocation component.
@@ -20,6 +13,7 @@ interface DetermineLocationProps {
   location: Location;
   setLocation: (location: Location) => void;
   prompt: (active: boolean) => void;
+  buttonRef: React.RefObject<HTMLButtonElement>;
 }
 
 /**
@@ -72,10 +66,16 @@ const DetermineLocation = ({
   location,
   setLocation,
   prompt,
+  buttonRef,
 }: DetermineLocationProps): React.ReactElement => {
   const ref = React.useRef<HTMLDivElement>(null);
-  const handleClickOutside = (event: Event) => {
-    if (ref.current && !ref.current.contains(event.target as Node)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      ref.current &&
+      !ref.current.contains(event.target as Node) &&
+      buttonRef.current &&
+      !buttonRef.current.contains(event.target as Node)
+    ) {
       prompt(false);
     }
   };
@@ -84,7 +84,7 @@ const DetermineLocation = ({
     setLocation(newLocation);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);

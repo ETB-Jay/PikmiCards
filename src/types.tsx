@@ -66,6 +66,7 @@ interface Order {
  * @property {ItemID} itemID - The item's unique identifier.
  * @property {OrderID} orderID - The unique identifier of the order containing the item.
  * @property {Status} status - The item's current local status.
+ * @property {string} set - The set the item belongs to
  * @property {number | null} box - The order's current box number. null otherwise.
  * @requires box must be a non-negative integer between 1 and 20 inclusive or null.
  */
@@ -73,6 +74,7 @@ interface Item {
   itemID: ItemID;
   orderID: OrderID;
   status: Status;
+  set: string;
   box: number | null;
 }
 

@@ -26,10 +26,6 @@ import { expressHandler as ordersHandler } from '../api/orders.js';
 dotenv.config();
 
 const {
-  // VITE_SHOPIFY_API_KEY,
-  // VITE_SHOPIFY_API_SECRET,
-  // VITE_SHOPIFY_STORE_DOMAIN,
-  // VITE_SHOPIFY_ACCESS_TOKEN,
   PORT = 3001,
 } = process.env;
 
@@ -39,7 +35,6 @@ app.use(express.json());
 
 /** @description Starts the Server */
 app.listen(PORT, () => {
-  // console.log(`Server running on port ${PORT}`); // Commented out to resolve linter error
 });
 
 /**

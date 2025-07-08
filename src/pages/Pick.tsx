@@ -15,8 +15,7 @@ const LOADING_TEXT = 'Loading Orders';
  * @description LoadingSpinner renders an animated loading indicator for orders
  * @returns The loading spinner
  */
-const LoadingSpinner = memo(
-  (): React.ReactElement => (
+const LoadingSpinner = memo((): React.ReactElement => (
     <FlexColCenter className="h-full w-full gap-4">
       <div className="animate-float-spin">
         <div className="animate-fly-horizontal relative flex flex-row items-center justify-center">
@@ -29,7 +28,7 @@ const LoadingSpinner = memo(
           />
         </div>
       </div>
-      <span className="text-green-smoke-900 text-xl font-bold tracking-wide drop-shadow-sm">
+      <span className="text-white text-xl font-bold tracking-wide drop-shadow-sm">
         {LOADING_TEXT}
         <span className="loading-dots" />
       </span>
@@ -75,15 +74,15 @@ const Pick = memo((): React.ReactElement => {
     orderDisplay.length === 0 ? (
       <LoadingSpinner />
     ) : (
-      <>
-        <Header />
-        <CardPicker />
-      </>
+      <CardPicker />
     );
 
   return (
     <MainContainer>
-      {content}
+      <Header />
+      <div className='flex-1'>
+        {content}
+      </div>
       {error && <div className="absolute right-1/2 bottom-5">{error}</div>}
     </MainContainer>
   );

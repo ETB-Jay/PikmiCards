@@ -25,16 +25,20 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   hideSmall?: boolean;
 }
 
-const Button = ({ label, icon, className = '', hideSmall = false, ...props }: ButtonProps) => (
-  <button
-    type="button"
-    className={`bg-green-smoke-700/60 border-green-smoke-900 focus:ring-green-smoke-800 hover:from-green-smoke-600 hover:to-green-smoke-400 inline-flex w-fit max-w-30 cursor-pointer items-center justify-center gap-2 rounded-md border px-2 py-1 font-bold text-white shadow-lg transition-all duration-150 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300 disabled:text-gray-400 disabled:opacity-80 ${className}`}
-    {...props}
-  >
-    {icon}
-    <span className={`BFont text-xs font-bold ${hideSmall && 'hidden sm:flex'}`}>{label}</span>
-  </button>
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ label, icon, className = '', hideSmall = false, ...props }, ref) => (
+    <button
+      ref={ref}
+      type="button"
+      className={` bg-green-smoke-700/60 border-green-smoke-900 focus:ring-green-smoke-800 hover:brightness-75 inline-flex w-fit max-w-30 cursor-pointer items-center justify-center gap-2 rounded-md border px-2 py-1 font-bold text-white shadow-lg transition-all focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300 disabled:text-gray-400 disabled:opacity-80 ${className}`}
+      {...props}
+    >
+      {icon}
+      <span className={`BFont text-xs font-bold ${hideSmall && 'hidden sm:flex'}`}>{label}</span>
+    </button>
+  )
 );
+Button.displayName = 'Button';
 
 /**
  * Tags component displays item tags (quantity, printing, box, rarity, set).

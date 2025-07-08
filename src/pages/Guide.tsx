@@ -61,7 +61,7 @@ function Guide(): React.ReactElement {
   return (
     <MainContainer>
       <Header />
-      <ScrollContainer className="relative z-10 mx-auto w-full max-w-2xl gap-5 border border-indigo-700 bg-black/30 px-5 py-8 text-white shadow-2xl backdrop-blur-md">
+      <ScrollContainer className="flex-1 relative z-10 mx-auto w-full max-w-2xl gap-5 border border-indigo-700 bg-black/30 px-5 py-8 text-white shadow-2xl backdrop-blur-md">
         <div className="flex flex-col">
           <h1 className="text-center text-4xl font-extrabold text-green-300 drop-shadow">
             {GUIDE_TEXT.title}

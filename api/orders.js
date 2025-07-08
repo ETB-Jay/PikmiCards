@@ -114,7 +114,7 @@ const getOrders = async (client) => {
                       return {
                         itemID: item.id,
                         orderID: order.id,
-                        itemName: item.name?.split(' - ').slice(0, -1).join(' - ') || item.name,
+                        itemName: item.name.split(" - ")[0] || item.name,
                         itemQuantity: item.quantity,
                         itemLocation: locationName,
                         itemSet:

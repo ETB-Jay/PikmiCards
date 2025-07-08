@@ -19,8 +19,8 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["vite/client"]
+    "types": ["vite/client", "vitest", "jest"]
   },
-  "include": ["src", "server/server.js"],
+  "include": ["src", "server/server.js", "vitest.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

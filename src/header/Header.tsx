@@ -36,10 +36,10 @@ const HeaderRedirectButton = memo(
     const handleClick = onClick
       ? onClick
       : () => {
-          if (navigateTo) {
-            navigate(navigateTo);
-          }
-        };
+        if (navigateTo) {
+          navigate(navigateTo);
+        }
+      };
     return (
       <button
         type="button"
@@ -57,7 +57,7 @@ HeaderRedirectButton.displayName = 'HeaderRedirectButton';
 /**
  * @description Header displays the top navigation bar with sidebar, location, and refresh controls.
  */
-const Header = () => {
+const Header = ({ pick = false }) => {
   return (
     <div className="relative flex h-[5vh] w-full flex-row items-center gap-5 px-4">
       <img
@@ -65,8 +65,12 @@ const Header = () => {
         alt={logoAlt}
         className="mr-2 h-10 w-10 rounded-xl bg-amber-50/15 shadow"
       />
-      <LocationButton />
-      <RefreshButton />
+      {pick &&
+        <>
+          <LocationButton />
+          <RefreshButton />
+        </>
+      }
       <div className="ml-auto flex gap-2">
         <HeaderRedirectButton
           label={pickOrdersLabel}

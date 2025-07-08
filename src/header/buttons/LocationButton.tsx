@@ -1,5 +1,5 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useRef } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { Button } from '../../components/modal';
@@ -13,6 +13,7 @@ import DetermineLocation from './DetermineLocation';
 const LocationButton = (): React.ReactElement => {
   const { location, setLocation } = useContext(LocationContext);
   const [locationPrompt, setLocationPrompt] = useState<boolean>(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleLocationSelect = useCallback(
     (newLocation: import('../../types').Location) => {
@@ -25,7 +26,8 @@ const LocationButton = (): React.ReactElement => {
   return (
     <div className="relative">
       <Button
-        onClick={() => setLocationPrompt((prev) => !prev)}
+        ref={buttonRef}
+        onClick={() => setLocationPrompt(prev => !prev)}
         label={location}
         icon={<KeyboardArrowDownIcon />}
       />
@@ -34,6 +36,7 @@ const LocationButton = (): React.ReactElement => {
           location={location}
           setLocation={handleLocationSelect}
           prompt={setLocationPrompt}
+          buttonRef={buttonRef}
         />
       )}
     </div>

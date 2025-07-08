@@ -1,7 +1,7 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import React, { ReactNode, PropsWithChildren } from 'react';
 
-import Iridescence from './Iridescence';
+import Background from './Background';
 
 /**
  * Props for the Container component.
@@ -27,17 +27,16 @@ interface ModalContainerProps extends PropsWithChildren<object> {
  * @param children - The content to render inside the main container.
  */
 const MainContainer = ({ children }: ContainerProps) => (
-  <>
-    <Iridescence
-      color={[0, 0.7, 1]}
-      mouseReact={false}
-      speed={0.2}
-      className="fixed inset-0 -z-1 opacity-70"
+  <div className="relative flex min-h-screen w-screen flex-col items-center justify-center gap-5 p-5 select-none">
+    <Background
+      particleColors={['#ffffff', '#ffffff']}
+      particleCount={200}
+      particleSpread={20}
+      speed={0.05}
+      particleBaseSize={100}
     />
-    <div className="relative flex min-h-screen w-screen flex-col items-center justify-center gap-5 p-5 select-none">
-      {children}
-    </div>
-  </>
+    {children}
+  </div>
 );
 
 /**
@@ -62,7 +61,7 @@ const ModalContainer = ({ children, className, onClick, onClose }: ModalContaine
     }}
   >
     <div
-      className={`bg-green-smoke-50/10 prompt-animate relative z-60 flex h-fit max-h-[90vh] w-fit max-w-[80vw] cursor-default flex-col items-center justify-center gap-2 rounded-lg p-4 shadow-2xl ${className}`}
+      className={`bg-blue-900/80 prompt-animate relative z-60 flex h-fit max-h-[90vh] w-fit max-w-[80vw] cursor-default flex-col items-center justify-center gap-2 rounded-lg p-4 shadow-2xl ${className}`}
       onClick={(event) => {
         event.stopPropagation();
         if (onClick) {
