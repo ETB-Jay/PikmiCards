@@ -4,11 +4,6 @@ import { ItemData } from '../types';
 
 import { ImageDisplay } from './ImageDisplay';
 
-interface OrderCardConfirmModalProps {
-  item: ItemData;
-  onImageClick: () => void;
-}
-
 const OrderCardConfirmModal = ({ item, onImageClick }: OrderCardConfirmModalProps) => {
   return (
     <div className="bg-green-smoke-600/20 relative flex min-h-fit min-w-fit flex-row items-center justify-start gap-3 rounded-lg p-2 shadow-lg transition-all">

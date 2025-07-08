@@ -3,42 +3,26 @@ import React, { memo, useCallback } from 'react';
 
 import { ModalContainer } from '../components/containers';
 
-// ─ Constants ────────────────────────────────────────────────────────────────────────────────────
-const FULLSCREEN_MODAL_ALT = 'Fullscreen Modal Image';
-
-/**
- * Props for the FullscreenModal component.
- * @property image - The image URL to display.
- * @property onClose - Function to close the modal.
- * @property children - Optional additional content.
- */
-interface FullscreenModalProps {
-  image?: string;
-  onClose: () => void;
-  children?: React.ReactNode;
-}
 
 /**
  * FullscreenModal displays an image in a fullscreen modal overlay.
  * @param image - The image URL to display.
  * @param onClose - Function to close the modal.
  * @param children - Optional additional content.
- * @returns {JSX.Element}
  */
-const FullscreenModal = memo(
-  ({ image, onClose, children }: FullscreenModalProps) => {
+const FullscreenModal = memo(({ image, onClose, children }: FullscreenModalProps) => {
     const handleModalClick = useCallback(() => {
       onClose();
     }, [onClose]);
 
-    const handleImageClick = (event: React.MouseEvent<HTMLImageElement>) => {
+    const handleImageClick = (event: MouseEvent) => {
       event.stopPropagation();
     };
 
     return (
       <ModalContainer
         className="flex flex-col items-center justify-center gap-4"
-        onClick={(event) => event.stopPropagation()}
+        onClick={(ev: Event) => ev.stopPropagation()}
         onClose={handleModalClick}
       >
         {image && (

@@ -6,15 +6,8 @@ import { useFullscreen } from '../context/useContext';
 import { ImageDisplay } from './ImageDisplay';
 import { Tags } from './modal';
 
-interface OrderCardToPickProps {
-  item: ItemData;
-  selected: boolean;
-  onCardClick?: () => void;
-}
-
 const OrderCardToPick = ({ item, selected, onCardClick }: OrderCardToPickProps) => {
   const { openFullscreen } = useFullscreen();
-  const cardClass = `flex flex-row gap-3 items-center justify-start shadow-lg rounded-lg transition-all min-w-fit min-h-fit p-2 ${selected ? 'bg-green-smoke-800/70 hover:bg-green-smoke-900/70 cursor-pointer hover:scale-102' : 'bg-green-smoke-600/60 hover:bg-green-smoke-600/70 cursor-pointer hover:scale-101'}`;
   return (
     <div
       className={cardClass}

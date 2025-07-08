@@ -15,47 +15,10 @@ import { returnLarger } from '../../components/sort';
  *
  * @description ToPick is a memoized component that renders the list of items to pick and confirmation controls.
  */
-// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────────
-const CONFIRM_BUTTON_TEXT = 'Confirm';
-const CLEAR_BUTTON_TEXT = 'Clear Items';
-
 const ToPick = (): React.ReactElement => {
   const { orders } = useOrders();
   const { orderDisplay, selectedItems, handleConfirm, handleClear, handleSelect } =
     useOrderDisplay();
-
-  const getItemKey = (item: ItemData, index: number) => `${item.orderID}-${item.itemID}-${index}`;
-
-  const itemsToPick = useMemo(() => {
-    return orderDisplay.flatMap((order) =>
-      order.items.filter((item) => item.status === 'unPicked')
-    ).sort(returnLarger);
-  }, [orderDisplay]);
-
-  const renderItem = useCallback(
-    (item: { orderID: OrderID; itemID: ItemID }, index: number) => {
-      const itemData = findItemByID(orders, item.orderID, item.itemID);
-      if (!itemData) {
-        return null;
-      }
-      const itemKey = getItemKey(itemData, index);
-      const selected = selectedItems.has(item.itemID);
-      return (
-        <OrderCardToPick
-          key={itemKey}
-          item={itemData}
-          selected={selected}
-          onCardClick={() => handleSelect(item.itemID)}
-        />
-      );
-    },
-    [orders, selectedItems, handleSelect]
-  );
-
-  const cards = useMemo(() => itemsToPick.map(renderItem), [itemsToPick, renderItem]);
-
-  const itemLabel = selectedItems.size === 1 ? 'Item' : 'Items';
-  const confirmButton = useMemo(() => { if (selectedItems.size === 0) { return null; }
 
     return (
       <>

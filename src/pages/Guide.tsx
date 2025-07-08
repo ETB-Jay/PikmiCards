@@ -5,57 +5,6 @@ import { MainContainer, ScrollContainer } from '../components/containers';
 import { SectionTitle } from '../components/modal';
 import Header from '../header/Header';
 
-// ─ Guide Page Content ─
-const GUIDE_TEXT = {
-  githubAlt: 'Github',
-  title: 'Guide to using PikmiCards',
-  subtitle: 'How to use PikmiCards effectively',
-  keywords: {
-    picklist: 'Picklist',
-    queue: 'Queue Pile',
-    box: 'Box Grid',
-
-    picker: 'Picker',
-    guide: 'Guide',
-    logout: 'Login Page',
-  },
-  header: {
-    hamburger: [
-      'The hamburger icon displays the sidebar, letting the user swap between the',
-      ',',
-      'and',
-    ],
-    location:
-      'The location can be changed by selecting the location button (defaults to the Oakville location). This will refresh the page so make sure to confirm any orders beforehand',
-    refresh:
-      'Refresh the order list with the refresh button. This will also reset any progress made.',
-  },
-  pick: {
-    picklist: {
-      subtitle: ['Items in the', 'are displayed in a grid on the left'],
-      features: [
-        "Click on an item's image to see the item more clearly",
-        'Click on the rest of the grid to select the item and confirm it',
-      ],
-    },
-    queue: {
-      subtitle: ['Items in the', 'are displayed in the bottom right'],
-      features: [
-        "Click on an item's image to see the item more clearly",
-        "If an item's order has appeared on the box and is currently in the queue pile, then the item will be highlighted a dark brown and will appear at the front of the list",
-        'Items can be confirmed by clicking the square icon',
-      ],
-    },
-    box: {
-      subtitle: ['Items in the', 'are displayed on the top right'],
-      features: [
-        'Click on a box to see the order details and confirm the order',
-        'Once an order has been confirmed, a new order will take its place',
-      ],
-    },
-  },
-};
-
 /** @description Guide page component with user instructions */
 function Guide(): React.ReactElement {
   return (

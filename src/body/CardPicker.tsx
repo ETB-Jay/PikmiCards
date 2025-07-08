@@ -6,21 +6,6 @@ import QueuePile from './sections/QueuePile';
 import CardGridDisplay from './sections/CardGridDisplay';
 
 /**
- * GridContainer wraps content in a styled flex column with optional className.
- * @param content - The content to display inside the container.
- * @param className - Additional CSS classes for the container.
- */
-const GridContainer = ({
-  content,
-  className = '',
-}: {
-  content: ReactNode;
-  className: string | undefined;
-}) => {
-  return <div className={`flex flex-col rounded-2xl bg-white/20 p-2 ${className}`}>{content}</div>;
-};
-
-/**
  * CardPicker is the main layout for the picking workflow.
  * It displays the ToPick, CardGridDisplay, and QueuePile sections in a grid.
  */

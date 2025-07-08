@@ -13,27 +13,17 @@ const RefreshButton = memo(() => {
   const { fetchOrders } = useOrders();
   const { orderDisplay, setOrderDisplay } = useOrderDisplay();
 
-  const refresh = useCallback(async () => {
-    try {
-      setOrderDisplay([]);
-      await fetchOrders();
-    } catch {
-      // ignore
-    }
-  }, [fetchOrders, setOrderDisplay]);
 
   return (
-    <>
-      <Button
-        label="Refresh"
-        icon={<RefreshIcon />}
-        onClick={() => {
-          refresh();
-        }}
-        disabled={!orderDisplay}
-        hideSmall
-      />
-    </>
+    <Button
+      label="Refresh"
+      icon={<RefreshIcon />}
+      onClick={() => {
+        refresh();
+      }}
+      disabled={!orderDisplay}
+      hideSmall
+    />
   );
 });
 
