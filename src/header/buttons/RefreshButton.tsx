@@ -1,28 +1,23 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import React, { memo, useCallback } from 'react';
+import { memo } from 'react';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 import { useOrderDisplay, useOrders } from '../../context/useContext';
-import { Button } from '../../components/modal';
+import { Button } from '../../components/formComponents';
 
-/**
- * RefreshButton displays a button to refresh the order list.
- * @returns {JSX.Element}
- */
-const RefreshButton = memo(() => {
+/** @description RefreshButton displays a button to refresh the order list */
+const RefreshButton = memo((): React.ReactElement => {
   const { fetchOrders } = useOrders();
-  const { orderDisplay, setOrderDisplay } = useOrderDisplay();
-
+  const { orderDisplay } = useOrderDisplay();
 
   return (
     <Button
       label="Refresh"
       icon={<RefreshIcon />}
       onClick={() => {
-        refresh();
+        fetchOrders();
       }}
       disabled={!orderDisplay}
-      hideSmall
     />
   );
 });

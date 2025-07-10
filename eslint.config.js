@@ -7,13 +7,14 @@ const shopifyConfig = [
   {
     languageOptions: {
       parserOptions: {
-        project: 'tsconfig.json',
+        project: './tsconfig.eslint.json',
       },
     },
     rules: {
       '@shopify/strict-component-boundaries': 'off',
       'react-hooks/exhaustive-deps': 'off',
       'no-process-env': 'off',
+      'react/react-in-jsx-scope': 'off',
     },
   },
 ];

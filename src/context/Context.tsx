@@ -109,6 +109,11 @@ interface ConfirmContextType {
   confirmConfirm: () => void;
   /** @description Function to close the confirmation modal. Wipes the current order */
   closeConfirm: () => void;
+  /** @description Removes an order from the display and swaps in a new one if needed. */
+  onConfirm: (
+    orderData: Order,
+    orderDisplay: Order[]
+  ) => void;
 }
 /** @description React context for confirmation modal state and actions. */
 const ConfirmContext = createContext<ConfirmContextType>({
@@ -116,6 +121,7 @@ const ConfirmContext = createContext<ConfirmContextType>({
   openConfirm: () => {},
   confirmConfirm: () => {},
   closeConfirm: () => {},
+  onConfirm: () => {},
 });
 ConfirmContext.displayName = 'ConfirmContext';
 
@@ -136,15 +142,20 @@ LocationContext.displayName = 'LocationContext';
 /** @description AuthContextType manages the authentication process */
 interface AuthContextType {
   user: User;
-  login: (data: User) => void;
   logout: () => void;
+  handleLogin: (
+    event: React.FormEvent,
+    username: string,
+    password: string,
+    setError: (err: { username?: string; password?: string; general?: string }) => void
+  ) => void;
 }
 /** @description React context for authenticating a user */
 const AuthContext = createContext<AuthContextType>({
   /** @description The current user */
   user: { username: '', password: '' },
-  login: () => {},
   logout: () => {},
+  handleLogin: () => {},
 });
 AuthContext.displayName = 'AuthContext';
 

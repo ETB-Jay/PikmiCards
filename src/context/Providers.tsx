@@ -1,8 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import React, { ReactNode, useState, useCallback, useMemo } from 'react';
+import { ReactNode, useState, useCallback, useMemo } from 'react';
 
 import FullscreenModal from '../modals/FullscreenModal';
-import { OrderData, Order, Location, Status, ItemID, User } from '../types';
+import { OrderData, Order, Location, Status, ItemID } from '../types';
 import ConfirmModal from '../modals/ConfirmModal';
 
 import {
@@ -14,6 +14,7 @@ import {
   AuthContext,
 } from './Context';
 import useLocalStorage from './useLocalStorage';
+import { useConfirm, useOrderDisplay } from './useContext';
 
 interface ProviderProps {
   children: ReactNode;
@@ -30,6 +31,7 @@ const OrdersProvider = ({ children }: ProviderProps) => {
   const fetchOrders = useCallback(async (): Promise<void> => {
     setError(null);
     try {
+      setOrders([]);
       const response = await fetch('/api/orders');
       if (!response.ok) {
         throw new Error('Failed to fetch orders');
@@ -53,7 +55,7 @@ const OrdersProvider = ({ children }: ProviderProps) => {
             itemID: item.itemID,
             orderID: item.orderID,
             status: 'unPicked' as Status,
-            set: item.itemSet ?? "",
+            set: item.itemSet ?? '',
             box: null,
           })),
       }))
@@ -117,9 +119,9 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
       items: order.items.map((item) =>
         selectedItems.has(item.itemID)
           ? {
-              ...item,
-              status: (displayedOrderIDs.has(item.orderID) ? 'inBox' : 'queue') as Status,
-            }
+            ...item,
+            status: (displayedOrderIDs.has(item.orderID) ? 'inBox' : 'queue') as Status,
+          }
           : item
       ),
     }));
@@ -174,7 +176,7 @@ const FullscreenProvider = ({ children }: ProviderProps) => {
   return (
     <FullscreenContext.Provider value={value}>
       {children}
-      {fullScreen && <FullscreenModal image={fullScreen} onClose={closeFullscreen} />}
+      {fullScreen && <FullscreenModal image={fullScreen} />}
     </FullscreenContext.Provider>
   );
 };
@@ -190,8 +192,33 @@ const ConfirmProvider = ({ children }: ProviderProps) => {
   const confirmConfirm = useCallback(() => {
     closeConfirm();
   }, []);
+  const { setOrderDisplay } = useOrderDisplay();
+
+  const onConfirm = (
+    orderData: Order,
+    orderDisplay: Order[]
+  ) => {
+    const removeIdx = orderDisplay.findIndex((orderItem) => orderItem.orderID === orderData.orderID);
+    if (removeIdx === -1) { return; }
+
+    const newOrderDisplay = [...orderDisplay];
+
+    if (newOrderDisplay.length > 24) {
+      const swapIdx = 24;
+      const swappedOrder = { ...newOrderDisplay[swapIdx], box: removeIdx + 1 };
+      swappedOrder.items = swappedOrder.items.map((item) => ({ ...item, box: removeIdx + 1 }));
+      newOrderDisplay.splice(removeIdx, 1, swappedOrder);
+      newOrderDisplay.splice(swapIdx, 1);
+    } else {
+      newOrderDisplay.splice(removeIdx, 1);
+    }
+
+    setOrderDisplay(newOrderDisplay);
+    closeConfirm();
+  };
+
   const value = useMemo(
-    () => ({ confirm, openConfirm, confirmConfirm, closeConfirm }),
+    () => ({ confirm, openConfirm, confirmConfirm, closeConfirm, onConfirm }),
     [confirm, openConfirm, confirmConfirm, closeConfirm]
   );
   return (
@@ -211,16 +238,45 @@ const LocationProvider = ({ children }: ProviderProps) => {
 const AuthProvider = ({ children }: ProviderProps) => {
   const [user, setUser] = useLocalStorage('user', null);
 
-  const login = (data: User): void => {
-    setUser(data);
-    window.location.href = '/pick';
+  const handleLogin = (
+    event: React.FormEvent,
+    username: string,
+    password: string,
+    setError: (err: { username?: string; password?: string; general?: string }) => void
+  ) => {
+    event.preventDefault();
+    let hasError = false;
+    const newError: { username?: string; password?: string; general?: string } = {};
+    if (!username.trim()) {
+      newError.username = 'Username is required.';
+      hasError = true;
+    }
+    if (!password.trim()) {
+      newError.password = 'Password is required.';
+      hasError = true;
+    }
+    if (hasError) {
+      setError(newError);
+      return;
+    }
+    if (username !== 'ETBETB' || password !== 'ETBETB') {
+      setError({ general: 'Invalid Username/Password' });
+      return;
+    }
+    try {
+      setUser({ username, password });
+      setError({});
+      window.location.href = '/pick';
+    } catch {
+      setError({ general: 'Login failed. Please try again.' });
+    }
   };
 
   const logout = () => {
     setUser(null);
   };
 
-  const value = useMemo(() => ({ user, login, logout }), [user, login, logout]);
+  const value = useMemo(() => ({ user, logout, handleLogin }), [user, logout]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

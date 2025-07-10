@@ -3,8 +3,8 @@
  * Background renders an animated particle background using OGL and WebGL.
  * Customizable via props for color, count, speed, and more.
  */
-import React, { useEffect, useRef } from "react";
-import { Renderer, Camera, Geometry, Program, Mesh } from "ogl";
+import { useEffect, useRef } from 'react';
+import { Renderer, Camera, Geometry, Program, Mesh } from 'ogl';
 
 interface BackgroundProps {
   particleCount?: number;
@@ -21,12 +21,15 @@ interface BackgroundProps {
   className?: string;
 }
 
-const defaultColors: string[] = ["#1a237e", "#1976d2", "#64b5f6", "#0d47a1", "#1565c0"];
+const defaultColors: string[] = ['#1a237e', '#1976d2', '#64b5f6', '#0d47a1', '#1565c0'];
 
 const hexToRgb = (hexValue: string): [number, number, number] => {
-  let hex = hexValue.replace(/^#/, "");
+  let hex = hexValue.replace(/^#/, '');
   if (hex.length === 3) {
-    hex = hex.split("").map((char) => char + char).join("");
+    hex = hex
+      .split('')
+      .map((char) => char + char)
+      .join('');
   }
   const intValue = parseInt(hex, 16);
   const red = ((intValue >> 16) & 255) / 255;
@@ -113,7 +116,9 @@ const Background: React.FC<BackgroundProps> = ({
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) { return; }
+    if (!container) {
+      return;
+    }
 
     const renderer = new Renderer({ depth: false, alpha: true });
     const gl = renderer.gl;
@@ -129,7 +134,7 @@ const Background: React.FC<BackgroundProps> = ({
       renderer.setSize(width, height);
       camera.perspective({ aspect: gl.canvas.width / gl.canvas.height });
     };
-    window.addEventListener("resize", resize, false);
+    window.addEventListener('resize', resize, false);
     resize();
 
     const handleMouseMove = (event: MouseEvent) => {
@@ -140,7 +145,7 @@ const Background: React.FC<BackgroundProps> = ({
     };
 
     if (moveParticlesOnHover) {
-      container.addEventListener("mousemove", handleMouseMove);
+      container.addEventListener('mousemove', handleMouseMove);
     }
 
     const count = particleCount;
@@ -212,6 +217,7 @@ const Background: React.FC<BackgroundProps> = ({
       if (!disableRotation) {
         particles.rotation.x = Math.sin(elapsed * 0.0002) * 0.1;
         particles.rotation.y = Math.cos(elapsed * 0.0005) * 0.15;
+        // eslint-disable-next-line id-length
         particles.rotation.z += 0.01 * speed;
       }
 
@@ -221,9 +227,9 @@ const Background: React.FC<BackgroundProps> = ({
     animationFrameId = requestAnimationFrame(update);
 
     return () => {
-      window.removeEventListener("resize", resize);
+      window.removeEventListener('resize', resize);
       if (moveParticlesOnHover) {
-        container.removeEventListener("mousemove", handleMouseMove);
+        container.removeEventListener('mousemove', handleMouseMove);
       }
       cancelAnimationFrame(animationFrameId);
       if (container.contains(gl.canvas)) {
@@ -246,7 +252,7 @@ const Background: React.FC<BackgroundProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`fixed inset-0 w-full h-full bg-east-bay-950 ${className}`}
+      className={`bg-east-bay-950 fixed inset-0 h-full w-full ${className}`}
       style={{ pointerEvents: 'none', zIndex: -1 }}
     />
   );

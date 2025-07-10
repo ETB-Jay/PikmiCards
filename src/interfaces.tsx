@@ -1,100 +1,63 @@
-
-// ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────
-interface ConfirmModalProps {
-  order: Order;
-  onClose: () => void;
-}
+// ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────────
+import { MouseEventHandler, Ref } from 'react';
 
 /**
- * HeaderRedirectButton renders a styled header navigation button.
- * - If `navigateTo` is provided, clicking navigates to that route.
- * - If `onClick` is provided, it is called on click instead.
- *
- * @param label - The button text.
- * @param navigateTo - (Optional) Route to navigate to on click.
- * @param onClick - (Optional) Custom click handler.
- * @param icon - (Optional) Icon to display before the label.
- * @param iconAlt - (Optional) Alternative text for the icon.
+ * @description Props for components with children and optional classes
+ * @param children - The content to render inside the column
+ * @param className - Optional CSS classes
  */
-interface HeaderRedirectButtonProps {
-  label: string;
-  navigateTo?: string;
-  onClick?: () => void;
-  icon?: React.ReactNode;
-}
-
-/**
- * Props for the DetermineLocation component.
- * @property location - The current location string.
- * @property setLocation - Function to update the location.
- * @property prompt - Function to toggle the prompt visibility.
- */
-interface DetermineLocationProps {
-  location: Location;
-  setLocation: (location: Location) => void;
-  prompt: (active: boolean) => void;
-  buttonRef: React.RefObject<HTMLButtonElement>;
-}
-
-interface OrderCardToPickProps {
-  item: ItemData;
-  selected: boolean;
-  onCardClick?: () => void;
-}
-interface OrderCardQueuePileProps {
-  item: ItemData;
-  selected: boolean;
-  onCardClick?: () => void;
-}
-
-
-
-/**
- * Button component for modal actions.
- * @param label - The button label text.
- * @param icon - Optional icon element.
- * @param className - Additional CSS classes for the button.
- * @param ...props - Standard button props.
- */
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  label: string;
-  icon?: React.ReactNode;
+interface ChildrenAndClassProps {
+  children: React.ReactNode;
   className?: string;
-  hideSmall?: boolean;
 }
 
+/**
+ * @description Props for input components
+ * @param icon
+ * @param label
+ * @param type
+ * @param value
+ * @param onChange
+ * @param err
+ */
+interface InputProps {
+  icon: React.ReactNode;
+  label: string;
+  type: string;
+  value: string;
+  onChange: (ev: React.ChangeEvent<HTMLInputElement>) => void;
+  err: string;
+}
 
 /**
- * Props for the ImageDisplay component.
- * @property {string} imageUrl - The URL of the image to display.
- * @property {string} alt - The alt text for the image.
- * @property {(e: React.MouseEvent) => void} [onClick] - Optional click handler for the image.
- * @property {string} [className] - Additional CSS classes for the image.
- * @property {(e: React.SyntheticEvent<HTMLImageElement>) => void} [onError] - Optional error handler for the image.
+ * @description Button Props
+ * @param icon
+ * @param label
+ * @param onClick
+ * @param className
+ * @param ref
  */
-interface ImageDisplayProps {
-  imageUrl: string;
-  alt: string;
-  onClick?: (e: React.MouseEvent) => void;
+interface ButtonProps {
+  icon: React.ReactNode;
+  label: string;
+  onClick: MouseEventHandler;
   className?: string;
-  onError?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
+  ref?: Ref<HTMLButtonElement>;
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
 }
-
-
-interface CustomerInfoProps {
-  order: Order;
-  index: number;
-}
-
 
 /**
- * Props for the FullscreenModal component.
- * @property image - The image URL to display.
- * @property onClose - Function to close the modal.
- * @property children - Optional additional content.
+ * @description PopupProps
+ * @param label - The new value
+ * @param current - The currently active value
+ * @param onSelect - Function to Select
  */
-interface FullscreenModalProps {
-  image?: string;
-  onClose: () => void;
-  children?: React.ReactNode;
+interface PopupProps {
+  label: string;
+  current: string;
+  onSelect: (val: string) => void;
 }
+
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────
+export type { ChildrenAndClassProps, InputProps, ButtonProps, PopupProps };

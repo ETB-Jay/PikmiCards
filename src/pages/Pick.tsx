@@ -1,11 +1,12 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import React, { useEffect, memo, useContext, useState } from 'react';
+import { useEffect, memo, useContext, useState } from 'react';
 
 import Header from '../header/Header';
 import CardPicker from '../body/CardPicker';
 import { useOrders, useOrderDisplay } from '../context/useContext';
-import { MainContainer, FlexColCenter } from '../components/containers';
+import { MainContainer } from '../components/containers';
 import { LocationContext } from '../context/Context';
+import LoadingAnimation from '../body/LoadingSpinner';
 
 /**
  * @description Pick returns a React.ReactElement that renders the card picker.
@@ -13,8 +14,6 @@ import { LocationContext } from '../context/Context';
  * - Formats the OrderData into Orders
  * - Renders the Loading Spinner while waiting for the OrderDisplay
  * - Renders the content once the OrderDisplay has loaded
- *
- * @returns The main card picking interface.
  */
 const Pick = memo((): React.ReactElement => {
   const { orders, fetchOrders, fromOrderDataToOrder } = useOrders();
@@ -34,25 +33,19 @@ const Pick = memo((): React.ReactElement => {
   }, [location]);
 
   useEffect(() => {
+    setOrderDisplay([]);
     if (orders.length > 0) {
       const filteredOrders = fromOrderDataToOrder(orders, location);
       setOrderDisplay(filteredOrders);
     }
   }, [orders, location]);
 
-  const content =
-    orderDisplay.length === 0 ? (
-      <LoadingSpinner />
-    ) : (
-      <CardPicker />
-    );
+  const pickDisplay = orderDisplay.length === 0 ? <LoadingAnimation /> : <CardPicker />;
 
   return (
     <MainContainer>
-      <Header />
-      <div className='flex-1'>
-        {content}
-      </div>
+      <Header pick={orderDisplay.length !== 0} />
+      <div className="flex-1">{pickDisplay}</div>
       {error && <div className="absolute right-1/2 bottom-5">{error}</div>}
     </MainContainer>
   );

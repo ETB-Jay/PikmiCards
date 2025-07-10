@@ -1,17 +1,20 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import React, { memo, useCallback, useMemo } from 'react';
+import { memo } from 'react';
 
-import { useOrderDisplay, useOrders } from '../../context/useContext';
+import { useOrderDisplay } from '../../context/useContext';
 import { ScrollContainer, FlexColCenter } from '../../components/containers';
-import OrderCardQueuePile from '../../components/OrderCardQueuePile';
-import { ItemData } from '../../types';
+import { Item } from '../../types';
+import OrderCard from '../../components/OrderCard';
 
-/**
- * QueuePile is a memoized component that renders the queue pile of items to pick.
- */
+const EMPTY_QUEUE_TEXT = 'Queue is empty';
+
+/** @description QueuePile is a memoized component that renders the queue pile of items to pick. */
 const QueuePile = (): React.ReactElement => {
-  const { selectedItems, handleSelect } = useOrderDisplay();
-  const { orders } = useOrders();
+  const { orderDisplay } = useOrderDisplay();
+
+  const items: Item[] = orderDisplay
+    .flatMap((order) => order.items)
+    .filter((items) => items.status === 'queue');
 
   const content =
     items.length === 0 ? (
@@ -19,7 +22,11 @@ const QueuePile = (): React.ReactElement => {
         {EMPTY_QUEUE_TEXT}
       </div>
     ) : (
-      <ScrollContainer className="flex-1 flex-row">{items}</ScrollContainer>
+      <ScrollContainer className="flex-1 flex-row">
+        {items.map((item) => (
+          <OrderCard key={item.itemID} item={item} largeDisplay={false} selectable />
+        ))}
+      </ScrollContainer>
     );
 
   return <FlexColCenter className="h-full min-h-20">{content}</FlexColCenter>;

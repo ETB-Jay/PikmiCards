@@ -1,8 +1,15 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Location } from '../../types';
+import { PopupOption } from '../../components/formComponents';
 
+interface DetermineLocationProps {
+  location: Location;
+  setLocation: (loc: Location) => void;
+  prompt: (show: boolean) => void;
+  buttonRef: React.RefObject<HTMLButtonElement>;
+}
 
 /**
  * DetermineLocation renders a dropdown for selecting a location.
@@ -18,6 +25,22 @@ const DetermineLocation = ({
 }: DetermineLocationProps): React.ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
 
+  const handleLocationSelect = (newLocation: string) => {
+    setLocation(newLocation as Location);
+    prompt(false);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      ref.current &&
+      !ref.current.contains(event.target as Node) &&
+      buttonRef.current &&
+      !buttonRef.current.contains(event.target as Node)
+    ) {
+      prompt(false);
+    }
+  };
+
   useEffect(() => {
     document.addEventListener('click', handleClickOutside, true);
     return () => {
@@ -30,16 +53,8 @@ const DetermineLocation = ({
       ref={ref}
       className="bg-green-smoke-200 absolute top-10 z-100 flex w-fit flex-col rounded border-1 py-1 text-sm font-semibold shadow-2xl"
     >
-      <LocationOption
-        newLocation="Oakville"
-        currentLocation={location}
-        onSelect={handleLocationSelect}
-      />
-      <LocationOption
-        newLocation="Newmarket"
-        currentLocation={location}
-        onSelect={handleLocationSelect}
-      />
+      <PopupOption label="Oakville" current={location} onSelect={handleLocationSelect} />
+      <PopupOption label="Newmarket" current={location} onSelect={handleLocationSelect} />
     </div>
   );
 };

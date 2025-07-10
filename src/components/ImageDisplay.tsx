@@ -1,17 +1,28 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import React, { memo, useMemo, useCallback } from 'react';
+import { memo } from 'react';
 
-/**
- * Displays an image with optional click and error handlers.
- * @param {ImageDisplayProps} props - The props for the image display.
- */
+interface ImageDisplayProps {
+  imageUrl: string;
+  alt?: string;
+  onClick?: React.ReactEventHandler<HTMLImageElement>;
+  onError?: React.ReactEventHandler<HTMLImageElement>;
+  className?: string;
+}
+
+/** @description Displays an image with optional click and error handlers. */
 const ImageDisplay = memo(
-  ({ imageUrl, alt, onClick, className = '', onError }: ImageDisplayProps) => {
+  ({ imageUrl, alt = 'image button', onClick, onError, className = '' }: ImageDisplayProps) => {
+    const handleClick = (event: React.MouseEvent | React.KeyboardEvent) => {
+      if (onClick) {
+        onClick(event as any);
+      }
+    };
 
     return (
-      <span
+      <div
         tabIndex={0}
         role="button"
+        aria-label={alt}
         onClick={handleClick}
         onKeyDown={(event) => {
           if (event.key === 'Enter' || event.key === ' ') {
@@ -20,8 +31,8 @@ const ImageDisplay = memo(
         }}
         onError={onError}
       >
-        <img className={imageClass} src={imageUrl} alt={alt} loading="lazy" />
-      </span>
+        <img className={className} src={imageUrl} alt={alt} loading="lazy" />
+      </div>
     );
   }
 );

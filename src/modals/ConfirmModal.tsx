@@ -1,22 +1,27 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import React, { useState, useCallback, memo } from 'react';
+import { useState, memo } from 'react';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 
 import { Order, ItemData } from '../types';
-import {
-  ModalContainer,
-  ScrollContainer,
-  FlexColCenter,
-  ErrorBox,
-  FlexRowBetween,
-} from '../components/containers';
-import OrderCardConfirmModal from '../components/OrderCardConfirmModal';
-import { Button, SectionTitle, TagPill, Tags } from '../components/modal';
-import { useOrderDisplay, useOrders } from '../context/useContext';
-import { findOrderByID } from '../context/orderFunctions';
-import { preview } from 'vite';
+import { ModalContainer, ScrollContainer, FlexColCenter, FlexRow } from '../components/containers';
+import { Button, SectionTitle, TagPill } from '../components/formComponents';
+import { useConfirm, useOrderDisplay, useOrders } from '../context/useContext';
+import { findOrderByID } from '../context/functions';
+import OrderCard from '../components/OrderCard';
+import Tags from '../components/Tags';
+import { ImageDisplay } from '../components/ImageDisplay';
 
+// ─ Constants ────────────────────────────────────────────────────────────────────────────────────
+const UNRETRIEVED_TITLE = 'Unretrieved Items';
+const RETRIEVED_TITLE = 'Retrieved Items';
+const EMPTY_PREVIEW_TEXT = 'Click an item to preview';
 
-// ─ Components ───────────────────────────────────────────────────────────────────────────────────
+// Define ConfirmModalProps
+interface ConfirmModalProps {
+  order: Order;
+  onClose: () => void;
+}
+
 /**
  * ConfirmModal displays a modal for confirming order completion and viewing item details.
  * @param order - The order to confirm.
@@ -24,15 +29,94 @@ import { preview } from 'vite';
  */
 const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
   const { orders } = useOrders();
-  const { orderDisplay, setOrderDisplay } = useOrderDisplay();
+  const { orderDisplay } = useOrderDisplay();
+  const { onConfirm } = useConfirm();
   const [previewItem, setPreviewItem] = useState<ItemData | null>(null);
 
+  // Define orderData using findOrderByID
+  const orderData = findOrderByID(orders, order.orderID);
+  if (!orderData) {
+    return null;
+  }
+
+  // Define unretrievedItems and retrievedItems as before
+  const unretrievedItems = order.items
+    .filter((item) => item.status !== 'inBox')
+    .map((item) => orderData.items.find((data) => data.itemID === item.itemID))
+    .filter(Boolean) as ItemData[];
+
+  const retrievedItems = order.items
+    .filter((item) => item.status === 'inBox')
+    .map((item) => orderData.items.find((data) => data.itemID === item.itemID))
+    .filter(Boolean) as ItemData[];
+
+  // Render unretrieved and retrieved items
+  const handlePreviewKeyDown = (item: ItemData) => (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      setPreviewItem(item);
+    }
+  };
+
+  const unretrievedContent = (
+    <FlexRow>
+      {unretrievedItems.map((item) => (
+        <div
+          key={item.itemID}
+          onClick={() => setPreviewItem(item)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={handlePreviewKeyDown(item)}
+          style={{ cursor: 'pointer' }}
+        >
+          <OrderCard
+            item={item}
+            largeDisplay={false}
+            selectable={false}
+            onImageClick={() => setPreviewItem(item)}
+          />
+        </div>
+      ))}
+    </FlexRow >
+  );
+
+  const retrievedContent = (
+    <div className="flex flex-row flex-wrap gap-2">
+      {retrievedItems.map((item) => (
+        <div
+          key={item.itemID}
+          onClick={() => setPreviewItem(item)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={handlePreviewKeyDown(item)}
+          style={{ cursor: 'pointer' }}
+        >
+          <OrderCard
+            item={item}
+            largeDisplay={false}
+            selectable={false}
+            onImageClick={() => setPreviewItem(item)}
+          />
+        </div>
+      ))}
+    </div>
+  );
+
+  const previewContent = previewItem ? (
+    <div className="flex flex-col items-center gap-2">
+      <ImageDisplay imageUrl={previewItem.imageUrl} onClick={() => { }} />
+      <Tags item={previewItem} />
+    </div>
+  ) : (
+    <div className="text-gray-400">{EMPTY_PREVIEW_TEXT}</div>
+  );
+
+  const handleConfirm = () => {
+    onConfirm(order, orderDisplay);
+    onClose();
+  };
+
   return (
-    <ModalContainer
-      className=""
-      onClick={(event: React.MouseEvent) => event.stopPropagation()}
-      onClose={onClose}
-    >
+    <ModalContainer className="" onClose={onClose}>
       <div className="flex min-w-[70vw] flex-row items-center justify-center gap-10">
         <div className="flex w-full flex-col items-center justify-center gap-4">
           <FlexColCenter className="w-full gap-4">
@@ -40,12 +124,12 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
               <span className="text-center text-lg font-bold text-white">
                 {orderData.customerName}
               </span>
-              <FlexRowBetween className="gap-2">
+              <FlexRow className="gap-2">
                 <TagPill className="bg-green-smoke-300/40 ring-2">{orderData.orderID}</TagPill>
                 <TagPill className="bg-green-smoke-300/40 ring-2">
                   {orderData.deliveryMethod}
                 </TagPill>
-              </FlexRowBetween>
+              </FlexRow>
             </div>
             <div className="flex h-full w-full flex-1/2 flex-col gap-3">
               <SectionTitle>{UNRETRIEVED_TITLE}</SectionTitle>
@@ -61,10 +145,14 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
                 </ScrollContainer>
               </div>
             </div>
-            <Button label="Confirm" onClick={onConfirm} disabled={unretrievedItems.length !== 0} />
+            <Button
+              icon={<ThumbUpAltIcon />}
+              label="Confirm"
+              onClick={handleConfirm}
+              disabled={unretrievedItems.length !== 0}
+            />
           </FlexColCenter>
         </div>
-
         <div className="hidden h-full min-h-[70vh] w-full flex-1/2 flex-col items-center justify-center rounded-2xl bg-black/10 p-5 md:flex">
           {previewContent}
         </div>

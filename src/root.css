@@ -36,15 +36,6 @@ body,
   overflow-x: hidden;
 }
 
-html, body {
-  overflow-x: hidden;
-  /* Hide the main vertical scrollbar */
-  scrollbar-width: none; /* Firefox */
-}
-html::-webkit-scrollbar, body::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
-
 .BFont {
   font-family: 'Syne Mono', monospace;
 }
