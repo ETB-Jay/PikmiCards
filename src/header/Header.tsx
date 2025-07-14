@@ -12,7 +12,7 @@ import RefreshButton from './buttons/RefreshButton';
 /** @description Header displays the top navigation bar with sidebar, location, and refresh controls */
 const Header = memo(({ pick = false }: { pick: boolean }) => {
   const navigate = useNavigate();
-  const pickOrdersLabel = 'Pick Orders';
+  const pickOrdersLabel = 'Orders';
   const guideLabel = 'Guide';
   const logoutLabel = 'Logout';
   return (

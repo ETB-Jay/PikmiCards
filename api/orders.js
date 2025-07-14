@@ -13,6 +13,11 @@ const {
   VITE_SHOPIFY_ACCESS_TOKEN,
 } = process.env;
 
+// Check for required environment variables
+if (!VITE_SHOPIFY_API_KEY || !VITE_SHOPIFY_API_SECRET || !VITE_SHOPIFY_STORE_DOMAIN || !VITE_SHOPIFY_ACCESS_TOKEN) {
+  throw new Error('Missing required Shopify environment variables. Please check your .env file.');
+}
+
 const getOrders = async (client) => {
   let orders = [];
   let hasNextPage = true;
@@ -23,7 +28,7 @@ const getOrders = async (client) => {
     {
       orders(first: 50, 
         after: ${cursor ? `"${cursor}"` : 'null'}, 
-        query: "created_at:>${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled", 
+        query: "created_at:>${new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled", 
         reverse: true) {
         edges {
           cursor
@@ -32,6 +37,9 @@ const getOrders = async (client) => {
             currentSubtotalLineItemsQuantity
             customer {displayName}
             shippingLines(first: 1) {edges {node {title}}}
+            metafield(namespace: "custom", key: "picked") {
+              value
+            }
             fulfillmentOrders(first: 2) {
               edges {
                 node {
@@ -71,13 +79,12 @@ const getOrders = async (client) => {
     const response = await client.request(query, {});
     const ordersData = response.data?.orders;
 
-    if (!ordersData?.edges) {
-      throw new Error('Invalid response from Shopify API');
-    }
+    if (!ordersData?.edges) { throw new Error('Invalid response from Shopify API'); }
 
     const temp = ordersData.edges
-      .map((edge) => {
+      .flatMap((edge) => {
         const order = edge.node;
+        if (!order) { return []; }
 
         const toTitleCase = (str) =>
           str.replace(
@@ -85,64 +92,56 @@ const getOrders = async (client) => {
             (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
           );
 
-        if (!order) {
-          return null;
-        }
-
-        return {
-          orderID: order.id,
-          customerName: order.customer?.displayName
-            ? toTitleCase(order.customer.displayName)
-            : null,
-          numberItems: order.currentSubtotalLineItemsQuantity,
-          deliveryMethod: order.shippingLines?.edges?.[0]?.node?.title,
-          items:
-            order.fulfillmentOrders?.edges
-              ?.flatMap((fulfillEdge) => {
-                if (!fulfillEdge?.node) {
-                  return [];
-                }
-                const locationName = fulfillEdge.node?.assignedLocation?.location?.name;
-                return (
-                  fulfillEdge.node?.lineItems?.edges
-                    ?.map((itemEdge) => {
-                      const item = itemEdge.node?.lineItem;
-                      const tags = item?.product?.tags;
-                      if (!item) {
-                        return null;
-                      }
-                      return {
-                        itemID: item.id,
-                        orderID: order.id,
-                        itemName: item.name.split(" - ")[0] || item.name,
-                        itemQuantity: item.quantity,
-                        itemLocation: locationName,
-                        itemSet:
-                          tags?.find((tag) => tag.startsWith('Set_'))?.replace('Set_', '') || null,
-                        itemRarity:
-                          tags?.find((tag) => tag.startsWith('Rarity_'))?.replace('Rarity_', '') ||
-                          null,
-                        itemPrinting:
-                          item.variant?.title === 'Default Title' ? null : item.variant?.title,
-                        imageUrl:
-                          item.variant?.image?.url ||
-                          item.product?.featuredImage?.url ||
-                          'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png',
-                      };
-                    })
-                    .filter(Boolean) || []
-                );
+        // Split each fulfillment order into its own order object with shared credentials
+        return (order.fulfillmentOrders?.edges || [])
+          .map((fulfillEdge) => {
+            if (!fulfillEdge?.node) { return null; }
+            const locationName = fulfillEdge.node?.assignedLocation?.location?.name;
+            const items = (fulfillEdge.node?.lineItems?.edges || [])
+              .map((itemEdge) => {
+                const item = itemEdge.node?.lineItem;
+                const tags = item?.product?.tags;
+                if (!item) { return null; }
+                return {
+                  itemID: item.id,
+                  orderID: order.id,
+                  itemName: item.name.split(" - ")[0] || item.name,
+                  itemQuantity: item.quantity,
+                  itemLocation: locationName,
+                  itemSet:
+                    tags?.find((tag) => tag.startsWith('Set_'))?.replace('Set_', '') || null,
+                  itemRarity:
+                    tags?.find((tag) => tag.startsWith('Rarity_'))?.replace('Rarity_', '') ||
+                    null,
+                  itemPrinting:
+                    item.variant?.title === 'Default Title' ? null : item.variant?.title,
+                  imageUrl:
+                    item.variant?.image?.url ||
+                    item.product?.featuredImage?.url ||
+                    'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png',
+                };
               })
-              .filter(Boolean) || [],
-        };
+              .filter(Boolean);
+            if (items.length === 0) { return null; }
+            return {
+              orderID: order.id,
+              customerName: order.customer?.displayName
+                ? toTitleCase(order.customer.displayName)
+                : null,
+              tags: order.tags || [],
+              numberItems: items.length,
+              deliveryMethod: order.shippingLines?.edges?.[0]?.node?.title,
+              fulfillmentLocation: locationName,
+              items,
+            };
+          })
+          .filter(Boolean);
       })
-      .filter(Boolean);
+      .filter(order => order && order.items && order.items.length > 0);
 
     orders = [...orders, ...temp];
     hasNextPage = ordersData.pageInfo.hasNextPage;
-    if (hasNextPage) {
-      cursor = ordersData.edges[ordersData.edges.length - 1].cursor;
-    }
+    if (hasNextPage) { cursor = ordersData.edges[ordersData.edges.length - 1].cursor; }
   }
   return orders;
 };

@@ -1,9 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { ItemData } from '../types';
-import { useOrderDisplay } from '../context/useContext';
-
-import { TagPill } from './formComponents';
-import { FlexRow } from './containers';
+import { ItemData } from '../../types';
+import { useOrderDisplay } from '../../context/useContext';
+import { FlexRow } from '../../components/containers';
+import { TagPill } from '../../components/formComponents';
 
 /**
  * Tags component displays item tags (quantity, printing, box, rarity, set).
@@ -27,7 +26,7 @@ const Tags = ({ item }: { item: ItemData }) => {
   }
 
   const order = orderDisplay.find(
-    (order): order is import('../types').Order => order.orderID === item.orderID
+    (order): order is import('../../types').Order => order.orderID === item.orderID
   );
   if (order && order.box) {
     tags.push({
@@ -41,7 +40,7 @@ const Tags = ({ item }: { item: ItemData }) => {
     <FlexRow>
       {tags.map((tag) => (
         <TagPill key={`${tag.value}-${tag.icon || ''}-${item.itemID}`}>
-          {tag.icon && <img src={tag.icon} alt={tag.alt || ''} className="mr-1 inline h-3 w-3" />}
+          {tag.icon && <img src={tag.icon} alt={tag.alt || ''} className="h-3 w-3" />}
           {tag.value}
         </TagPill>
       ))}

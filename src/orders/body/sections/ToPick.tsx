@@ -3,11 +3,11 @@ import { useMemo, memo } from 'react';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 
-import { useOrderDisplay } from '../../context/useContext';
-import { ScrollContainer } from '../../components/containers';
-import { Button } from '../../components/formComponents';
+import { useOrderDisplay } from '../../../context/useContext';
+import { ScrollContainer } from '../../../components/containers';
+import { Button } from '../../../components/formComponents';
 import OrderCard from '../../components/OrderCard';
-import { Item } from '../../types';
+import { Item } from '../../../types';
 
 const CONFIRM_BUTTON_TEXT = 'Confirm';
 const CLEAR_BUTTON_TEXT = 'Clear Items';
@@ -17,9 +17,7 @@ const ToPick = (): React.ReactElement => {
   const { orderDisplay, selectedItems, handleConfirm, handleClear } = useOrderDisplay();
 
   const confirmButton = useMemo(() => {
-    if (selectedItems.size === 0) {
-      return null;
-    }
+    if (selectedItems.size === 0) { return null; }
     return (
       <>
         <Button
@@ -45,18 +43,10 @@ const ToPick = (): React.ReactElement => {
     for (const key of keys) {
       const value1 = item1[key];
       const value2 = item2[key];
-      if (value1 == null && value2 != null) {
-        return 1;
-      }
-      if (value1 != null && value2 == null) {
-        return -1;
-      }
-      if (value1! > value2!) {
-        return 1;
-      }
-      if (value1! < value2!) {
-        return -1;
-      }
+      if (value1 == null && value2 != null) { return 1; }
+      if (value1 != null && value2 == null) { return -1; }
+      if (value1! > value2!) { return 1; }
+      if (value1! < value2!) { return -1;}
     }
     return 0;
   }
@@ -65,9 +55,9 @@ const ToPick = (): React.ReactElement => {
 
   return (
     <div className="flex h-full w-full flex-col">
-      <ScrollContainer className="flex-1 overflow-y-scroll p-1">
+      <ScrollContainer className="flex-1 overflow-y-scroll p-2">
         {items.map((item: Item) => (
-          <OrderCard key={item.itemID} item={item} largeDisplay selectable />
+          <OrderCard key={item.itemID + item.orderID} item={item} largeDisplay selectable />
         ))}
       </ScrollContainer>
       {confirmButton && (

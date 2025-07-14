@@ -2,14 +2,15 @@
 import { useState, memo } from 'react';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 
-import { Order, ItemData } from '../types';
-import { ModalContainer, ScrollContainer, FlexColCenter, FlexRow } from '../components/containers';
-import { Button, SectionTitle, TagPill } from '../components/formComponents';
-import { useConfirm, useOrderDisplay, useOrders } from '../context/useContext';
-import { findOrderByID } from '../context/functions';
+import { Order, ItemData } from '../../types';
+import { ModalContainer, ScrollContainer, FlexColCenter, FlexRow } from '../../components/containers';
+import { Button, SectionTitle, TagPill, Empty } from '../../components/formComponents';
+import { useConfirm, useLocation, useOrderDisplay, useOrders } from '../../context/useContext';
+import { findOrderDataByOrder } from '../../context/functions';
 import OrderCard from '../components/OrderCard';
 import Tags from '../components/Tags';
 import { ImageDisplay } from '../components/ImageDisplay';
+import SelectEmployee from '../components/SelectEmployee';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const UNRETRIEVED_TITLE = 'Unretrieved Items';
@@ -31,23 +32,21 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
   const { orders } = useOrders();
   const { orderDisplay } = useOrderDisplay();
   const { onConfirm } = useConfirm();
+  const { location } = useLocation();
   const [previewItem, setPreviewItem] = useState<ItemData | null>(null);
 
-  // Define orderData using findOrderByID
-  const orderData = findOrderByID(orders, order.orderID);
-  if (!orderData) {
-    return null;
-  }
+  const orderData = findOrderDataByOrder(orders, order, location);
+  if (!orderData) { return null; }
 
   // Define unretrievedItems and retrievedItems as before
   const unretrievedItems = order.items
     .filter((item) => item.status !== 'inBox')
-    .map((item) => orderData.items.find((data) => data.itemID === item.itemID))
+    .map((item) => orderData.items.find((data: ItemData) => data.itemID === item.itemID))
     .filter(Boolean) as ItemData[];
 
   const retrievedItems = order.items
     .filter((item) => item.status === 'inBox')
-    .map((item) => orderData.items.find((data) => data.itemID === item.itemID))
+    .map((item) => orderData.items.find((data: ItemData) => data.itemID === item.itemID))
     .filter(Boolean) as ItemData[];
 
   // Render unretrieved and retrieved items
@@ -57,49 +56,55 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
     }
   };
 
-  const unretrievedContent = (
-    <FlexRow>
-      {unretrievedItems.map((item) => (
-        <div
-          key={item.itemID}
-          onClick={() => setPreviewItem(item)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={handlePreviewKeyDown(item)}
-          style={{ cursor: 'pointer' }}
-        >
-          <OrderCard
-            item={item}
-            largeDisplay={false}
-            selectable={false}
-            onImageClick={() => setPreviewItem(item)}
-          />
-        </div>
-      ))}
-    </FlexRow >
-  );
+  const unretrievedContent =
+    unretrievedItems.length === 0 ? (
+      <Empty text="No unretrieved items" />
+    ) : (
+      <FlexRow>
+        {unretrievedItems.map((item) => (
+          <div
+            key={item.itemID}
+            onClick={() => setPreviewItem(item)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={handlePreviewKeyDown(item)}
+            style={{ cursor: 'pointer' }}
+          >
+            <OrderCard
+              item={item}
+              largeDisplay={false}
+              selectable={false}
+              onImageClick={() => setPreviewItem(item)}
+            />
+          </div>
+        ))}
+      </FlexRow>
+    );
 
-  const retrievedContent = (
-    <div className="flex flex-row flex-wrap gap-2">
-      {retrievedItems.map((item) => (
-        <div
-          key={item.itemID}
-          onClick={() => setPreviewItem(item)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={handlePreviewKeyDown(item)}
-          style={{ cursor: 'pointer' }}
-        >
-          <OrderCard
-            item={item}
-            largeDisplay={false}
-            selectable={false}
-            onImageClick={() => setPreviewItem(item)}
-          />
-        </div>
-      ))}
-    </div>
-  );
+  const retrievedContent =
+    retrievedItems.length === 0 ? (
+      <Empty text="No retrieved items" />
+    ) : (
+      <div className="flex flex-row flex-wrap gap-2">
+        {retrievedItems.map((item) => (
+          <div
+            key={item.itemID}
+            onClick={() => setPreviewItem(item)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={handlePreviewKeyDown(item)}
+            style={{ cursor: 'pointer' }}
+          >
+            <OrderCard
+              item={item}
+              largeDisplay={false}
+              selectable={false}
+              onImageClick={() => setPreviewItem(item)}
+            />
+          </div>
+        ))}
+      </div>
+    );
 
   const previewContent = previewItem ? (
     <div className="flex flex-col items-center gap-2">
@@ -145,12 +150,15 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
                 </ScrollContainer>
               </div>
             </div>
-            <Button
-              icon={<ThumbUpAltIcon />}
-              label="Confirm"
-              onClick={handleConfirm}
-              disabled={unretrievedItems.length !== 0}
-            />
+            <FlexRow className='justify-center gap-4'>
+              <SelectEmployee />
+              <Button
+                icon={<ThumbUpAltIcon />}
+                label="Confirm"
+                onClick={handleConfirm}
+                disabled={unretrievedItems.length !== 0}
+              />
+            </FlexRow>
           </FlexColCenter>
         </div>
         <div className="hidden h-full min-h-[70vh] w-full flex-1/2 flex-col items-center justify-center rounded-2xl bg-black/10 p-5 md:flex">

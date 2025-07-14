@@ -1,7 +1,7 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { memo } from 'react';
 
-import { ModalContainer } from '../components/containers';
+import { ModalContainer } from '../../components/containers';
 
 const FULLSCREEN_IMAGE_LABEL = 'Close fullscreen image';
 

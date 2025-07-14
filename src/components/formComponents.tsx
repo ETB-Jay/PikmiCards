@@ -7,7 +7,7 @@ import { ButtonProps, ChildrenAndClassProps, InputProps, PopupProps } from '../i
 const InputField = memo(({ icon, label, type, value, onChange, err }: InputProps) => (
   <div className="flex min-w-fit flex-col items-center justify-center">
     <label
-      className="relative flex min-w-100 flex-row items-center"
+      className="relative flex flex-row items-center"
       htmlFor={label.replace(/\s+/g, '-').toLowerCase()}
     >
       <span className="absolute left-3.5">{icon}</span>
@@ -66,7 +66,7 @@ const Button = memo(
         ref={ref}
         // eslint-disable-next-line react/button-has-type
         type={type}
-        className={`${disabled ? 'bg-gray-400' : 'bg-green-smoke-600 hover:bg-green-smoke-700 focus:ring-green-smoke-800'} cursor-pointer rounded-xl p-2 font-bold tracking-wide text-white shadow transition-all focus:ring-2 focus:outline-none ${className}`}
+        className={`${disabled ? 'bg-gray-400' : 'bg-green-smoke-600 hover:bg-green-smoke-700 focus:ring-green-smoke-800'} cursor-pointer rounded-xl p-1 font-bold tracking-wide text-white shadow transition-all focus:ring-2 focus:outline-none ${className}`}
         onClick={onClick}
         disabled={disabled}
         onKeyDown={(event) => {
@@ -78,7 +78,7 @@ const Button = memo(
       >
         <span className="flex items-center gap-1">
           {icon}
-          <span className="BFont hidden font-bold sm:inline sm:text-xs lg:text-base">{label}</span>
+          {label && <span className="BFont hidden font-bold sm:inline sm:text-xs lg:text-base">{label}</span>}
         </span>
       </button>
     );
@@ -90,7 +90,7 @@ Button.displayName = 'Button';
 const TagPill = memo(
   ({ children, className = '' }: ChildrenAndClassProps): React.ReactNode => (
     <span
-      className={`block items-center justify-center rounded-2xl bg-green-900 px-1.5 py-0.5 text-center text-xs font-semibold text-wrap text-white ring-2 ring-green-950 ${className}`}
+      className={`flex flex-nowrap gap-1 items-center justify-center rounded-2xl bg-green-900 px-1.5 py-0.5 text-center text-xs font-semibold text-wrap text-white ring-2 ring-green-950 ${className}`}
     >
       {children}
     </span>

@@ -1,7 +1,7 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { memo } from 'react';
 
-import { ChildrenAndClassProps } from '../interfaces';
+import { ChildrenAndClassProps } from '../../interfaces';
 
 import ToPick from './sections/ToPick';
 import QueuePile from './sections/QueuePile';

@@ -1,8 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { useCallback } from 'react';
 
-import { Item, OrderData, ItemData } from '../types';
-import { useFullscreen, useOrderDisplay, useOrders } from '../context/useContext';
+import { Item, OrderData, ItemData } from '../../types';
+import { useFullscreen, useOrderDisplay, useOrders } from '../../context/useContext';
 
 import { ImageDisplay } from './ImageDisplay';
 import Tags from './Tags';
@@ -19,9 +19,7 @@ interface OrderCardProps {
 function findItemDataByID(orders: OrderData[], itemID: string): ItemData | undefined {
   for (const order of orders) {
     const found = order.items.find((item) => item.itemID === itemID);
-    if (found) {
-      return found;
-    }
+    if (found) { return found; }
   }
   return undefined;
 }
@@ -47,21 +45,14 @@ const OrderCard = ({ item, largeDisplay, selectable, onImageClick }: OrderCardPr
   );
 
   const handleCardClick = useCallback(() => {
-    if (!itemData) {
-      return;
-    }
-    if (selectable) {
-      handleSelect(itemData.itemID);
-    } else {
-      handleImageClick();
-    }
+    if (!itemData) { return; }
+    if (selectable) { handleSelect(itemData.itemID); }
+    else { handleImageClick(); }
   }, [selectable, handleSelect, itemData, handleImageClick]);
 
-  const cardClass = `bg-green-smoke-800/60 hover:bg-green-smoke-800/80 active: cursor-pointer flex flex-row gap-3 object-contain p-2 h-fit rounded-xl transition-all${selectable && selected ? ' brightness-90 opacity-60 ring-2 ring-green-950' : ''}`;
+  const cardClass = `bg-green-smoke-800/60 hover:bg-green-smoke-800/80 active:bg-green-smoke-900/80 hover:scale-102 cursor-pointer flex flex-row gap-3 object-contain p-2 h-fit rounded-xl transition-all${selectable && selected ? ' brightness-90 opacity-60 ring-2 ring-green-950' : ''}`;
 
-  if (!itemData) {
-    return null;
-  }
+  if (!itemData) { return null; }
 
   return (
     <div

@@ -1,9 +1,9 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { ReactNode, useState, useCallback, useMemo } from 'react';
 
-import FullscreenModal from '../modals/FullscreenModal';
+import FullscreenModal from '../orders/modals/FullscreenModal';
 import { OrderData, Order, Location, Status, ItemID } from '../types';
-import ConfirmModal from '../modals/ConfirmModal';
+import ConfirmModal from '../orders/modals/ConfirmModal';
 
 import {
   OrdersContext,
@@ -14,7 +14,7 @@ import {
   AuthContext,
 } from './Context';
 import useLocalStorage from './useLocalStorage';
-import { useConfirm, useOrderDisplay } from './useContext';
+import { useOrderDisplay } from './useContext';
 
 interface ProviderProps {
   children: ReactNode;
@@ -33,9 +33,7 @@ const OrdersProvider = ({ children }: ProviderProps) => {
     try {
       setOrders([]);
       const response = await fetch('/api/orders');
-      if (!response.ok) {
-        throw new Error('Failed to fetch orders');
-      }
+      if (!response.ok) { throw new Error('Failed to fetch orders'); }
       const orders = await response.json();
       setOrders(orders);
     } catch (err) {
@@ -45,12 +43,12 @@ const OrdersProvider = ({ children }: ProviderProps) => {
 
   const fromOrderDataToOrder = useCallback((orders: OrderData[], location: Location): Order[] => {
     const transformed = orders
+      .filter((order) => order.fulfillmentLocation.includes(location))
       .map((order) => ({
         orderID: order.orderID,
         location,
         box: null,
         items: order.items
-          .filter((item) => item.itemLocation.includes(location))
           .map((item) => ({
             itemID: item.itemID,
             orderID: item.orderID,
@@ -59,6 +57,7 @@ const OrdersProvider = ({ children }: ProviderProps) => {
             box: null,
           })),
       }))
+      .filter(Boolean)
       .filter((order) => order.items.length > 0);
     return assignBoxes(transformed);
   }, []);
@@ -78,8 +77,8 @@ const OrdersProvider = ({ children }: ProviderProps) => {
   };
 
   const value = useMemo(
-    () => ({ orders, setOrders, fetchOrders, fromOrderDataToOrder, error }),
-    [orders, setOrders, fetchOrders, fromOrderDataToOrder, error]
+    () => ({ orders, setOrders, fetchOrders, fromOrderDataToOrder, assignBoxes, error }),
+    [orders, setOrders, fetchOrders, fromOrderDataToOrder, assignBoxes, error]
   );
 
   return <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>;
@@ -230,7 +229,7 @@ const ConfirmProvider = ({ children }: ProviderProps) => {
 };
 
 const LocationProvider = ({ children }: ProviderProps) => {
-  const [location, setLocation] = useState<Location>('Oakville');
+  const [location, setLocation] = useState<Location>("Oakville");
   const value = useMemo(() => ({ location, setLocation }), [location, setLocation]);
   return <LocationContext.Provider value={value}>{children}</LocationContext.Provider>;
 };
@@ -287,15 +286,17 @@ const AuthProvider = ({ children }: ProviderProps) => {
 const Providers = ({ children }: ProviderProps) => {
   return (
     <AuthProvider>
-      <OrdersProvider>
-        <OrderDisplayProvider>
-          <ConfirmProvider>
-            <FullscreenProvider>
-              <LocationProvider>{children}</LocationProvider>
-            </FullscreenProvider>
-          </ConfirmProvider>
-        </OrderDisplayProvider>
-      </OrdersProvider>
+      <LocationProvider>
+        <OrdersProvider>
+          <OrderDisplayProvider>
+            <ConfirmProvider>
+              <FullscreenProvider>
+                {children}
+              </FullscreenProvider>
+            </ConfirmProvider>
+          </OrderDisplayProvider>
+        </OrdersProvider>
+      </LocationProvider>
     </AuthProvider>
   );
 };

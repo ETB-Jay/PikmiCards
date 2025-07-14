@@ -85,7 +85,7 @@ ScrollContainer.displayName = 'ScrollContainer';
 
 /** @description FlexRowBetween provides a flex row with justify-between and full width */
 const FlexRow = memo(({ children, className = '' }: ChildrenAndClassProps) => (
-  <div className={`flex w-full flex-row flex-wrap items-center gap-2 ${className}`}>{children}</div>
+  <div className={`${className} flex w-full flex-row flex-wrap items-center gap-2`}>{children}</div>
 ));
 FlexRow.displayName = 'FlexRowBetween';
 

@@ -7,6 +7,7 @@ import {
   OrderDisplayContext,
   ConfirmContext,
   AuthContext,
+  LocationContext,
 } from './Context';
 
 // ─ Custom Hooks ────────────────────────────────────────────────────────────────────────────────────
@@ -47,6 +48,15 @@ const useConfirm = () => {
 };
 
 /**
+ * useLocation returns the LocationContext value
+ * @throws Error if used outside LocationProvider
+ */
+const useLocation = () => {
+  const context = useContext(LocationContext)
+  return context;
+}
+
+/**
  * useAuth returns the AuthContext value.
  * @throws Error if used otuside AuthProvider
  */
@@ -56,4 +66,4 @@ const useAuth = () => {
 };
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
-export { useOrders, useFullscreen, useOrderDisplay, useConfirm, useAuth };
+export { useOrders, useFullscreen, useOrderDisplay, useConfirm, useLocation, useAuth };

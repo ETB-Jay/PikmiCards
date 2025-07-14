@@ -14,6 +14,7 @@ interface OrderData {
   numberItems: number;
   deliveryMethod: string | null;
   items: ItemData[];
+  fulfillmentLocation: Location;
 }
 
 /**
@@ -89,6 +90,17 @@ interface User {
   password: string;
 }
 
+/**
+ * @description ConfirmResponse is a response back to Shopify
+ * 
+ * @property {string} employee - name of employee who confirmed the response
+ * @property {Location} location - location where the response was confirmed
+ */
+interface ConfirmResponse {
+  employee: string;
+  location: Location;
+}
+
 // ─ Types ─────────────────────────────────────────────────────────────────────────────────────────────
 /**
  * @description OrderID is a unique identifier for an Order.
@@ -109,4 +121,4 @@ type Location = 'Oakville' | 'Newmarket' | 'Guelph';
 type Status = 'unPicked' | 'queue' | 'inBox';
 
 // ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
-export type { OrderData, ItemData, Order, Item, OrderID, ItemID, Location, Status, User };
+export type { OrderData, ItemData, Order, Item, ConfirmResponse, OrderID, ItemID, Location, Status, User };

@@ -1,28 +1,24 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 
-import { Location } from '../../types';
+import { useLocation } from '../../context/useContext';
 import { PopupOption } from '../../components/formComponents';
+import { Location } from '../../types';
 
 interface DetermineLocationProps {
-  location: Location;
-  setLocation: (loc: Location) => void;
   prompt: (show: boolean) => void;
   buttonRef: React.RefObject<HTMLButtonElement>;
 }
 
 /**
  * DetermineLocation renders a dropdown for selecting a location.
- * @param location - The current location string.
- * @param setLocation - Function to update the location.
  * @param prompt - Function to toggle the prompt visibility.
  */
-const DetermineLocation = ({
-  location,
-  setLocation,
+const DetermineLocation = memo(({
   prompt,
   buttonRef,
 }: DetermineLocationProps): React.ReactElement => {
+  const { location, setLocation } = useLocation();
   const ref = useRef<HTMLDivElement>(null);
 
   const handleLocationSelect = (newLocation: string) => {
@@ -57,7 +53,7 @@ const DetermineLocation = ({
       <PopupOption label="Newmarket" current={location} onSelect={handleLocationSelect} />
     </div>
   );
-};
+});
 
 DetermineLocation.displayName = 'DetermineLocation';
 

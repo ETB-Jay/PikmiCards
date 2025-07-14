@@ -1,7 +1,7 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import React, { memo } from 'react';
 
-import { FlexColCenter } from '../components/containers';
+import { FlexColCenter } from '../../components/containers';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const LOADING_TEXT = 'Loading';

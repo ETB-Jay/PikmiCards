@@ -1,7 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { createContext } from 'react';
 
-import { Order, OrderData, ItemID, Location, User } from '../types';
+import { Order, OrderData, ItemID, User } from '../types';
+import type { Location } from '../types';
 
 /** @description OrdersContextType stores the fetched order data from Shopify */
 interface OrdersContextType {
@@ -135,7 +136,7 @@ const LocationContext = createContext<LocationContextType>({
   /** @description The current location being picked from */
   location: 'Oakville',
   /** @description Function to set location */
-  setLocation: () => {},
+  setLocation: () => {}
 });
 LocationContext.displayName = 'LocationContext';
 
@@ -166,6 +167,7 @@ export type {
   FullscreenContextType,
   ConfirmContextType,
   AuthContextType,
+  LocationContextType
 };
 export {
   OrdersContext,

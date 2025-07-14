@@ -3,10 +3,10 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 
-import Pick from './pages/Pick';
-import Login from './pages/Login';
+import Pick from './orders/Orders';
+import Login from './login/Login';
 import Providers from './context/Providers';
-import Guide from './pages/Guide';
+import Guide from './guide/Guide';
 import ProtectedRoute from './context/ProtectedRoute';
 
 import './root.css';

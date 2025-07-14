@@ -1,9 +1,9 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { memo } from 'react';
 
-import { useOrderDisplay } from '../../context/useContext';
-import { ScrollContainer, FlexColCenter } from '../../components/containers';
-import { Item } from '../../types';
+import { useOrderDisplay } from '../../../context/useContext';
+import { ScrollContainer, FlexColCenter } from '../../../components/containers';
+import { Item } from '../../../types';
 import OrderCard from '../../components/OrderCard';
 
 const EMPTY_QUEUE_TEXT = 'Queue is empty';

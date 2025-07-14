@@ -1,14 +1,18 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import { OrderData, OrderID, ItemData, ItemID, Order, Status } from '../types';
+import { OrderData, ItemData, ItemID, Order, Status, Location } from '../types';
 
 /**
  * Finds an order by its ID.
- * @param orders - The list of orders.
- * @param orderID - The order ID to search for.
+ * @param orderDataList - The list of orders.
+ * @param order - The order ID to search for.
+ * @param location - The fulfillment Location
  * @returns The matching OrderData or undefined.
  */
-const findOrderByID = (orders: OrderData[] | null, orderID: OrderID): OrderData | undefined => {
-  return orders?.find((order) => order.orderID === orderID);
+const findOrderDataByOrder = (orderDataList: OrderData[] | null, order: Order, location: Location): OrderData | undefined => {
+  return orderDataList?.find((orderData) => {
+    return (orderData.orderID === order.orderID &&
+      orderData.fulfillmentLocation.includes(location))
+  });
 };
 
 /**
@@ -47,15 +51,17 @@ const getOrderKeys = (orders: OrderData[]): Order[] => {
  * @param orders - The list of orders.
  * @param orderID - The order ID.
  * @param itemID - The item ID.
+ * @param location -  The location of the order
  * @returns The matching ItemData or undefined.
  */
 const findItemByID = (
-  orders: OrderData[],
-  orderID: OrderID,
-  itemID: ItemID
+  orderDataList: OrderData[],
+  order: Order,
+  itemID: ItemID,
+  location: Location
 ): ItemData | undefined => {
-  const order = findOrderByID(orders, orderID);
-  return order?.items.find((item) => item.itemID === itemID);
+  const orderData = findOrderDataByOrder(orderDataList, order, location);
+  return orderData?.items.find((item) => item.itemID === itemID);
 };
 
-export { findOrderByID, getItemKeys, getOrderKeys, findItemByID };
+export { findOrderDataByOrder, getItemKeys, getOrderKeys, findItemByID };

@@ -1,26 +1,17 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import { useContext, useState, useCallback, useRef } from 'react';
+import { useState, useRef, memo } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { Button } from '../../components/formComponents';
-import { LocationContext } from '../../context/Context';
-import { Location } from '../../types';
+import { useLocation } from '../../context/useContext';
 
 import DetermineLocation from './DetermineLocation';
 
 /** @description LocationButton displays a button for the current location and opens a dropdown to change it. */
-const LocationButton = (): React.ReactElement => {
-  const { location, setLocation } = useContext(LocationContext);
+const LocationButton = memo((): React.ReactElement => {
+  const { location } = useLocation();
   const [locationPrompt, setLocationPrompt] = useState<boolean>(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const handleLocationSelect = useCallback(
-    (newLocation: Location) => {
-      setLocation(newLocation);
-      setLocationPrompt(false);
-    },
-    [setLocation]
-  );
 
   return (
     <div className="relative">
@@ -32,16 +23,13 @@ const LocationButton = (): React.ReactElement => {
       />
       {locationPrompt && (
         <DetermineLocation
-          location={location}
-          setLocation={handleLocationSelect}
           prompt={setLocationPrompt}
           buttonRef={buttonRef}
         />
       )}
     </div>
   );
-};
-
+});
 LocationButton.displayName = 'LocationButton';
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
