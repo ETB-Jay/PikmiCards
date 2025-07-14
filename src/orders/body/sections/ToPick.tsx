@@ -54,14 +54,14 @@ const ToPick = (): React.ReactElement => {
   const items: Item[] = orderDisplay.flatMap((order) => order.items).filter(item => item.status === 'unPicked').sort(returnLarger);
 
   return (
-    <div className="flex h-full w-full flex-col">
-      <ScrollContainer className="flex-1 overflow-y-scroll p-2">
+    <div className="flex flex-col w-full h-full">
+      <ScrollContainer className="flex-1 p-2 overflow-y-scroll">
         {items.map((item: Item) => (
           <OrderCard key={item.itemID + item.orderID} item={item} largeDisplay selectable />
         ))}
       </ScrollContainer>
       {confirmButton && (
-        <div className="bg-green-smoke-800/80 border-black-olive-900 sticky bottom-0 z-20 flex flex-row justify-center gap-3 rounded-b-2xl border-t p-2 shadow-lg backdrop-blur-md">
+        <div className="sticky bottom-0 z-20 flex flex-row justify-center gap-3 p-2 border-t shadow-lg bg-green-smoke-800/80 border-black-olive-900 rounded-b-2xl backdrop-blur-md">
           {confirmButton}
         </div>
       )}

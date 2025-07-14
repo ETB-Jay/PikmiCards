@@ -21,7 +21,7 @@ const CardGridDisplay = memo((): React.ReactElement => {
     );
 
   return (
-    <div className="relative grid h-full w-full flex-1 auto-rows-fr grid-cols-1 p-1 gap-1 overflow-y-auto rounded-lg sm:grid-cols-2">
+    <div className="relative grid flex-1 w-full h-full grid-cols-1 gap-1 p-1 overflow-y-auto rounded-lg auto-rows-fr sm:grid-cols-2">
       {content}
     </div>
   );

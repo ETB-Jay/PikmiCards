@@ -17,7 +17,6 @@ const UNRETRIEVED_TITLE = 'Unretrieved Items';
 const RETRIEVED_TITLE = 'Retrieved Items';
 const EMPTY_PREVIEW_TEXT = 'Click an item to preview';
 
-// Define ConfirmModalProps
 interface ConfirmModalProps {
   order: Order;
   onClose: () => void;
@@ -34,6 +33,7 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
   const { onConfirm } = useConfirm();
   const { location } = useLocation();
   const [previewItem, setPreviewItem] = useState<ItemData | null>(null);
+  const [employee, setEmployee] = useState<string>('')
 
   const orderData = findOrderDataByOrder(orders, order, location);
   if (!orderData) { return null; }
@@ -108,7 +108,10 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
 
   const previewContent = previewItem ? (
     <div className="flex flex-col items-center gap-2">
-      <ImageDisplay imageUrl={previewItem.imageUrl} onClick={() => { }} />
+      <ImageDisplay imageUrl={previewItem.imageUrl} className='w-auto h-full max-h-80' onClick={() => { }} />
+      <span className="text-sm font-medium truncate text-green-smoke-100 text-nowrap">
+        {previewItem.itemName}
+      </span>
       <Tags item={previewItem} />
     </div>
   ) : (
@@ -122,11 +125,11 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
 
   return (
     <ModalContainer className="" onClose={onClose}>
-      <div className="flex min-w-[70vw] flex-row items-center justify-center gap-10">
-        <div className="flex w-full flex-col items-center justify-center gap-4">
+      <div className="flex min-w-[70vw] flex-row items-center justify-center gap-5">
+        <div className="flex flex-col items-center justify-center w-full gap-4">
           <FlexColCenter className="w-full gap-4">
             <div className="flex flex-col gap-2">
-              <span className="text-center text-lg font-bold text-white">
+              <span className="text-lg font-bold text-center text-white">
                 {orderData.customerName}
               </span>
               <FlexRow className="gap-2">
@@ -136,22 +139,22 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
                 </TagPill>
               </FlexRow>
             </div>
-            <div className="flex h-full w-full flex-1/2 flex-col gap-3">
+            <div className="flex flex-col w-full h-full gap-3 flex-1/2">
               <SectionTitle>{UNRETRIEVED_TITLE}</SectionTitle>
-              <div className="rounded-2xl bg-black/10 p-2">
-                <ScrollContainer className="max-h-50 w-full flex-row flex-wrap">
+              <div className="p-2 rounded-2xl bg-black/10">
+                <ScrollContainer className="flex-row flex-wrap w-full max-h-50">
                   {unretrievedContent}
                 </ScrollContainer>
               </div>
               <SectionTitle>{RETRIEVED_TITLE}</SectionTitle>
-              <div className="rounded-2xl bg-black/10 p-2">
-                <ScrollContainer className="max-h-50 w-full flex-row flex-wrap">
+              <div className="p-2 rounded-2xl bg-black/10">
+                <ScrollContainer className="flex-row flex-wrap w-full max-h-50">
                   {retrievedContent}
                 </ScrollContainer>
               </div>
             </div>
             <FlexRow className='justify-center gap-4'>
-              <SelectEmployee />
+              <SelectEmployee confirmedEmployee={employee} setConfirmedEmployee={setEmployee} />
               <Button
                 icon={<ThumbUpAltIcon />}
                 label="Confirm"
@@ -161,7 +164,7 @@ const ConfirmModal = memo(({ order, onClose }: ConfirmModalProps) => {
             </FlexRow>
           </FlexColCenter>
         </div>
-        <div className="hidden h-full min-h-[70vh] w-full flex-1/2 flex-col items-center justify-center rounded-2xl bg-black/10 p-5 md:flex">
+        <div className="flex-col items-center justify-center hidden w-full h-full p-5 flex-2/3 rounded-2xl bg-black/10 md:flex">
           {previewContent}
         </div>
       </div>

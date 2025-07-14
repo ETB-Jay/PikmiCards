@@ -8,8 +8,8 @@ import Background from './Background';
 
 /** @description MainContainer wraps the app content*/
 const MainContainer = memo(({ children, className }: ChildrenAndClassProps) => (
-  <div
-    className={`relative flex min-h-screen w-screen flex-col items-center justify-center gap-5 p-5 select-none ${className}`}
+  <ScrollContainer
+    className={`relative flex min-h-screen items-center justify-center w-screen flex-col gap-5 p-5 select-none ${className}`}
   >
     <Background
       particleColors={['#ffffff', '#ffffff']}
@@ -19,7 +19,7 @@ const MainContainer = memo(({ children, className }: ChildrenAndClassProps) => (
       particleBaseSize={100}
     />
     {children}
-  </div>
+  </ScrollContainer>
 ));
 MainContainer.displayName = 'MainContainer';
 
@@ -69,7 +69,7 @@ ModalContainer.displayName = 'Modal Container';
 
 /** @description FlexColCenter provides a flex column with centered alignment */
 const FlexColCenter = memo(({ children, className }: ChildrenAndClassProps) => (
-  <div className={`relative flex w-full flex-col items-center justify-center ${className}`}>
+  <div className={`flex h-full w-full flex-col items-center justify-center ${className}`}>
     {children}
   </div>
 ));
@@ -77,7 +77,7 @@ FlexColCenter.displayName = 'flexColCenter';
 
 /** @description ScrollContainer wraps a scroll container */
 const ScrollContainer = memo(({ children, className = '' }: ChildrenAndClassProps) => (
-  <div className={`flex h-full flex-col gap-2 overflow-y-scroll rounded-lg p-1 ${className}`}>
+  <div className={`flex h-full flex-col w-full gap-2 overflow-y-scroll rounded-lg p-1 ${className}`}>
     {children}
   </div>
 ));

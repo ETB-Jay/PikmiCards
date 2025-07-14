@@ -48,18 +48,18 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
         }
       }}
     >
-      <p className="max-w-1/3 truncate font-semibold">{orderData.customerName}</p>
+      <p className="font-semibold truncate max-w-1/3">{orderData.customerName}</p>
       <div className="flex flex-row gap-2">
         <TagPill>
-          <img src="/ClosedBox.svg" alt="" className="mr-1 inline-block h-4 w-4 align-middle" />
+          <img src="/ClosedBox.svg" alt="" className="inline-block w-4 h-4 mr-1 align-middle" />
           {index}
         </TagPill>
         <TagPill>
-          <img src="/Picked.svg" alt="" className="mr-1 inline-block h-4 w-4 align-middle" />
+          <img src="/Picked.svg" alt="" className="inline-block w-4 h-4 mr-1 align-middle" />
           {retrievedCount}
         </TagPill>
         <TagPill>
-          <img src="/NotPicked.svg" alt="" className="mr-1 inline-block h-4 w-4 align-middle" />
+          <img src="/NotPicked.svg" alt="" className="inline-block w-4 h-4 mr-1 align-middle" />
           {unretrievedCount}
         </TagPill>
       </div>

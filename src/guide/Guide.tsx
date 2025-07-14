@@ -1,5 +1,5 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { MainContainer, ScrollContainer } from '../components/containers';
+import { MainContainer } from '../components/containers';
 import Header from '../header/Header';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
@@ -54,17 +54,17 @@ const GUIDE_TEXT = {
 };
 
 const Title = ({ text }: { text: string }) => (
-  <h1 className="mb-2 text-center text-4xl font-extrabold tracking-tight text-green-400 drop-shadow-lg">
+  <h1 className="mb-2 text-4xl font-extrabold tracking-tight text-center text-green-400 drop-shadow-lg">
     {text}
   </h1>
 );
 
 const Subtitle = ({ text }: { text: string }) => (
-  <h2 className="mb-1 text-center text-2xl font-bold text-green-200">{text}</h2>
+  <h2 className="mb-1 text-2xl font-bold text-center text-green-200">{text}</h2>
 );
 
 const Description = ({ text }: { text: string }) => (
-  <h2 className="text-md mb-2 font-medium text-gray-300 italic">{text}</h2>
+  <h2 className="mb-2 italic font-medium text-gray-300 text-md">{text}</h2>
 );
 
 const Text = ({ text }: { text: string }) => <p className="mb-2 text-green-100">{text}</p>;
@@ -78,10 +78,10 @@ const Section = ({
   subtitleParts: string[];
   features: string[];
 }) => (
-  <div className="mb-4 flex flex-col rounded-xl bg-green-900/20 p-4 shadow">
+  <div className="flex flex-col p-4 mb-4 shadow rounded-xl bg-green-900/20">
     <Subtitle text={title} />
     <Description text={subtitleParts.join(' ')} />
-    <ul className="ml-8 list-outside list-disc break-words whitespace-pre-line text-green-100">
+    <ul className="ml-8 text-green-100 break-words whitespace-pre-line list-disc list-outside">
       {features.map((feature) => (
         <li className="break-words whitespace-pre-line" key={feature}>
           <Text text={feature} />
@@ -96,7 +96,7 @@ function Guide(): React.ReactElement {
   return (
     <MainContainer>
       <Header pick={false} />
-      <ScrollContainer className="relative z-10 mx-auto w-full max-w-4xl flex-1 gap-5 border border-indigo-700 bg-black/30 px-5 py-8 text-white shadow-2xl backdrop-blur-md">
+      <div className="flex flex-col h-full max-h-[calc(95vh-3.75rem)] w-full gap-2 mb-5">
         <div className="flex flex-col">
           <Title text={GUIDE_TEXT.title} />
           <Subtitle text={GUIDE_TEXT.subtitle} />
@@ -116,7 +116,7 @@ function Guide(): React.ReactElement {
           subtitleParts={GUIDE_TEXT.pick.box.subtitle}
           features={GUIDE_TEXT.pick.box.features}
         />
-      </ScrollContainer>
+      </div>
     </MainContainer>
   );
 }

@@ -85,18 +85,23 @@ const getOrders = async (client) => {
       .flatMap((edge) => {
         const order = edge.node;
         if (!order) { return []; }
-
+        let pickedLocations = [];
+        try {
+          pickedLocations = JSON.parse(order.metafield.value).map(picked => picked.location);
+        } catch {
+          pickedLocations = [];
+        }
         const toTitleCase = (str) =>
           str.replace(
             /\w\S*/g,
             (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
           );
 
-        // Split each fulfillment order into its own order object with shared credentials
         return (order.fulfillmentOrders?.edges || [])
           .map((fulfillEdge) => {
             if (!fulfillEdge?.node) { return null; }
             const locationName = fulfillEdge.node?.assignedLocation?.location?.name;
+            if (pickedLocations.includes(locationName)) { return null; }
             const items = (fulfillEdge.node?.lineItems?.edges || [])
               .map((itemEdge) => {
                 const item = itemEdge.node?.lineItem;
@@ -108,20 +113,15 @@ const getOrders = async (client) => {
                   itemName: item.name.split(" - ")[0] || item.name,
                   itemQuantity: item.quantity,
                   itemLocation: locationName,
-                  itemSet:
-                    tags?.find((tag) => tag.startsWith('Set_'))?.replace('Set_', '') || null,
-                  itemRarity:
-                    tags?.find((tag) => tag.startsWith('Rarity_'))?.replace('Rarity_', '') ||
-                    null,
-                  itemPrinting:
-                    item.variant?.title === 'Default Title' ? null : item.variant?.title,
+                  itemSet: tags?.find((tag) => tag.startsWith('Set_'))?.replace('Set_', '') || null,
+                  itemRarity: tags?.find((tag) => tag.startsWith('Rarity_'))?.replace('Rarity_', '') || null,
+                  itemPrinting: item.variant?.title === 'Default Title' ? null : item.variant?.title,
                   imageUrl:
                     item.variant?.image?.url ||
                     item.product?.featuredImage?.url ||
                     'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png',
                 };
-              })
-              .filter(Boolean);
+              }).filter(Boolean);
             if (items.length === 0) { return null; }
             return {
               orderID: order.id,
@@ -134,16 +134,71 @@ const getOrders = async (client) => {
               fulfillmentLocation: locationName,
               items,
             };
-          })
-          .filter(Boolean);
-      })
-      .filter(order => order && order.items && order.items.length > 0);
+          }).filter(Boolean);
+      }).filter(order => order && order.items && order.items.length > 0);
 
     orders = [...orders, ...temp];
     hasNextPage = ordersData.pageInfo.hasNextPage;
     if (hasNextPage) { cursor = ordersData.edges[ordersData.edges.length - 1].cursor; }
   }
   return orders;
+};
+
+const writeOrders = async (client, orderID, field) => {
+  // First, fetch the existing metafield
+  const getMetafield = `
+    query getMetafield($orderID: ID!) {
+      order(id: $orderID) {
+        metafield(namespace: "custom", key: "picked") {
+          value
+        }
+      }
+    }
+  `;
+
+  const existingData = await client.request(getMetafield, { orderID });
+  let currentValue = [];
+
+  try {
+    currentValue = JSON.parse(existingData.order?.metafield?.value || '[]');
+  } catch (err) {
+    console.log(err);
+  }
+
+  // Add new field to the existing array
+  const updatedValue = JSON.stringify([...currentValue, field]);
+
+  // Update with combined data
+  const mutation = `
+    mutation MetafieldsSet($metafields: [MetafieldsSetInput!]!) {
+      metafieldsSet(metafields: $metafields) {
+        metafields {
+          key
+          namespace
+          value
+          type
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    metafields: [
+      {
+        orderID,
+        namespace: 'custom',
+        key: 'picked',
+        type: 'json',
+        value: updatedValue
+      },
+    ]
+  };
+
+  return client.request(mutation, variables);
 };
 
 async function handler(req, res) {
@@ -177,3 +232,4 @@ async function handler(req, res) {
 
 export default handler;
 export const expressHandler = (req, res) => handler(req, res);
+export { writeOrders };

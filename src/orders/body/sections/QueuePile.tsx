@@ -18,11 +18,11 @@ const QueuePile = (): React.ReactElement => {
 
   const content =
     items.length === 0 ? (
-      <div className="bg-green-smoke-600/70 flex h-full w-full items-center justify-center rounded-2xl text-white ring-2 ring-green-900">
+      <div className="flex items-center justify-center w-full h-full text-white bg-green-smoke-600/70 rounded-2xl ring-2 ring-green-900">
         {EMPTY_QUEUE_TEXT}
       </div>
     ) : (
-      <ScrollContainer className="flex-1 flex-row">
+      <ScrollContainer className="flex-row flex-1">
         {items.map((item) => (
           <OrderCard key={item.itemID} item={item} largeDisplay={false} selectable />
         ))}

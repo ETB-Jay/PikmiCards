@@ -20,17 +20,17 @@ const Header = memo(({ pick = false }: { pick: boolean }) => {
       <img
         src="/pikmicard.png"
         alt=""
-        className="mr-5 h-10 w-10 rounded-xl bg-amber-50/15 shadow"
+        className="w-10 h-10 mr-5 shadow rounded-xl bg-amber-50/15"
       />
       {pick && <LocationButton />}
       <RefreshButton />
-      <div className="ml-auto flex gap-2">
+      <div className="flex gap-2 ml-auto">
         <Button
           label={pickOrdersLabel}
           onClick={() => {
             navigate('/pick');
           }}
-          icon={<img src="/cards.svg" alt={pickOrdersLabel} className="h-5 w-5 align-middle" />}
+          icon={<img src="/cards.svg" alt={pickOrdersLabel} className="w-5 h-5 align-middle" />}
         />
         <Button
           label={guideLabel}

@@ -9,14 +9,14 @@ const LOADING_TEXT = 'Loading';
 /** @description loadingAnimation renders a spaceship loading indicator */
 const LoadingAnimation = memo(
   (): React.ReactElement => (
-    <FlexColCenter className="h-full w-full gap-4">
+    <FlexColCenter className="w-full h-full gap-4">
       <div className="animate-float-spin">
-        <div className="animate-fly-horizontal relative flex flex-row items-center justify-center">
+        <div className="relative flex flex-row items-center justify-center animate-fly-horizontal">
           <div className="spaceship-fire spaceship-fire-horizontal" />
           <img
             src="/spaceship.png"
             alt=""
-            className="relative z-10 h-20 w-auto drop-shadow-xl"
+            className="relative z-10 w-auto h-20 drop-shadow-xl"
             draggable={false}
           />
         </div>

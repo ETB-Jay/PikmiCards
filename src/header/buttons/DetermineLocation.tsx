@@ -47,7 +47,7 @@ const DetermineLocation = memo(({
   return (
     <div
       ref={ref}
-      className="bg-green-smoke-200 absolute top-10 z-100 flex w-fit flex-col rounded border-1 py-1 text-sm font-semibold shadow-2xl"
+      className="absolute flex flex-col py-1 text-sm font-semibold rounded shadow-2xl bg-green-smoke-200 top-10 z-100 w-fit border-1"
     >
       <PopupOption label="Oakville" current={location} onSelect={handleLocationSelect} />
       <PopupOption label="Newmarket" current={location} onSelect={handleLocationSelect} />

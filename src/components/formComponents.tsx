@@ -5,16 +5,15 @@ import { ButtonProps, ChildrenAndClassProps, InputProps, PopupProps } from '../i
 
 /** @description InputField renders a styled input with an icon */
 const InputField = memo(({ icon, label, type, value, onChange, err }: InputProps) => (
-  <div className="flex min-w-fit flex-col items-center justify-center">
+  <div className="flex flex-col items-center justify-center min-w-fit">
     <label
-      className="relative flex flex-row items-center"
+      className="relative flex flex-row items-center w-full"
       htmlFor={label.replace(/\s+/g, '-').toLowerCase()}
     >
-      <span className="absolute left-3.5">{icon}</span>
+      <span className="absolute -translate-y-1/2 left-3 top-1/2">{icon}</span>
       <input
         id={label.replace(/\s+/g, '-').toLowerCase()}
-        role="button"
-        className="border-green-smoke-200 focus:ring-green-smoke-400 w-full rounded-xl border bg-white/80 py-2 pr-3 pl-10 text-base text-stone-800 shadow-sm transition-all placeholder:text-stone-600 focus:ring-2 focus:outline-none sm:py-2.5 sm:pl-12 sm:text-lg"
+        className="w-full rounded-xl border border-green-smoke-200 bg-white/80 py-2.5 pl-11 pr-4 text-base text-stone-800 shadow-sm transition-all placeholder:text-stone-600 focus:ring-2 focus:ring-green-smoke-400 focus:outline-none sm:pl-11"
         placeholder={label}
         type={type}
         value={value}
@@ -42,8 +41,8 @@ ErrorBox.displayName = 'ErrorBox';
 /** @description Empty renders a styled visual for when something is Empty */
 const Empty = memo(
   ({ text }: { text: string }): React.ReactElement => (
-    <div className="flex h-full w-full flex-col items-center justify-center bg-green-50/10 text-center text-lg">
-      <img src="/OpenBox.svg" alt="" className="mx-auto mb-2 h-16 w-16 opacity-80" />
+    <div className="flex flex-col items-center justify-center w-full h-full p-5 text-lg text-center bg-green-50/10">
+      <img src="/OpenBox.svg" alt="" className="w-16 h-16 mx-auto mb-2 opacity-80" />
       {text}
     </div>
   )
@@ -66,7 +65,11 @@ const Button = memo(
         ref={ref}
         // eslint-disable-next-line react/button-has-type
         type={type}
-        className={`${disabled ? 'bg-gray-400' : 'bg-green-smoke-600 hover:bg-green-smoke-700 focus:ring-green-smoke-800'} cursor-pointer rounded-xl p-1 font-bold tracking-wide text-white shadow transition-all focus:ring-2 focus:outline-none ${className}`}
+        className={`${
+          disabled
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-green-smoke-600 hover:bg-green-smoke-700 active:bg-green-smoke-800'
+        } inline-flex items-center justify-center rounded-xl p-2 font-semibold text-white shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-smoke-800 focus:ring-offset-2 cursor-pointer BFont ${className}`}
         onClick={onClick}
         disabled={disabled}
         onKeyDown={(event) => {
@@ -76,9 +79,9 @@ const Button = memo(
           }
         }}
       >
-        <span className="flex items-center gap-1">
-          {icon}
-          {label && <span className="BFont hidden font-bold sm:inline sm:text-xs lg:text-base">{label}</span>}
+        <span className="flex items-center gap-2">
+          {icon && <span className="text-lg">{icon}</span>}
+          {label && <span className="hidden text-sm font-semibold md:block">{label}</span>}
         </span>
       </button>
     );
@@ -105,7 +108,7 @@ const PopupOption = memo(({ label, current, onSelect }: PopupProps): React.React
   return (
     <div
       role="button"
-      className="cursor-pointer rounded px-3 transition-colors hover:bg-black/10"
+      className="px-3 transition-colors rounded cursor-pointer hover:bg-black/10"
       onClick={handleClick}
       tabIndex={0}
       onKeyDown={(ev) => {
@@ -114,7 +117,7 @@ const PopupOption = memo(({ label, current, onSelect }: PopupProps): React.React
         }
       }}
     >
-      <span className="BFont text-sm font-semibold text-green-950">{label}</span>
+      <span className="text-sm font-semibold BFont text-green-950">{label}</span>
     </div>
   );
 });

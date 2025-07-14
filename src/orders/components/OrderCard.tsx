@@ -71,15 +71,15 @@ const OrderCard = ({ item, largeDisplay, selectable, onImageClick }: OrderCardPr
       <ImageDisplay
         imageUrl={itemData.imageUrl}
         alt={itemData.itemName || 'Unnamed'}
-        className="inline-block h-22 w-auto cursor-pointer object-contain transition-all hover:opacity-80 hover:brightness-40"
+        className="inline-block object-contain w-auto transition-all cursor-pointer h-22 hover:opacity-80 hover:brightness-40"
         onClick={handleImageClick}
       />
       {largeDisplay && (
-        <div className="flex min-w-0 flex-1 flex-col">
-          <div className="text-silver-100 md:text-md mb-2 text-sm font-semibold text-wrap">
+        <div className="flex flex-col flex-1 min-w-0">
+          <div className="mb-2 text-sm font-semibold text-silver-100 md:text-md text-wrap">
             {itemData.itemName}
           </div>
-          <div className="flex min-w-0 flex-row flex-wrap gap-2 sm:gap-3">
+          <div className="flex flex-row flex-wrap min-w-0 gap-2 sm:gap-3">
             <Tags item={itemData} />
           </div>
         </div>

@@ -1,7 +1,7 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { ItemData } from '../../types';
 import { useOrderDisplay } from '../../context/useContext';
-import { FlexRow } from '../../components/containers';
+import { FlexColCenter, FlexRow } from '../../components/containers';
 import { TagPill } from '../../components/formComponents';
 
 /**
@@ -10,7 +10,7 @@ import { TagPill } from '../../components/formComponents';
  * @param item - The item to display tags for.
  * @param className - Additional CSS classes.
  */
-const Tags = ({ item }: { item: ItemData }) => {
+const Tags = ({ item, className = '' }: { item: ItemData; className?: string }) => {
   const { orderDisplay } = useOrderDisplay();
 
   const tags: { value: string; icon?: string; alt?: string }[] = [];
@@ -37,11 +37,22 @@ const Tags = ({ item }: { item: ItemData }) => {
   }
 
   return (
-    <FlexRow>
+    <FlexRow
+      className={`flex-wrap items-center justify-start gap-1 min-h-[24px] ${className}`}
+    >
       {tags.map((tag) => (
-        <TagPill key={`${tag.value}-${tag.icon || ''}-${item.itemID}`}>
-          {tag.icon && <img src={tag.icon} alt={tag.alt || ''} className="h-3 w-3" />}
-          {tag.value}
+        <TagPill
+          key={`${tag.value}-${tag.icon || ''}-${item.itemID}`}
+          className="inline-flex items-center px-2 py-0.5 gap-1.5 bg-green-smoke-800/60 hover:bg-green-smoke-700/60 transition-colors"
+        >
+          {tag.icon && (
+            <img
+              src={tag.icon}
+              alt={tag.alt || ''}
+              className="flex-shrink-0 object-contain w-3 h-3"
+            />
+          )}
+          <span className="text-xs font-medium whitespace-nowrap">{tag.value}</span>
         </TagPill>
       ))}
     </FlexRow>

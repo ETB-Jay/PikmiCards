@@ -30,10 +30,8 @@
 }
 
 html,
-body,
-.min-w-screen,
-.w-screen {
-  overflow-x: hidden;
+body {
+  overflow: hidden;
 }
 
 .BFont {

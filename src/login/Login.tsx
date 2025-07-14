@@ -28,17 +28,19 @@ function Login(): React.ReactElement {
 
   return (
     <MainContainer>
-      <FlexColCenter className="animate-fade-in max-w-xl gap-7">
+      <FlexColCenter className="max-w-xl animate-fade-in gap-7">
         <img
           src="/pikmicard.png"
           alt=""
-          className="relative top-0 z-20 h-24 w-auto drop-shadow-2xl"
+          className="relative top-0 z-20 w-auto h-24 drop-shadow-2xl"
         />
         <form
           onSubmit={(ev) => handleLogin(ev, username, password, setError)}
-          className="bg-green-smoke-400/50 ring-green-smoke-600 border-green-smoke-300 z-10 flex w-full flex-col items-center gap-6 rounded-2xl border py-8 shadow-2xl ring-2 backdrop-blur-md"
+          className="z-10 flex flex-col items-center w-full gap-6 py-8 border 
+    bg-green-smoke-400/50 ring-green-smoke-600 border-green-smoke-300 rounded-xl ring-2 
+    shadow-[0_0_20px_2px] shadow-green-smoke-600 hover:shadow-[0_0_30px_2px] transition-all"
         >
-          <h1 className="text-green-smoke-950 mb-2 text-center text-3xl font-extrabold tracking-wide drop-shadow">
+          <h1 className="mb-2 text-3xl font-extrabold tracking-wide text-center text-east-bay-200 drop-shadow">
             {LOGIN_TITLE}
           </h1>
           <InputField
