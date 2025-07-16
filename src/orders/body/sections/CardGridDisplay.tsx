@@ -25,7 +25,7 @@ const CardGridDisplay = memo((): React.ReactElement => {
     );
 
   return (
-    <div className={cn(`relative flex flex-wrap items-start w-full gap-1 p-2 overflow-hidden rounded-lg ${orderDisplay.length === 0 ? 'h-full' : 'h-fit'}`)}>
+    <div className={cn(`relative flex flex-wrap w-full gap-1 p-2 rounded-lg h-full max-h-full`)}>
       {content}
     </div>
   );

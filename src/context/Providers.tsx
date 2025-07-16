@@ -216,10 +216,11 @@ const ConfirmProvider = ({ children }: ProviderProps) => {
 
     await fetch('/api/orders/write', {
       method: 'POST',
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         orderID: confirmedOrder[0].orderID,
-        field: {
+        value: {
           employee,
           location
         }
