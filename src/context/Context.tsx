@@ -1,5 +1,5 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { createContext } from 'react';
+import { createContext, Dispatch, SetStateAction } from 'react';
 
 import { Order, OrderData, ItemID, User } from '../types';
 import type { Location } from '../types';
@@ -113,7 +113,9 @@ interface ConfirmContextType {
   /** @description Removes an order from the display and swaps in a new one if needed. */
   onConfirm: (
     orderData: Order,
-    orderDisplay: Order[]
+    orderDisplay: Order[],
+    employee: string,
+    location: Location
   ) => void;
 }
 /** @description React context for confirmation modal state and actions. */
@@ -125,6 +127,20 @@ const ConfirmContext = createContext<ConfirmContextType>({
   onConfirm: () => {},
 });
 ConfirmContext.displayName = 'ConfirmContext';
+
+/** @description LogoutContextType manages the logout modal state */
+interface LogoutContextType {
+  /** @description If the modal should be open or not */
+  logout: boolean;
+  /** @description Function to open or close the Modal */
+  setLogout: Dispatch<SetStateAction<boolean>>;
+}
+/** @description React context for logout modal state and actions */
+const LogoutContext = createContext<LogoutContextType>({
+  logout: false,
+  setLogout: () => {},
+});
+LogoutContext.displayName = 'LogoutContext';
 
 /** @description LocationContextType manages the location state */
 interface LocationContextType {
@@ -167,6 +183,7 @@ export type {
   FullscreenContextType,
   ConfirmContextType,
   AuthContextType,
+  LogoutContextType,
   LocationContextType
 };
 export {
@@ -174,6 +191,7 @@ export {
   OrderDisplayContext,
   FullscreenContext,
   ConfirmContext,
+  LogoutContext,
   LocationContext,
   AuthContext,
 };

@@ -4,16 +4,14 @@ import { useEffect, memo, useState } from 'react';
 import Header from '../header/Header';
 import { useOrders, useOrderDisplay, useLocation } from '../context/useContext';
 import { MainContainer } from '../components/containers';
+import { cn } from '../context/functions';
 
 import CardPicker from './body/CardPicker';
 import LoadingAnimation from './components/LoadingSpinner';
 
 /**
- * @description Pick returns a React.ReactElement that renders the card picker.
- * - Fetches Orders from Shopify
- * - Formats the OrderData into Orders
- * - Renders the Loading Spinner while waiting for the OrderDisplay
- * - Renders the content once the OrderDisplay has loaded
+ * @description Orders renders the card picker and manages order fetching and display logic.
+ * Fetches orders from Shopify, formats them, and displays loading or content.
  */
 const Orders = memo((): React.ReactElement => {
   const { orders, fetchOrders, fromOrderDataToOrder } = useOrders();
@@ -40,13 +38,13 @@ const Orders = memo((): React.ReactElement => {
     }
   }, [orders]);
 
-  const pickDisplay = orderDisplay.length === 0 ? <LoadingAnimation /> : <CardPicker />;
+  const pickDisplay = (orderDisplay.length === 0 && orders.length === 0 ? <LoadingAnimation /> : <CardPicker />);
 
   return (
     <MainContainer>
       <Header pick={orderDisplay.length !== 0} />
-      <div className="flex-1">{pickDisplay}</div>
-      {error && <div className="absolute right-1/2 bottom-5">{error}</div>}
+      <div className={cn("flex-1")}>{pickDisplay}</div>
+      {error && <div className={cn("absolute right-1/2 bottom-5")}>{error}</div>}
     </MainContainer>
   );
 });

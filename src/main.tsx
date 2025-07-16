@@ -1,3 +1,6 @@
+/**
+ * @description Main entry point for the PikmiCards React application. Sets up routing and providers.
+ */
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -19,22 +22,30 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <Login />,
+    element: (
+      <Providers>
+        <Login />
+      </Providers>
+    ),
   },
   {
     path: '/pick',
     element: (
-      <ProtectedRoute>
-        <Pick />
-      </ProtectedRoute>
+      <Providers>
+        <ProtectedRoute>
+          <Pick />
+        </ProtectedRoute>
+      </Providers>
     ),
   },
   {
     path: '/guide',
     element: (
-      <ProtectedRoute>
-        <Guide />
-      </ProtectedRoute>
+      <Providers>
+        <ProtectedRoute>
+          <Guide />
+        </ProtectedRoute>
+      </Providers>
     ),
   },
 ]);
@@ -42,8 +53,6 @@ const router = createBrowserRouter([
 // ─ Render ───────────────────────────────────────────────────────────────────────────────────────
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Providers>
-      <RouterProvider router={router} />
-    </Providers>
+    <RouterProvider router={router} />
   </StrictMode>
 );

@@ -5,13 +5,17 @@ import { useOrderDisplay } from '../../../context/useContext';
 import { Empty } from '../../../components/formComponents';
 import { Order } from '../../../types';
 import CustomerInfo from '../../components/CustomerInfo';
+import { cn } from '../../../context/functions';
 
+/**
+ * @description CardGridDisplay displays a grid of customer orders or an empty state.
+ */
 const CardGridDisplay = memo((): React.ReactElement => {
   const { orderDisplay } = useOrderDisplay();
 
   const content =
     orderDisplay.length === 0 ? (
-      <Empty text="wow" />
+      <Empty text="No Orders Left" />
     ) : (
       orderDisplay
         .slice(0, 24)
@@ -21,7 +25,7 @@ const CardGridDisplay = memo((): React.ReactElement => {
     );
 
   return (
-    <div className="relative grid flex-1 w-full h-full grid-cols-1 gap-1 p-1 overflow-y-auto rounded-lg auto-rows-fr sm:grid-cols-2">
+    <div className={cn(`relative flex flex-wrap items-start w-full gap-1 p-2 overflow-hidden rounded-lg ${orderDisplay.length === 0 ? 'h-full' : 'h-fit'}`)}>
       {content}
     </div>
   );

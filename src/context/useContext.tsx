@@ -8,11 +8,12 @@ import {
   ConfirmContext,
   AuthContext,
   LocationContext,
+  LogoutContext
 } from './Context';
 
 // ─ Custom Hooks ────────────────────────────────────────────────────────────────────────────────────
 /**
- * useOrders returns the OrdersContext value.
+ * @description useOrders returns the OrdersContext value.
  * @throws Error if used outside OrdersProvider.
  */
 const useOrders = () => {
@@ -21,7 +22,7 @@ const useOrders = () => {
 };
 
 /**
- * useOrderDisplay returns the OrderDisplayContext value.
+ * @description useOrderDisplay returns the OrderDisplayContext value.
  * @throws Error if used outside OrderDisplayProvider.
  */
 const useOrderDisplay = () => {
@@ -30,7 +31,7 @@ const useOrderDisplay = () => {
 };
 
 /**
- * useFullscreen returns the FullscreenContext value.
+ * @description useFullscreen returns the FullscreenContext value.
  * @throws Error if used outside FullscreenProvider.
  */
 const useFullscreen = () => {
@@ -39,7 +40,7 @@ const useFullscreen = () => {
 };
 
 /**
- * useConfirm returns the ConfirmContext value.
+ * @description useConfirm returns the ConfirmContext value.
  * @throws Error if used outside ConfirmProvider.
  */
 const useConfirm = () => {
@@ -48,8 +49,8 @@ const useConfirm = () => {
 };
 
 /**
- * useLocation returns the LocationContext value
- * @throws Error if used outside LocationProvider
+ * @description useLocation returns the LocationContext value.
+ * @throws Error if used outside LocationProvider.
  */
 const useLocation = () => {
   const context = useContext(LocationContext)
@@ -57,13 +58,22 @@ const useLocation = () => {
 }
 
 /**
- * useAuth returns the AuthContext value.
- * @throws Error if used otuside AuthProvider
+ * @description useAuth returns the AuthContext value.
+ * @throws Error if used outside AuthProvider.
  */
 const useAuth = () => {
   const context = useContext(AuthContext);
   return context;
 };
 
+/**
+ * @description useLogout returns the LogoutContext value
+ * @throws Error if used outside AuthProvider
+ */
+const useLogout = () => {
+  const context = useContext(LogoutContext);
+  return context;
+}
+
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
-export { useOrders, useFullscreen, useOrderDisplay, useConfirm, useLocation, useAuth };
+export { useOrders, useFullscreen, useOrderDisplay, useConfirm, useLocation, useAuth, useLogout };

@@ -1,6 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { MainContainer } from '../components/containers';
 import Header from '../header/Header';
+import { cn } from '../context/functions';
+import { Title, Subtitle, Description, Text } from '../components/formComponents';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const GUIDE_TEXT = {
@@ -53,22 +55,6 @@ const GUIDE_TEXT = {
   },
 };
 
-const Title = ({ text }: { text: string }) => (
-  <h1 className="mb-2 text-4xl font-extrabold tracking-tight text-center text-green-400 drop-shadow-lg">
-    {text}
-  </h1>
-);
-
-const Subtitle = ({ text }: { text: string }) => (
-  <h2 className="mb-1 text-2xl font-bold text-center text-green-200">{text}</h2>
-);
-
-const Description = ({ text }: { text: string }) => (
-  <h2 className="mb-2 italic font-medium text-gray-300 text-md">{text}</h2>
-);
-
-const Text = ({ text }: { text: string }) => <p className="mb-2 text-green-100">{text}</p>;
-
 const Section = ({
   title,
   subtitleParts,
@@ -78,12 +64,12 @@ const Section = ({
   subtitleParts: string[];
   features: string[];
 }) => (
-  <div className="flex flex-col p-4 mb-4 shadow rounded-xl bg-green-900/20">
+  <div className={cn("flex flex-col p-4 mb-4 shadow rounded-xl bg-green-900/20")}>
     <Subtitle text={title} />
     <Description text={subtitleParts.join(' ')} />
-    <ul className="ml-8 text-green-100 break-words whitespace-pre-line list-disc list-outside">
+    <ul className={cn("ml-8 text-green-100 break-words whitespace-pre-line list-disc list-outside")}>
       {features.map((feature) => (
-        <li className="break-words whitespace-pre-line" key={feature}>
+        <li className={cn("break-words whitespace-pre-line")} key={feature}>
           <Text text={feature} />
         </li>
       ))}
@@ -91,13 +77,15 @@ const Section = ({
   </div>
 );
 
-/** @description Guide page component with user instructions */
+/**
+ * @description Guide page component with user instructions.
+ */
 function Guide(): React.ReactElement {
   return (
     <MainContainer>
       <Header pick={false} />
-      <div className="flex flex-col h-full max-h-[calc(95vh-3.75rem)] w-full gap-2 mb-5">
-        <div className="flex flex-col">
+      <div className={cn("flex flex-col h-full max-h-[calc(95vh-5rem)] w-full gap-2")}>
+        <div className={cn("flex flex-col")}>
           <Title text={GUIDE_TEXT.title} />
           <Subtitle text={GUIDE_TEXT.subtitle} />
         </div>

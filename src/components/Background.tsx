@@ -1,10 +1,12 @@
 // ─ Background Component ───────────────────────────────────────────────────────────────
 /**
- * Background renders an animated particle background using OGL and WebGL.
+ * @description Background renders an animated particle background using OGL and WebGL.
  * Customizable via props for color, count, speed, and more.
  */
 import { useEffect, useRef } from 'react';
 import { Renderer, Camera, Geometry, Program, Mesh } from 'ogl';
+
+import { cn } from '../context/functions';
 
 interface BackgroundProps {
   particleCount?: number;
@@ -252,7 +254,7 @@ const Background: React.FC<BackgroundProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`bg-east-bay-950 fixed inset-0 h-full w-full ${className}`}
+      className={cn("bg-east-bay-950 fixed inset-0 h-full w-full", className)}
       style={{ pointerEvents: 'none', zIndex: -1 }}
     />
   );

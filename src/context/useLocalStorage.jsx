@@ -2,6 +2,12 @@
 import { useState } from 'react';
 
 // ─ useLocalStorage Hook ──────────────────────────────────────────────────────────────────────────────
+/**
+ * @description useLocalStorage is a custom React hook for persisting state to localStorage.
+ * @param {string} keyName - The key to use in localStorage.
+ * @param {any} defaultValue - The default value to use if none is found in localStorage.
+ * @returns {[any, function]} The stored value and a setter function.
+ */
 const useLocalStorage = (keyName, defaultValue) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {

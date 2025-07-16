@@ -4,6 +4,7 @@ import { memo, useEffect, useRef } from 'react';
 import { useLocation } from '../../context/useContext';
 import { PopupOption } from '../../components/formComponents';
 import { Location } from '../../types';
+import { cn } from '../../context/functions';
 
 interface DetermineLocationProps {
   prompt: (show: boolean) => void;
@@ -47,7 +48,7 @@ const DetermineLocation = memo(({
   return (
     <div
       ref={ref}
-      className="absolute flex flex-col py-1 text-sm font-semibold rounded shadow-2xl bg-green-smoke-200 top-10 z-100 w-fit border-1"
+      className={cn("absolute flex flex-col py-1 text-sm font-semibold rounded shadow-2xl bg-green-smoke-200 top-10 mt-1 z-100 w-fit border-1")}
     >
       <PopupOption label="Oakville" current={location} onSelect={handleLocationSelect} />
       <PopupOption label="Newmarket" current={location} onSelect={handleLocationSelect} />

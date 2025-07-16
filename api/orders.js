@@ -28,7 +28,7 @@ const getOrders = async (client) => {
     {
       orders(first: 50, 
         after: ${cursor ? `"${cursor}"` : 'null'}, 
-        query: "created_at:>${new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled", 
+        query: "created_at:>${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled", 
         reverse: true) {
         edges {
           cursor
@@ -144,62 +144,49 @@ const getOrders = async (client) => {
   return orders;
 };
 
-const writeOrders = async (client, orderID, field) => {
-  // First, fetch the existing metafield
-  const getMetafield = `
-    query getMetafield($orderID: ID!) {
-      order(id: $orderID) {
-        metafield(namespace: "custom", key: "picked") {
-          value
-        }
-      }
-    }
-  `;
-
-  const existingData = await client.request(getMetafield, { orderID });
-  let currentValue = [];
-
-  try {
-    currentValue = JSON.parse(existingData.order?.metafield?.value || '[]');
-  } catch (err) {
-    console.log(err);
-  }
-
-  // Add new field to the existing array
-  const updatedValue = JSON.stringify([...currentValue, field]);
-
-  // Update with combined data
-  const mutation = `
-    mutation MetafieldsSet($metafields: [MetafieldsSetInput!]!) {
+const writeOrders = async (client, orderID, employee, location) => {
+  const mutationQuery = `
+  mutation MetafieldsSet($metafields: [MetafieldsSetInput!]!) {
       metafieldsSet(metafields: $metafields) {
         metafields {
           key
           namespace
           value
-          type
+          createdAt
+          updatedAt
         }
         userErrors {
           field
           message
+          code
         }
       }
     }
   `;
 
   const variables = {
-    metafields: [
+    "metafields": [
       {
-        orderID,
-        namespace: 'custom',
-        key: 'picked',
-        type: 'json',
-        value: updatedValue
-      },
+        "key": "picked",
+        "namespace": "custom",
+        "ownerId": orderID,
+        "type": "json",
+        "value": JSON.stringify([{
+          employee,
+          location
+        }])
+      }
     ]
   };
 
-  return client.request(mutation, variables);
-};
+  try {
+    const response = await client.request(mutationQuery, variables)
+    return response
+  } catch (err) {
+    console.log(err)
+  }
+
+}
 
 async function handler(req, res) {
   try {
@@ -213,7 +200,7 @@ async function handler(req, res) {
     const shopify = shopifyApi({
       apiKey: VITE_SHOPIFY_API_KEY,
       apiSecretKey: VITE_SHOPIFY_API_SECRET,
-      scopes: ['read_orders'],
+      scopes: ['read_orders', 'write_orders', 'write_metaobjects', 'read_metaobjects'],
       hostName: VITE_SHOPIFY_STORE_DOMAIN,
       apiVersion: LATEST_API_VERSION,
       isEmbeddedApp: true,
@@ -232,4 +219,4 @@ async function handler(req, res) {
 
 export default handler;
 export const expressHandler = (req, res) => handler(req, res);
-export { writeOrders };
+export { writeOrders }

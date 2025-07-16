@@ -8,16 +8,12 @@ import { Button } from '../../components/formComponents';
 /** @description RefreshButton displays a button to refresh the order list */
 const RefreshButton = memo((): React.ReactElement => {
   const { fetchOrders } = useOrders();
-  const { orderDisplay } = useOrderDisplay();
 
   return (
     <Button
       label="Refresh"
       icon={<RefreshIcon />}
-      onClick={() => {
-        fetchOrders();
-      }}
-      disabled={!orderDisplay}
+      onClick={() => { fetchOrders(); }}
     />
   );
 });

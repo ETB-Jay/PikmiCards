@@ -2,9 +2,7 @@
 import { MouseEventHandler, Ref } from 'react';
 
 /**
- * @description Props for components with children and optional classes
- * @param children - The content to render inside the column
- * @param className - Optional CSS classes
+ * @description ChildrenAndClassProps are props for components with children and optional classes.
  */
 interface ChildrenAndClassProps {
   children: React.ReactNode;
@@ -12,13 +10,7 @@ interface ChildrenAndClassProps {
 }
 
 /**
- * @description Props for input components
- * @param icon
- * @param label
- * @param type
- * @param value
- * @param onChange
- * @param err
+ * @description InputProps are props for input components.
  */
 interface InputProps {
   icon: React.ReactNode;
@@ -30,12 +22,7 @@ interface InputProps {
 }
 
 /**
- * @description Button Props
- * @param icon
- * @param label
- * @param onClick
- * @param className
- * @param ref
+ * @description ButtonProps are props for button components.
  */
 interface ButtonProps {
   icon: React.ReactNode;
@@ -48,10 +35,7 @@ interface ButtonProps {
 }
 
 /**
- * @description PopupProps
- * @param label - The new value
- * @param current - The currently active value
- * @param onSelect - Function to Select
+ * @description PopupProps are props for popup components.
  */
 interface PopupProps {
   label: string;

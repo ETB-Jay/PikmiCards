@@ -5,6 +5,8 @@ import BookIcon from '@mui/icons-material/Book';
 import PersonIcon from '@mui/icons-material/Person';
 
 import { Button } from '../components/formComponents';
+import { cn } from '../context/functions';
+import { useLogout, useOrderDisplay } from '../context/useContext';
 
 import LocationButton from './buttons/LocationButton';
 import RefreshButton from './buttons/RefreshButton';
@@ -12,38 +14,34 @@ import RefreshButton from './buttons/RefreshButton';
 /** @description Header displays the top navigation bar with sidebar, location, and refresh controls */
 const Header = memo(({ pick = false }: { pick: boolean }) => {
   const navigate = useNavigate();
+  const { setLogout } = useLogout();
+  const { orderDisplay } = useOrderDisplay();
   const pickOrdersLabel = 'Orders';
   const guideLabel = 'Guide';
   const logoutLabel = 'Logout';
   return (
-    <div className="relative flex h-[5vh] w-full flex-row items-center gap-2 px-4">
+    <div className={cn("relative flex h-[5vh] w-full flex-row items-center gap-2 px-4")}>
       <img
         src="/pikmicard.png"
         alt=""
-        className="w-10 h-10 mr-5 shadow rounded-xl bg-amber-50/15"
+        className={cn("w-10 h-10 mr-5 shadow rounded-xl bg-amber-50/15")}
       />
       {pick && <LocationButton />}
       <RefreshButton />
-      <div className="flex gap-2 ml-auto">
+      <div className={cn("flex gap-2 ml-auto")}>
         <Button
           label={pickOrdersLabel}
-          onClick={() => {
-            navigate('/pick');
-          }}
-          icon={<img src="/cards.svg" alt={pickOrdersLabel} className="w-5 h-5 align-middle" />}
+          onClick={() => { navigate('/pick'); }}
+          icon={<img src="/cards.svg" alt={pickOrdersLabel} className={cn("w-5 h-5 align-middle")} />}
         />
         <Button
           label={guideLabel}
-          onClick={() => {
-            navigate('/guide');
-          }}
+          onClick={() => { navigate('/guide'); }}
           icon={<BookIcon />}
         />
         <Button
           label={logoutLabel}
-          onClick={() => {
-            navigate('/login');
-          }}
+          onClick={() => { setLogout(true); }}
           icon={<PersonIcon />}
         />
       </div>

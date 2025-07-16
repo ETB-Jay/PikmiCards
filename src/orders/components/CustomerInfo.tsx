@@ -3,8 +3,9 @@ import {memo} from "react";
 
 import { Order, Item } from "../../types";
 import { useConfirm, useLocation, useOrders } from "../../context/useContext";
-import { TagPill } from "../../components/formComponents";
-import { findOrderDataByOrder } from "../../context/functions";
+import { findOrderDataByOrder, cn } from "../../context/functions";
+
+import { TagPill } from "./Tags";
 
 interface CustomerInfoProps {
   order: Order;
@@ -12,9 +13,7 @@ interface CustomerInfoProps {
 }
 
 /**
- * CustomerInfo displays summary info for a single order in the grid.
- * @param order - The order to display.
- * @param index - The index of the order in the list.
+ * @description CustomerInfo displays summary info for a single order in the grid.
  */
 const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
   const { openConfirm } = useConfirm();
@@ -22,9 +21,7 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
   const { orders } = useOrders();
 
   const orderData = findOrderDataByOrder(orders, order, location);
-  if (!orderData) {
-    return null;
-  }
+  if (!orderData) { return null; }
 
   const ariaLabel = `Order for ${orderData.customerName}`;
 
@@ -33,7 +30,7 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
 
   return (
     <div
-      className="bg-green-smoke-600/60 hover:bg-green-smoke-600/70 relative flex h-full w-full cursor-pointer flex-row items-center justify-between overflow-hidden rounded-lg border-2 border-green-950 p-2 text-xs text-green-100 shadow backdrop-blur-md transition-all duration-150 hover:scale-[1.01] hover:shadow-lg"
+      className={cn("bg-green-smoke-600/60 hover:bg-green-smoke-600/70 relative flex w-[calc(50%-0.2rem)] h-fit max-h-8 cursor-pointer flex-row items-center justify-between overflow-hidden rounded-lg border-2 border-green-950 p-2 text-xs text-green-100 shadow backdrop-blur-md transition-all duration-150 hover:scale-[1.01] hover:shadow-lg")}
       onClick={(event) => {
         event.stopPropagation();
         openConfirm(order);
@@ -48,18 +45,18 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps) => {
         }
       }}
     >
-      <p className="font-semibold truncate max-w-1/3">{orderData.customerName}</p>
-      <div className="flex flex-row gap-2">
+      <p className={cn("font-semibold truncate max-w-1/3")}>{orderData.customerName}</p>
+      <div className={cn("flex flex-row gap-2")}>
         <TagPill>
-          <img src="/ClosedBox.svg" alt="" className="inline-block w-4 h-4 mr-1 align-middle" />
+          <img src="/ClosedBox.svg" alt="" className={cn("inline-block w-4 h-4 mr-1 align-middle")} />
           {index}
         </TagPill>
         <TagPill>
-          <img src="/Picked.svg" alt="" className="inline-block w-4 h-4 mr-1 align-middle" />
+          <img src="/Picked.svg" alt="" className={cn("inline-block w-4 h-4 mr-1 align-middle")} />
           {retrievedCount}
         </TagPill>
         <TagPill>
-          <img src="/NotPicked.svg" alt="" className="inline-block w-4 h-4 mr-1 align-middle" />
+          <img src="/NotPicked.svg" alt="" className={cn("inline-block w-4 h-4 mr-1 align-middle")} />
           {unretrievedCount}
         </TagPill>
       </div>

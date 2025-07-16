@@ -4,6 +4,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { Button } from '../../components/formComponents';
 import { useLocation } from '../../context/useContext';
+import { cn } from '../../context/functions';
 
 import DetermineLocation from './DetermineLocation';
 
@@ -14,7 +15,7 @@ const LocationButton = memo((): React.ReactElement => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="relative">
+    <div className={cn("relative")}>
       <Button
         ref={buttonRef}
         onClick={() => setLocationPrompt((prev) => !prev)}

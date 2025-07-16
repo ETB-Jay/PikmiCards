@@ -2,7 +2,9 @@
 import { memo } from 'react';
 
 import { ModalContainer } from '../../components/containers';
+import { cn } from '../../context/functions';
 
+// ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const FULLSCREEN_IMAGE_LABEL = 'Close fullscreen image';
 
 interface FullscreenModalProps {
@@ -11,16 +13,15 @@ interface FullscreenModalProps {
 }
 
 /**
- * FullscreenModal displays an image in a fullscreen modal overlay.
- * @param image - The image URL to display.
- * @param children - Optional additional content.
+ * @description FullscreenModal displays an image in a fullscreen modal overlay.
  */
 const FullscreenModal = memo(({ image, children }: FullscreenModalProps) => {
+
   return (
-    <ModalContainer className="flex flex-col items-center justify-center gap-4">
+    <ModalContainer>
       {image && (
         <div
-          className="max-h-[70vh] w-auto rounded-3xl object-contain shadow-[0_0_30px_4px_black] ring-2 ring-offset-2"
+          className={cn("max-h-[70vh] w-auto rounded-3xl object-contain shadow-[0_0_30px_4px_black] ring-2 ring-offset-2")}
           tabIndex={0}
           role="button"
           aria-label={FULLSCREEN_IMAGE_LABEL}
@@ -33,7 +34,7 @@ const FullscreenModal = memo(({ image, children }: FullscreenModalProps) => {
         >
           <img
             src={image}
-            className="max-h-[70vh] w-auto rounded-3xl object-contain shadow-[0_0_30px_4px_black] ring-2 ring-offset-2"
+            className={cn("max-h-[70vh] w-auto rounded-3xl object-contain shadow-[0_0_30px_4px_black] ring-2 ring-offset-2")}
             alt=""
           />
         </div>

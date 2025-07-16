@@ -4,6 +4,7 @@ import { ReactNode, useState, useCallback, useMemo } from 'react';
 import FullscreenModal from '../orders/modals/FullscreenModal';
 import { OrderData, Order, Location, Status, ItemID } from '../types';
 import ConfirmModal from '../orders/modals/ConfirmModal';
+import LogoutModal from '../orders/modals/LogoutModal';
 
 import {
   OrdersContext,
@@ -12,6 +13,7 @@ import {
   ConfirmContext,
   LocationContext,
   AuthContext,
+  LogoutContext,
 } from './Context';
 import useLocalStorage from './useLocalStorage';
 import { useOrderDisplay } from './useContext';
@@ -21,8 +23,7 @@ interface ProviderProps {
 }
 
 /**
- * OrdersProvider provides order data and fetch logic to the app.
- * @param children - The child components to wrap.
+ * @description OrdersProvider provides order data and fetch logic to the app.
  */
 const OrdersProvider = ({ children }: ProviderProps) => {
   const [orders, setOrders] = useState<OrderData[]>([]);
@@ -85,8 +86,7 @@ const OrdersProvider = ({ children }: ProviderProps) => {
 };
 
 /**
- * OrderDisplayProvider manages the display and selection state for orders.
- * @param children - The child components to wrap.
+ * @description OrderDisplayProvider manages the display and selection state for orders.
  */
 const OrderDisplayProvider = ({ children }: ProviderProps) => {
   const [orderDisplay, setOrderDisplay] = useState<Order[]>([]);
@@ -153,8 +153,7 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
 };
 
 /**
- * FullscreenProvider manages fullscreen image modal state and actions.
- * @param children - The child components to wrap.
+ * @description FullscreenProvider manages fullscreen image modal state and actions.
  */
 const FullscreenProvider = ({ children }: ProviderProps) => {
   const [fullScreen, setFullScreen] = useState<string | null>(null);
@@ -181,8 +180,7 @@ const FullscreenProvider = ({ children }: ProviderProps) => {
 };
 
 /**
- * ConfirmProvider manages the confirmation modal state and actions.
- * @param children - The child components to wrap.
+ * @description ConfirmProvider manages the confirmation modal state and actions.
  */
 const ConfirmProvider = ({ children }: ProviderProps) => {
   const [confirm, setConfirm] = useState<Order | null>(null);
@@ -193,24 +191,40 @@ const ConfirmProvider = ({ children }: ProviderProps) => {
   }, []);
   const { setOrderDisplay } = useOrderDisplay();
 
-  const onConfirm = (
+  const onConfirm = async (
     orderData: Order,
-    orderDisplay: Order[]
+    orderDisplay: Order[],
+    employee: string,
+    location: Location
   ) => {
     const removeIdx = orderDisplay.findIndex((orderItem) => orderItem.orderID === orderData.orderID);
     if (removeIdx === -1) { return; }
 
     const newOrderDisplay = [...orderDisplay];
 
+    let confirmedOrder;
+
     if (newOrderDisplay.length > 24) {
       const swapIdx = 24;
       const swappedOrder = { ...newOrderDisplay[swapIdx], box: removeIdx + 1 };
       swappedOrder.items = swappedOrder.items.map((item) => ({ ...item, box: removeIdx + 1 }));
-      newOrderDisplay.splice(removeIdx, 1, swappedOrder);
+      confirmedOrder = newOrderDisplay.splice(removeIdx, 1, swappedOrder);
       newOrderDisplay.splice(swapIdx, 1);
     } else {
-      newOrderDisplay.splice(removeIdx, 1);
+      confirmedOrder = newOrderDisplay.splice(removeIdx, 1);
     }
+
+    await fetch('/api/orders/write', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderID: confirmedOrder[0].orderID,
+        field: {
+          employee,
+          location
+        }
+      })
+    });
 
     setOrderDisplay(newOrderDisplay);
     closeConfirm();
@@ -223,17 +237,37 @@ const ConfirmProvider = ({ children }: ProviderProps) => {
   return (
     <ConfirmContext.Provider value={value}>
       {children}
-      {confirm && <ConfirmModal order={confirm} onClose={closeConfirm} />}
+      {confirm && <ConfirmModal order={confirm} />}
     </ConfirmContext.Provider>
   );
 };
 
+/**
+ * @description LogoutProvider manages the logout modal state and actions
+ */
+const LogoutProvider = ({ children }: ProviderProps) => {
+  const [logout, setLogout] = useState<boolean>(false);
+  const value = useMemo(() => ({ logout, setLogout }), [logout, setLogout]);
+  return (
+    <LogoutContext.Provider value={value}>
+      {children}
+      {logout && <LogoutModal />}
+    </LogoutContext.Provider>
+  )
+}
+
+/**
+ * @description LocationProvider manages the current location state.
+ */
 const LocationProvider = ({ children }: ProviderProps) => {
   const [location, setLocation] = useState<Location>("Oakville");
   const value = useMemo(() => ({ location, setLocation }), [location, setLocation]);
   return <LocationContext.Provider value={value}>{children}</LocationContext.Provider>;
 };
 
+/**
+ * @description AuthProvider manages authentication state and logic.
+ */
 const AuthProvider = ({ children }: ProviderProps) => {
   const [user, setUser] = useLocalStorage('user', null);
 
@@ -265,7 +299,9 @@ const AuthProvider = ({ children }: ProviderProps) => {
     try {
       setUser({ username, password });
       setError({});
-      window.location.href = '/pick';
+      setTimeout(() => {
+        window.location.href = '/pick';
+      }, 1000);
     } catch {
       setError({ general: 'Login failed. Please try again.' });
     }
@@ -280,8 +316,7 @@ const AuthProvider = ({ children }: ProviderProps) => {
 };
 
 /**
- * Providers wraps all context providers for the app.
- * @param children - The child components to wrap.
+ * @description Providers wraps all context providers for the app.
  */
 const Providers = ({ children }: ProviderProps) => {
   return (
@@ -291,7 +326,9 @@ const Providers = ({ children }: ProviderProps) => {
           <OrderDisplayProvider>
             <ConfirmProvider>
               <FullscreenProvider>
-                {children}
+                <LogoutProvider>
+                  {children}
+                </LogoutProvider>
               </FullscreenProvider>
             </ConfirmProvider>
           </OrderDisplayProvider>
