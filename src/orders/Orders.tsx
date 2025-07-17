@@ -18,16 +18,28 @@ const Orders = memo((): React.ReactElement => {
   const { orderDisplay, setOrderDisplay } = useOrderDisplay();
   const [error, setError] = useState<string>();
   const { location } = useLocation();
+  const [progress, setProgress] = useState<number>(0);
 
   useEffect(() => {
+    let interval: NodeJS.Timeout;
     const loadOrders = async () => {
+      setProgress(0);
       try {
+        interval = setInterval(() => {
+          setProgress((prev) => (prev < 90 ? prev + 10 : prev));
+        }, 200);
         await fetchOrders();
+        setProgress(100);
+        setTimeout(() => setProgress(0), 500);
       } catch (err) {
         setError(`Failed to fetch orders ${err}`);
+        setProgress(0);
+      } finally {
+        clearInterval(interval);
       }
     };
     loadOrders();
+    return () => clearInterval(interval);
   }, [location]);
 
   useEffect(() => {
@@ -38,7 +50,9 @@ const Orders = memo((): React.ReactElement => {
     }
   }, [orders]);
 
-  const pickDisplay = (orderDisplay.length === 0 && orders.length === 0 ? <LoadingAnimation /> : <CardPicker />);
+  const pickDisplay = (orderDisplay.length === 0 && orders.length === 0 ? <LoadingAnimation progress={progress} /> : <CardPicker />);
+
+  console.log(pickDisplay)
 
   return (
     <MainContainer>

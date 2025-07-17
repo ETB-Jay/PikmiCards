@@ -21,6 +21,6 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["vite/client", "vitest", "jest"]
   },
-  "include": ["src", "server", "vitest.config.ts"],
+  "include": ["src", "api", "vitest.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

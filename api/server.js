@@ -6,8 +6,7 @@ import dotenv from 'dotenv';
 import '@shopify/shopify-api/adapters/node';
 import { shopifyApi, LATEST_API_VERSION, Session } from '@shopify/shopify-api';
 
-import { getOrders } from './getOrders.js';
-import { writeOrders } from './writeOrders.js';
+import { getOrders, writeOrders } from './ordersUtils.js';
 
 dotenv.config();
 
@@ -87,7 +86,7 @@ app.post('/api/orders/write', async (req, res) => {
     const result = await writeOrders(client, orderID, value);
     res.status(200).json(result);
   } catch (err) {
-    console.error('Write order error:', err); // Add this line
+    console.error('Write order error:', err);
     res.status(500).json({ error: err.message });
   }
 }); 

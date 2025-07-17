@@ -26,8 +26,25 @@ function Login(): React.ReactElement {
   const { logout, handleLogin } = useAuth();
 
   useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log('[Login] Component mounted, logging out user.');
     logout();
   }, []);
+
+  // Log when error state changes
+  useEffect(() => {
+    if (error.username || error.password || error.general) {
+      // eslint-disable-next-line no-console
+      console.log('[Login] Error set:', error);
+    }
+  }, [error]);
+
+  // Wrapper to log login attempts
+  const handleLoginWithLog = (ev: React.FormEvent | React.MouseEvent) => {
+    // eslint-disable-next-line no-console
+    console.log('[Login] Login attempt:', { username });
+    handleLogin(ev, username, password, setError);
+  };
 
   return (
     <MainContainer>
@@ -40,7 +57,7 @@ function Login(): React.ReactElement {
         <FlexColCenter className='h-fit'>
           <div className='absolute inset-0 z-0 shadow-[0_0_30px_4px] shadow-green-smoke-600 hover:shadow-[0_0_40px_2px] transition-all animate-pulse rounded-xl' />
           <form
-            onSubmit={(ev) => handleLogin(ev, username, password, setError)}
+            onSubmit={handleLoginWithLog}
             className={cn("relative z-10 flex flex-col items-center w-full gap-6 p-8 border bg-green-smoke-400/50 ring-green-smoke-600 border-green-smoke-300 rounded-xl ring-2")}
           >
             <h1 className={cn("mb-2 text-3xl font-extrabold tracking-wide text-center text-east-bay-200 drop-shadow")}> 
@@ -52,6 +69,8 @@ function Login(): React.ReactElement {
               value={username}
               onChange={(input: React.ChangeEvent<HTMLInputElement>) => {
                 setUsername(input.target.value);
+                // eslint-disable-next-line no-console
+                console.log('[Login] Username changed:', input.target.value);
               }}
               icon={<PersonIcon />}
               err={error.username || ''}
@@ -62,6 +81,8 @@ function Login(): React.ReactElement {
               value={password}
               onChange={(input: React.ChangeEvent<HTMLInputElement>) => {
                 setPassword(input.target.value);
+                // eslint-disable-next-line no-console
+                console.log('[Login] Password changed.');
               }}
               icon={<KeyIcon />}
               err={error.password || ''}
@@ -70,7 +91,7 @@ function Login(): React.ReactElement {
             <Button
               label={LOGIN_BUTTON_TEXT}
               icon={<LoginIcon />}
-              onClick={(ev) => handleLogin(ev, username, password, setError)}
+              onClick={handleLoginWithLog}
               ref={null}
             />
           </form>

@@ -1,4 +1,7 @@
-const getOrders = async (client) => {
+import { shopifyApi, LATEST_API_VERSION, Session } from '@shopify/shopify-api';
+
+// Utility function to fetch orders from Shopify
+async function getOrders(client) {
   let orders = [];
   let hasNextPage = true;
   let cursor = null;
@@ -6,44 +9,43 @@ const getOrders = async (client) => {
   try {
     while (hasNextPage) {
       const query = `
-      {
-        orders(first: 50, 
-          after: ${cursor ? `"${cursor}"` : 'null'}, 
-          query: "created_at:>${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled", 
-          reverse: true) {
-          edges {
-            cursor
-            node {
-              id
-              currentSubtotalLineItemsQuantity
-              customer {displayName}
-              shippingLines(first: 1) {edges {node {title}}}
-              metafield(namespace: "custom", key: "picked") {
-                value
-              }
-              fulfillmentOrders(first: 2) {
-                edges {
-                  node {
-                    assignedLocation {location {name}}
-                    lineItems(first: 100) {
-                      edges {
-                        node {
-                          lineItem {
-                            id
-                            name
-                            quantity
-                            variant {
-                              title
-                              image {
-                                url
-                              }
+    {
+      orders(first: 50, 
+        after: ${cursor ? `"${cursor}"` : 'null'}, 
+        query: "created_at:>${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled", 
+        reverse: true) {
+        edges {
+          cursor
+          node {
+            id
+            currentSubtotalLineItemsQuantity
+            customer {displayName}
+            shippingLines(first: 1) {edges {node {title}}}
+            metafield(namespace: "custom", key: "picked") {
+              value
+            }
+            fulfillmentOrders(first: 2) {
+              edges {
+                node {
+                  assignedLocation {location {name}}
+                  lineItems(first: 100) {
+                    edges {
+                      node {
+                        lineItem {
+                          id
+                          name
+                          quantity
+                          variant {
+                            title
+                            image {
+                              url
                             }
-                            product {
-                              featuredImage {
-                                url
-                              }
-                              tags
+                          }
+                          product {
+                            featuredImage {
+                              url
                             }
+                            tags
                           }
                         }
                       }
@@ -53,9 +55,10 @@ const getOrders = async (client) => {
               }
             }
           }
-          pageInfo {hasNextPage}
         }
-      }`;
+        pageInfo {hasNextPage}
+      }
+    }`;
 
       const response = await client.request(query, {});
       const ordersData = response.data?.orders;
@@ -125,9 +128,77 @@ const getOrders = async (client) => {
     }
     return orders;
   } catch (err) {
-    console.error('Error fetching orders:', err);
-    throw err;
+    throw new Error(err);
   }
-};
+}
 
-export { getOrders }; 
+// --- Write Orders ---
+async function writeOrders(client, orderID, value) {
+  const getMetafieldQuery = `
+    query GetOrderMetafields($id: ID!) {
+      order(id: $id) {
+        metafield(namespace: "custom", key: "picked") {
+          value
+        }
+      }
+    }
+  `;
+
+  let currentMetafield = [];
+  try {
+    const metafieldResponse = await client.request(getMetafieldQuery, { variables: { id: orderID } });
+    const metafieldValue =
+      metafieldResponse.body?.order?.metafield?.value ||
+      metafieldResponse.order?.metafield?.value ||
+      null;
+    currentMetafield = metafieldValue ? JSON.parse(metafieldValue) : [];
+  } catch {
+    currentMetafield = [];
+  }
+
+  const mutation = `
+    mutation OrderUpdate($input: OrderInput!) {
+      orderUpdate(input: $input) {
+        order {
+          id
+          metafields(first: 1, namespace: "custom") {
+            edges {
+              node {
+                id
+                namespace
+                key
+                value
+                type
+              }
+            }
+          }
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    input: {
+      id: orderID,
+      metafields: [{
+        key: "picked",
+        namespace: "custom",
+        type: "json",
+        value: JSON.stringify([...currentMetafield, value])
+      }]
+    }
+  };
+
+  const response = await client.request(mutation, { variables });
+  const orderUpdate = response.body?.orderUpdate || response.orderUpdate;
+  if (orderUpdate?.userErrors && orderUpdate.userErrors.length > 0) {
+    throw new Error(JSON.stringify(orderUpdate.userErrors));
+  }
+  return orderUpdate;
+}
+
+export { getOrders, writeOrders }; 

@@ -1,6 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { ReactNode, useState, useCallback, useMemo } from 'react';
+import { ReactNode, useState, useCallback, useMemo, FormEvent } from 'react';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
+import app from '../firebase';
 import FullscreenModal from '../orders/modals/FullscreenModal';
 import { OrderData, Order, Location, Status, ItemID } from '../types';
 import ConfirmModal from '../orders/modals/ConfirmModal';
@@ -29,16 +31,26 @@ const OrdersProvider = ({ children }: ProviderProps) => {
   const [orders, setOrders] = useState<OrderData[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  // eslint-disable-next-line no-console
+  console.log('[OrdersProvider] Mounted');
+
   const fetchOrders = useCallback(async (): Promise<void> => {
     setError(null);
+    // eslint-disable-next-line no-console
+    console.log('[OrdersProvider] fetchOrders called');
     try {
       setOrders([]);
       const response = await fetch('/api/orders');
+      console.log(response)
       if (!response.ok) { throw new Error('Failed to fetch orders'); }
       const orders = await response.json();
       setOrders(orders);
+      // eslint-disable-next-line no-console
+      console.log('[OrdersProvider] Orders fetched:', orders);
     } catch (err) {
       setError((err as Error).message);
+      // eslint-disable-next-line no-console
+      console.log('[OrdersProvider] fetchOrders error:', err);
     }
   }, []);
 
@@ -92,6 +104,9 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
   const [orderDisplay, setOrderDisplay] = useState<Order[]>([]);
   const [selectedItems, setSelectedItems] = useState<Set<ItemID>>(new Set());
 
+  // eslint-disable-next-line no-console
+  console.log('[OrderDisplayProvider] Mounted');
+
   const handleSelect = useCallback((itemID: ItemID) => {
     setSelectedItems((prev) => {
       const newSet = new Set(prev);
@@ -100,15 +115,21 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
       } else {
         newSet.add(itemID);
       }
+      // eslint-disable-next-line no-console
+      console.log('[OrderDisplayProvider] handleSelect:', Array.from(newSet));
       return newSet;
     });
   }, []);
 
   const handleClear = useCallback(() => {
     setSelectedItems(new Set());
+    // eslint-disable-next-line no-console
+    console.log('[OrderDisplayProvider] handleClear: selection cleared');
   }, []);
 
   const handleConfirm = useCallback(() => {
+    // eslint-disable-next-line no-console
+    console.log('[OrderDisplayProvider] handleConfirm: confirming selection', Array.from(selectedItems));
     const displayedOrderIDs = new Set(
       orderDisplay.filter((order) => order.box !== null).map((order) => order.orderID)
     );
@@ -158,12 +179,19 @@ const OrderDisplayProvider = ({ children }: ProviderProps) => {
 const FullscreenProvider = ({ children }: ProviderProps) => {
   const [fullScreen, setFullScreen] = useState<string | null>(null);
 
+  // eslint-disable-next-line no-console
+  console.log('[FullscreenProvider] Mounted');
+
   const openFullscreen = useCallback((imageUrl: string) => {
     setFullScreen(imageUrl);
+    // eslint-disable-next-line no-console
+    console.log('[FullscreenProvider] openFullscreen:', imageUrl);
   }, []);
 
   const closeFullscreen = useCallback(() => {
     setFullScreen(null);
+    // eslint-disable-next-line no-console
+    console.log('[FullscreenProvider] closeFullscreen');
   }, []);
 
   const value = useMemo(
@@ -184,10 +212,22 @@ const FullscreenProvider = ({ children }: ProviderProps) => {
  */
 const ConfirmProvider = ({ children }: ProviderProps) => {
   const [confirm, setConfirm] = useState<Order | null>(null);
-  const openConfirm = useCallback((order: Order) => setConfirm(order), []);
-  const closeConfirm = useCallback(() => setConfirm(null), []);
+  // eslint-disable-next-line no-console
+  console.log('[ConfirmProvider] Mounted');
+  const openConfirm = useCallback((order: Order) => {
+    setConfirm(order);
+    // eslint-disable-next-line no-console
+    console.log('[ConfirmProvider] openConfirm:', order);
+  }, []);
+  const closeConfirm = useCallback(() => {
+    setConfirm(null);
+    // eslint-disable-next-line no-console
+    console.log('[ConfirmProvider] closeConfirm');
+  }, []);
   const confirmConfirm = useCallback(() => {
     closeConfirm();
+    // eslint-disable-next-line no-console
+    console.log('[ConfirmProvider] confirmConfirm');
   }, []);
   const { setOrderDisplay } = useOrderDisplay();
 
@@ -197,6 +237,8 @@ const ConfirmProvider = ({ children }: ProviderProps) => {
     employee: string,
     location: Location
   ) => {
+    // eslint-disable-next-line no-console
+    console.log('[ConfirmProvider] onConfirm called', { orderData, employee, location });
     const removeIdx = orderDisplay.findIndex((orderItem) => orderItem.orderID === orderData.orderID);
     if (removeIdx === -1) { return; }
 
@@ -229,6 +271,8 @@ const ConfirmProvider = ({ children }: ProviderProps) => {
 
     setOrderDisplay(newOrderDisplay);
     closeConfirm();
+    // eslint-disable-next-line no-console
+    console.log('[ConfirmProvider] Order confirmed and removed:', orderData.orderID);
   };
 
   const value = useMemo(
@@ -248,6 +292,8 @@ const ConfirmProvider = ({ children }: ProviderProps) => {
  */
 const LogoutProvider = ({ children }: ProviderProps) => {
   const [logout, setLogout] = useState<boolean>(false);
+  // eslint-disable-next-line no-console
+  console.log('[LogoutProvider] Mounted');
   const value = useMemo(() => ({ logout, setLogout }), [logout, setLogout]);
   return (
     <LogoutContext.Provider value={value}>
@@ -262,6 +308,8 @@ const LogoutProvider = ({ children }: ProviderProps) => {
  */
 const LocationProvider = ({ children }: ProviderProps) => {
   const [location, setLocation] = useState<Location>("Oakville");
+  // eslint-disable-next-line no-console
+  console.log('[LocationProvider] Mounted');
   const value = useMemo(() => ({ location, setLocation }), [location, setLocation]);
   return <LocationContext.Provider value={value}>{children}</LocationContext.Provider>;
 };
@@ -272,13 +320,15 @@ const LocationProvider = ({ children }: ProviderProps) => {
 const AuthProvider = ({ children }: ProviderProps) => {
   const [user, setUser] = useLocalStorage('user', null);
 
-  const handleLogin = (
-    event: React.FormEvent,
+  const handleLogin = async (
+    event: FormEvent,
     username: string,
     password: string,
     setError: (err: { username?: string; password?: string; general?: string }) => void
   ) => {
     event.preventDefault();
+    // eslint-disable-next-line no-console
+    console.log('[AuthProvider] handleLogin called:', { username });
     let hasError = false;
     const newError: { username?: string; password?: string; general?: string } = {};
     if (!username.trim()) {
@@ -290,25 +340,33 @@ const AuthProvider = ({ children }: ProviderProps) => {
       hasError = true;
     }
     if (hasError) {
+      // eslint-disable-next-line no-console
+      console.log('[AuthProvider] Validation error:', newError);
       setError(newError);
       return;
     }
-    if (username !== 'ETBETB' || password !== 'ETBETB') {
-      setError({ general: 'Invalid Username/Password' });
-      return;
-    }
+    const auth = getAuth(app);
     try {
-      setUser({ username, password });
-      setError({});
+      await signInWithEmailAndPassword(auth, username, password);
       setTimeout(() => {
-        window.location.href = '/pick';
-      }, 1000);
-    } catch {
-      setError({ general: 'Login failed. Please try again.' });
+        setUser({ username, password });
+        setError({});
+        // eslint-disable-next-line no-console
+        console.log('[AuthProvider] Login successful:', { username });
+        setTimeout(() => {
+          window.location.href = '/pick';
+        }, 1000);
+      })
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.log('[AuthProvider] Login failed:', err);
+      setError({ general: 'Invalid Username/Password' });
     }
   };
 
   const logout = () => {
+    // eslint-disable-next-line no-console
+    console.log('[AuthProvider] logout called');
     setUser(null);
   };
 
