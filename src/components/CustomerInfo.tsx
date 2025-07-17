@@ -1,9 +1,9 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import {memo} from "react";
 
-import { Order, Item } from "../../types";
-import { useConfirm, useLocation, useOrders } from "../../context/useContext";
-import { findOrderDataByOrder, cn } from "../../context/functions";
+import { Order, Item } from '../types';
+import { useConfirm, useLocation, useOrders } from '../context/useContext';
+import { findOrderDataByOrder, cn } from '../context/functions';
 
 import { TagPill } from "./Tags";
 

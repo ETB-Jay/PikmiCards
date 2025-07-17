@@ -1,12 +1,12 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { memo } from 'react';
 
-import { useOrderDisplay } from '../../../context/useContext';
-import { ScrollContainer, FlexColCenter } from '../../../components/containers';
-import { Item } from '../../../types';
+import { useOrderDisplay } from '../../context/useContext';
+import { ScrollContainer, FlexColCenter } from '../../components/containers';
+import { Item } from '../../types';
 import OrderCard from '../../components/OrderCard';
-import { cn } from '../../../context/functions';
-import { Empty } from '../../../components/formComponents';
+import { cn } from '../../context/functions';
+import { Empty } from '../../components/formComponents';
 
 /**
  * @description QueuePile is a memoized component that renders the queue pile of items to pick.

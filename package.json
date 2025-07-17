@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "node ./api/server.js",
+    "server": "node ./api/orders.js",
     "test": "vitest"
   },
   "dependencies": {

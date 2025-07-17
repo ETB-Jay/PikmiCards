@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { LogoutContext } from '../../context/Context';
-import { cn } from '../../context/functions';
-import { ModalContainer } from '../../components/containers';
-import { Button } from '../../components/formComponents';
+import { LogoutContext } from '../context/Context';
+import { cn } from '../context/functions';
+import { ModalContainer } from '../components/containers';
+import { Button } from '../components/formComponents';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const LOGOUT_MODAL_TITLE = 'Confirm Logout';

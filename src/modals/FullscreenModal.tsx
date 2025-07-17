@@ -1,8 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { memo } from 'react';
 
-import { ModalContainer } from '../../components/containers';
-import { cn } from '../../context/functions';
+import { ModalContainer } from '../components/containers';
+import { cn } from '../context/functions';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const FULLSCREEN_IMAGE_LABEL = 'Close fullscreen image';

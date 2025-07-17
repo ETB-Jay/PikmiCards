@@ -1,11 +1,11 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { memo } from 'react';
 
-import { useOrderDisplay } from '../../../context/useContext';
-import { Empty } from '../../../components/formComponents';
-import { Order } from '../../../types';
+import { useOrderDisplay } from '../../context/useContext';
+import { Empty } from '../../components/formComponents';
+import { Order } from '../../types';
 import CustomerInfo from '../../components/CustomerInfo';
-import { cn } from '../../../context/functions';
+import { cn } from '../../context/functions';
 
 /**
  * @description CardGridDisplay displays a grid of customer orders or an empty state.

@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-import { cn } from '../../context/functions';
+import { cn } from '../context/functions';
 
 interface EmployeeInputProps {
   newEmployee: string;

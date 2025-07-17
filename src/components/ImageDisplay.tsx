@@ -1,7 +1,7 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import { memo, ReactEventHandler } from 'react';
 
-import { cn } from '../../context/functions';
+import { cn } from '../context/functions';
 
 interface ImageDisplayProps {
   imageUrl: string;

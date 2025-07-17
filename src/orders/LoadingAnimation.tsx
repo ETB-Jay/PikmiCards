@@ -1,8 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import React, { memo } from 'react';
 
-import { FlexColCenter } from '../../components/containers';
-import { cn } from '../../context/functions';
+import { FlexColCenter } from '../components/containers';
+import { cn } from '../context/functions';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const LOADING_TEXT = 'Loading';
@@ -10,7 +10,7 @@ const LOADING_TEXT = 'Loading';
 // Progress prop for loading animation
 
 interface LoadingAnimationProps {
-  progress?: number; // 0-100
+  progress?: number;
 }
 
 /**

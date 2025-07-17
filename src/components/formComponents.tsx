@@ -1,17 +1,17 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { memo, useState } from 'react';
-import { useLocation } from 'react-router';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 import { ButtonProps, ChildrenAndClassProps, InputProps, PopupProps } from '../interfaces';
 import { cn } from '../context/functions';
-import { useOrderDisplay, useOrders } from '../context/useContext';
+
+import { ErrorBox } from './containers';
 
 /**
  * @description InputField renders a styled input with an icon.
  */
-const InputField = memo(({ icon, label, type, value, onChange, err }: InputProps) => {
+const InputField = memo(({ icon, label, type, value, onChange, autoComplete, err }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = (type === 'password');
   const inputType = (isPassword && showPassword) ? 'text' : type;
@@ -32,6 +32,7 @@ const InputField = memo(({ icon, label, type, value, onChange, err }: InputProps
           value={value}
           aria-label={label.replace(/\s+/g, '-').toLowerCase()}
           onChange={onChange}
+          autoComplete={autoComplete}
         />
         {isPassword && (
           <div
@@ -55,20 +56,6 @@ const InputField = memo(({ icon, label, type, value, onChange, err }: InputProps
   );
 });
 InputField.displayName = 'InputField';
-
-/**
- * @description ErrorBox renders a styled error message box.
- */
-const ErrorBox = memo(
-  ({ children, className = '' }: ChildrenAndClassProps): React.ReactElement => (
-    <div
-      className={cn("animate-shake rounded-lg bg-red-800/40 px-3 py-2 text-center font-semibold text-red-100 ring-3 ring-red-950", className)}
-    >
-      {children}
-    </div>
-  )
-);
-ErrorBox.displayName = 'ErrorBox';
 
 /**
  * @description Empty renders a styled visual for when something is empty.

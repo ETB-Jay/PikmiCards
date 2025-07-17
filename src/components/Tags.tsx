@@ -1,11 +1,12 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { memo } from 'react';
 
-import { ItemData } from '../../types';
-import { useOrderDisplay } from '../../context/useContext';
-import { FlexRow } from '../../components/containers';
-import { ChildrenAndClassProps } from '../../interfaces';
-import { cn } from '../../context/functions';
+import { ItemData } from '../types';
+import { useOrderDisplay } from '../context/useContext';
+import { ChildrenAndClassProps } from '../interfaces';
+import { cn } from '../context/functions';
+
+import { FlexRow } from './containers';
 
 
 /**

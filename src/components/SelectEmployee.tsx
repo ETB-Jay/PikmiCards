@@ -3,7 +3,7 @@ import { useState } from "react";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { cn } from '../../context/functions';
+import { cn } from '../context/functions';
 
 import EmployeeInput from './EmployeeInput';
 

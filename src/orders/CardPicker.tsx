@@ -1,8 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { memo } from 'react';
 
-import { ChildrenAndClassProps } from '../../interfaces';
-import { cn } from '../../context/functions';
+import { ChildrenAndClassProps } from '../interfaces';
+import { cn } from '../context/functions';
 
 import ToPick from './sections/ToPick';
 import QueuePile from './sections/QueuePile';

@@ -3,12 +3,12 @@ import { useMemo, memo } from 'react';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 
-import { useOrderDisplay } from '../../../context/useContext';
-import { ScrollContainer } from '../../../components/containers';
-import { Button, Empty } from '../../../components/formComponents';
+import { useOrderDisplay } from '../../context/useContext';
+import { ScrollContainer } from '../../components/containers';
+import { Button, Empty } from '../../components/formComponents';
 import OrderCard from '../../components/OrderCard';
-import { Item } from '../../../types';
-import { cn } from '../../../context/functions';
+import { Item } from '../../types';
+import { cn } from '../../context/functions';
 
 const CONFIRM_BUTTON_TEXT = 'Confirm';
 const CLEAR_BUTTON_TEXT = 'Clear Items';

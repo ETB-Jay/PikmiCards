@@ -19,6 +19,7 @@ interface InputProps {
   value: string;
   onChange: (ev: React.ChangeEvent<HTMLInputElement>) => void;
   err: string;
+  autoComplete: string;
 }
 
 /**

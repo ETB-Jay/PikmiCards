@@ -3,9 +3,9 @@ import { useCallback } from 'react';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
-import { Item, ItemData } from '../../types';
-import { useFullscreen, useOrderDisplay, useOrders } from '../../context/useContext';
-import { findItemDataByID, cn } from '../../context/functions';
+import { Item, ItemData } from '../types';
+import { useFullscreen, useOrderDisplay, useOrders } from '../context/useContext';
+import { findItemDataByID, cn } from '../context/functions';
 
 import { ImageDisplay } from './ImageDisplay';
 import { Tags } from './Tags';

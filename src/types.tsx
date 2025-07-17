@@ -51,7 +51,7 @@ interface Item {
  * @description User is a user in the system.
  */
 interface User {
-  username: string;
+  email: string;
   password: string;
 }
 

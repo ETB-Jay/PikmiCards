@@ -14,6 +14,7 @@ interface OrdersContextType {
    * @param order - a list of OrderData
    */
   setOrders: (order: OrderData[]) => void;
+
   /** @description Function that pulls data from the Shopify server backend */
   fetchOrders: () => Promise<void>;
 
@@ -25,14 +26,12 @@ interface OrdersContextType {
    */
   fromOrderDataToOrder: (order: OrderData[], location: Location) => Order[];
 }
-
 const OrdersContext = createContext<OrdersContextType>({
   orders: [],
   setOrders: () => {},
   fetchOrders: async () => {},
   fromOrderDataToOrder: () => [],
 });
-
 OrdersContext.displayName = 'OrdersContext';
 
 /** @description OrderDisplayContextType manages the displayed orders */
@@ -48,7 +47,7 @@ interface OrderDisplayContextType {
 
   /** @description A set containing the selected ItemIDs */
   selectedItems: Set<ItemID>;
-
+  
   /**
    * @description Function to update selectedItems
    * @param selectedItems - A set of ItemID
@@ -63,7 +62,7 @@ interface OrderDisplayContextType {
 
   /** @description Function to confirm the current selection. */
   handleConfirm: () => void;
-
+  
   /** @description Function to clear the current selection. */
   handleClear: () => void;
 }
@@ -85,6 +84,7 @@ interface FullscreenContextType {
    * @param imageURL - a valid imageURL
    */
   openFullscreen: (imageUrl: string) => void;
+
   /**
    * @description Function to close the fullscreen modal. Wipes the current imageURL
    * @requires openFullscreen was called before
@@ -101,15 +101,16 @@ FullscreenContext.displayName = 'FullscreenContext';
 interface ConfirmContextType {
   /** @description The order currently being confirmed, or null if none */
   confirm: Order | null;
+  
   /**
    * @description Function to open the confirmation modal with a given order
    * @param order The order to be displayed
    */
   openConfirm: (order: Order) => void;
-  /** @description Function to confirm the confirmation modal. Calls closeConfirm to close the order after*/
-  confirmConfirm: () => void;
+
   /** @description Function to close the confirmation modal. Wipes the current order */
   closeConfirm: () => void;
+
   /** @description Removes an order from the display and swaps in a new one if needed. */
   onConfirm: (
     orderData: Order,
@@ -122,7 +123,6 @@ interface ConfirmContextType {
 const ConfirmContext = createContext<ConfirmContextType>({
   confirm: null,
   openConfirm: () => {},
-  confirmConfirm: () => {},
   closeConfirm: () => {},
   onConfirm: () => {},
 });
@@ -132,6 +132,7 @@ ConfirmContext.displayName = 'ConfirmContext';
 interface LogoutContextType {
   /** @description If the modal should be open or not */
   logout: boolean;
+
   /** @description Function to open or close the Modal */
   setLogout: Dispatch<SetStateAction<boolean>>;
 }
@@ -151,6 +152,7 @@ interface LocationContextType {
 const LocationContext = createContext<LocationContextType>({
   /** @description The current location being picked from */
   location: 'Oakville',
+  
   /** @description Function to set location */
   setLocation: () => {}
 });
@@ -158,20 +160,15 @@ LocationContext.displayName = 'LocationContext';
 
 /** @description AuthContextType manages the authentication process */
 interface AuthContextType {
-  user: User;
-  logout: () => void;
   handleLogin: (
     event: React.FormEvent,
-    username: string,
-    password: string,
-    setError: (err: { username?: string; password?: string; general?: string }) => void
+    user: User,
+    setError: (err: { email?: string; password?: string; general?: string }) => void,
+    navigate: (path: string) => void
   ) => void;
 }
 /** @description React context for authenticating a user */
 const AuthContext = createContext<AuthContextType>({
-  /** @description The current user */
-  user: { username: '', password: '' },
-  logout: () => {},
   handleLogin: () => {},
 });
 AuthContext.displayName = 'AuthContext';

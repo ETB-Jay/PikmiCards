@@ -104,7 +104,7 @@ FlexRow.displayName = 'FlexRowBetween';
  */
 const ErrorBox = memo(({ children, className = '' }: ChildrenAndClassProps) => (
   <div
-    className={cn("animate-shake font-semi rounded-lg bg-red-800/40 px-3 py-2 text-center text-xs text-red-100 ring-2 ring-red-950", className)}
+    className={cn("animate-shake font-semibold rounded-lg bg-red-800/40 px-3 py-2 text-center text-xs text-red-100 ring-2 ring-red-950", className)}
   >
     {children}
   </div>

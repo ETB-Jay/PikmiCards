@@ -2,7 +2,7 @@
 import { memo } from 'react';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
-import { useOrderDisplay, useOrders } from '../../context/useContext';
+import { useOrders } from '../../context/useContext';
 import { Button } from '../../components/formComponents';
 
 /** @description RefreshButton displays a button to refresh the order list */

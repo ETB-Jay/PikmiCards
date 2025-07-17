@@ -1,13 +1,15 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { useEffect, memo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import Header from '../header/Header';
-import { useOrders, useOrderDisplay, useLocation } from '../context/useContext';
+import { useOrders, useOrderDisplay, useLocation as useLocationContext } from '../context/useContext';
 import { MainContainer } from '../components/containers';
 import { cn } from '../context/functions';
+import { Location } from '../types';
 
-import CardPicker from './body/CardPicker';
-import LoadingAnimation from './components/LoadingSpinner';
+import CardPicker from './CardPicker';
+import LoadingAnimation from './LoadingAnimation';
 
 /**
  * @description Orders renders the card picker and manages order fetching and display logic.
@@ -17,8 +19,15 @@ const Orders = memo((): React.ReactElement => {
   const { orders, fetchOrders, fromOrderDataToOrder } = useOrders();
   const { orderDisplay, setOrderDisplay } = useOrderDisplay();
   const [error, setError] = useState<string>();
-  const { location } = useLocation();
+  const { location: contextLocation, setLocation } = useLocationContext();
   const [progress, setProgress] = useState<number>(0);
+  const { location } = useParams();
+
+  useEffect(() => {
+    if (location && location !== contextLocation) {
+      setLocation(location as Location);
+    }
+  }, [location, contextLocation, setLocation]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -40,19 +49,17 @@ const Orders = memo((): React.ReactElement => {
     };
     loadOrders();
     return () => clearInterval(interval);
-  }, [location]);
+  }, [contextLocation, fetchOrders]);
 
   useEffect(() => {
     setOrderDisplay([]);
     if (orders.length > 0) {
-      const filteredOrders = fromOrderDataToOrder(orders, location);
+      const filteredOrders = fromOrderDataToOrder(orders, contextLocation);
       setOrderDisplay(filteredOrders);
     }
-  }, [orders]);
+  }, [orders, contextLocation, fromOrderDataToOrder]);
 
   const pickDisplay = (orderDisplay.length === 0 && orders.length === 0 ? <LoadingAnimation progress={progress} /> : <CardPicker />);
-
-  console.log(pickDisplay)
 
   return (
     <MainContainer>

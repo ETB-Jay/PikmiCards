@@ -31,22 +31,20 @@ const getItemKeys = (order: OrderData): ItemID[] => {
  * @param {OrderData[]} orders - The list of orders.
  * @returns {Order[]} Array of Order objects.
  */
-const getOrderKeys = (orders: OrderData[]): Order[] => {
-  return orders.map((order: OrderData) => {
-    return {
+const getOrderKeys = (orders: OrderData[]): Order[] => (
+  orders.map((order: OrderData) => ({
+    orderID: order.orderID,
+    location: order.items[0]?.itemLocation,
+    box: null,
+    items: order.items.map((item) => ({
+      itemID: item.itemID,
       orderID: order.orderID,
-      location: order.items[0]?.itemLocation,
+      set: item.itemSet ?? '',
+      status: 'unPicked' as Status,
       box: null,
-      items: order.items.map((item) => ({
-        itemID: item.itemID,
-        orderID: order.orderID,
-        set: item.itemSet ?? '',
-        status: 'unPicked' as Status,
-        box: null,
-      })),
-    };
-  });
-};
+    })),
+  }))
+);
 
 /**
  * @description Finds an item by its item ID, with optional filtering by order and location.
@@ -78,9 +76,9 @@ function findItemDataByID(
 /**
  * @description Merges TailwindCSS classes together.
  * @param {...(string | undefined | null | false)[]} inputs - The strings to merge.
- * @returns {string} The merged Tailwind classes.
+ * @returns The merged Tailwind classes.
  */
-function cn(...inputs: (string | undefined | null | false)[]) {
+function cn(...inputs: (string | undefined | null | false)[]): string {
   return twMerge(...inputs.filter(Boolean));
 }
 

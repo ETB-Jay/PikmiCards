@@ -1,10 +1,12 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
 import { memo, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useLocation } from '../../context/useContext';
 import { PopupOption } from '../../components/formComponents';
 import { Location } from '../../types';
 import { cn } from '../../context/functions';
+
 
 interface DetermineLocationProps {
   prompt: (show: boolean) => void;
@@ -21,9 +23,11 @@ const DetermineLocation = memo(({
 }: DetermineLocationProps): React.ReactElement => {
   const { location, setLocation } = useLocation();
   const ref = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const handleLocationSelect = (newLocation: string) => {
     setLocation(newLocation as Location);
+    navigate(`/pick/${newLocation}`);
     prompt(false);
   };
 
