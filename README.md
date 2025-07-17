@@ -1,15 +1,18 @@
 <div align="center">
 
-# PIKMICARDS
+<img height="500" alt="PikmiCardsBanner" src="https://github.com/user-attachments/assets/412b9291-10b6-4e12-b026-9f1fbb247350" />
+
+##
+
+<br> 
+
 
 ![version](https://img.shields.io/badge/version-1.0.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![build](https://img.shields.io/badge/build-passing-brightgreen)
 
-<img src="https://github.com/user-attachments/assets/8b17ef49-e956-45ac-9df1-71b34775fcba" width="300" />
-
-**PikmiCards** is a TCG card picking system originally designed by Michael Zhang using [React.js](https://react.dev/), [tailwindcss](https://tailwindcss.com/), and [React Router](https://reactrouter.com/).
-[Shopify](https://www.shopify.com/ca) is used as the backend for this project. The data was primarily extracted using its [GraphQL tool](https://shopify.dev/docs/api/admin-graphql). 
+**PikmiCards** is a TCG card picking system originally designed by Michael Zhang for Enter the Battlefield (ETB) using [React.js](https://react.dev/), [tailwindcss](https://tailwindcss.com/), and [React Router](https://reactrouter.com/).
+[Shopify](https://www.shopify.com/ca) is used as the backend for this project. The data was primarily extracted using the company's [GraphQL tool](https://shopify.dev/docs/api/admin-graphql). 
 
 </div>
 
@@ -17,24 +20,18 @@
 
 ## 📝 | FEATURES AND USAGE
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/b3f42b31-3261-43e9-9d1e-24088e23e0bf"/>
+  <img width="1917" height="856" alt="Preview" src="https://github.com/user-attachments/assets/6b9626cb-c6b0-41aa-bb99-b579b25d3e48" />
 </p>
 
+**1 - Location and Refresh Buttons:** Changes the currently displayed location and allows orders to be refreshed. **ONLY USE THESE ONCE YOU ARE OK WITH RESETTING YOUR UNCOMMITTED PROCESS**
 
-**Picklist:** Items that have yet to be picked are displayed on the left
+**2 - Picklist:** Items that have yet to be picked
 
+**3 - Box Grid:** Orders that are waiting to be committed are displayed on the top right
 
-**Queue Pile:** Items that are waiting to be placed in a box are displayed on the bottom right
+**4 - Queue Pile:** Items that are waiting to be placed in a box are displayed on the bottom right
 
-
-**Box Grid:** Orders that are waiting to be committed are displayed on the top right
-
-
-**Use the Buttons in the header to:**
-- Switch Locations
-- Reload Customer List
-- Switch Pages
-
+**5 - Pages** Allows the User to toggle between the _Orders_ and _Guide_ pages. It also allows the user to logout. 
 
 ## 🖥️ | DEVELOPMENT
 
@@ -46,7 +43,7 @@
 
 1. **Clone the repository:**
    ```sh
-   git clone <your-repo-url>
+   git clone https://github.com/ETB-Jay/PikmiCards.git
    cd pikmicards
    ```
 
@@ -89,31 +86,10 @@
 - `npm run lint` — Run ESLint on the codebase
 - `npm run server` — Start the Express backend server
 
-## Project Structure
-
-```
-pikmicards/
-  ├── api/                # Express API handlers (orders)
-  ├── public/             # Static assets (SVGs, PNGs, favicon)
-  ├── server/             # Express server
-  ├── src/
-  │   ├── body/           # Main picking workflow components
-  │   ├── components/     # Reusable UI components (containers, modals, etc.)
-  │   ├── context/        # React context providers and hooks
-  │   ├── header/         # Header and navigation
-  │   ├── modals/         # Modal components
-  │   ├── pages/          # App pages (Login, Pick, Guide)
-  │   ├── root.css        # Custom and Tailwind CSS
-  │   └── types.tsx       # TypeScript types and interfaces
-  ├── package.json
-  ├── tsconfig.json
-  └── vite.config.js
-```
-
 ## Core Technologies
 
-- **Frontend:** React, TypeScript, Vite, Tailwind CSS, OGL (WebGL), MUI Icons
-- **Backend:** Node.js, Express, Shopify API, dotenv, cors
+- **Frontend:** React, TypeScript, Vite, Tailwind CSS,  MUI Icons
+- **Backend:** Node.js, Express, Shopify API, dotenv, cors, Firebase Authentication
 - **State Management:** React Context + Custom Hooks
 - **Linting/Formatting:** ESLint, Prettier
 - **Hosting:** Vercel
@@ -124,5 +100,4 @@ From 2025-05-05 to 2025-08-29, Michael Zhang will be conducting preliminary upda
 After this period, it will be the responsibility of the new "tech guy" to manage the system. For additional information regarding the repository and any creditionals (i.e. Environment Variables, API Keys), please either create new ones for the system or contact Michael through Jay or Kris to obtain the old ones.
 
 ## License
-
-> _Specify your license here (MIT, Apache-2.0, etc.)_
+MIT 
