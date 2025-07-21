@@ -1,13 +1,12 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import { ReactElement, ReactNode, memo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { LogoutContext } from '../context/Context';
+import { Button, ModalContainer } from '../components';
 import { cn } from '../context/functions';
-import { ModalContainer } from '../components/containers';
-import { Button } from '../components/formComponents';
+import { useLogout } from '../context/useContext';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const LOGOUT_MODAL_TITLE = 'Confirm Logout';
@@ -15,39 +14,58 @@ const LOGOUT_MODAL_MESSAGE = 'Are you sure you want to log out?';
 const LOGOUT_MODAL_CONFIRM = 'Confirm';
 const LOGOUT_MODAL_CLOSE = 'Close';
 
-/**
- * @description LogoutModal displays a modal for confirming logout.
- */
-const LogoutModal = (): React.ReactElement => {
-  const { setLogout } = useContext(LogoutContext);
+/** LogoutModal displays a modal for confirming logout. */
+const LogoutModal = (): ReactElement => {
+  const { setLogout } = useLogout();
   const navigate = useNavigate();
+
+  const LogoutModalButton = memo(
+    ({
+      onAction,
+      icon,
+      label,
+      color,
+    }: {
+      onAction: () => void;
+      icon: ReactNode;
+      label: string;
+      color: 'green' | 'gray';
+    }) => (
+      <Button
+        className={cn(
+          'flex min-w-[110px] items-center gap-2 rounded px-4 py-2 font-semibold transition',
+          color === 'green'
+            ? 'bg-green-700 text-white shadow hover:bg-green-800'
+            : 'bg-gray-300 text-gray-800 shadow hover:bg-gray-400'
+        )}
+        onAction={onAction}
+        type="button"
+        icon={icon}
+        label={label}
+      />
+    )
+  );
+  LogoutModalButton.displayName = 'LogoutModalButton';
+
   return (
     <ModalContainer>
       <h2 className={cn('text-xl font-bold text-white')}>{LOGOUT_MODAL_TITLE}</h2>
       <p className={cn('text-gray-200')}>{LOGOUT_MODAL_MESSAGE}</p>
-      <div className="flex flex-row justify-center gap-4 mt-2">
-        <Button
-          className={cn(
-            'flex items-center gap-2 min-w-[110px] px-4 py-2 rounded font-semibold transition',
-            'bg-green-700 hover:bg-green-800 text-white shadow'
-          )}
-          onClick={() => {
+      <div className="mt-2 flex flex-row justify-center gap-4">
+        <LogoutModalButton
+          onAction={() => {
             navigate('/login');
             setLogout(false);
           }}
-          type="button"
           icon={<CheckIcon />}
           label={LOGOUT_MODAL_CONFIRM}
+          color="green"
         />
-        <Button
-          className={cn(
-            'flex items-center gap-2 min-w-[110px] px-4 py-2 rounded font-semibold transition',
-            'bg-gray-300 hover:bg-gray-400 text-gray-800 shadow'
-          )}
-          onClick={() => setLogout(false)}
-          type="button"
+        <LogoutModalButton
+          onAction={() => setLogout(false)}
           icon={<CloseIcon />}
           label={LOGOUT_MODAL_CLOSE}
+          color="gray"
         />
       </div>
     </ModalContainer>

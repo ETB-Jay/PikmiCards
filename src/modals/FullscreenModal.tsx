@@ -1,49 +1,25 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { memo } from 'react';
 
-import { ModalContainer } from '../components/containers';
+import { ModalContainer } from '../components';
 import { cn } from '../context/functions';
 
-// ─ Constants ────────────────────────────────────────────────────────────────────────────────────
-const FULLSCREEN_IMAGE_LABEL = 'Close fullscreen image';
-
-interface FullscreenModalProps {
-  image: string;
-  children?: React.ReactNode;
-}
-
-/**
- * @description FullscreenModal displays an image in a fullscreen modal overlay.
- */
-const FullscreenModal = memo(({ image, children }: FullscreenModalProps) => {
-
+/** FullscreenModal displays an image in a fullscreen modal overlay. */
+const FullscreenModal = memo(({ image }: { image: string }) => {
   return (
     <ModalContainer>
       {image && (
-        <div
-          className={cn("max-h-[70vh] w-auto rounded-3xl object-contain shadow-[0_0_30px_4px_black] ring-2 ring-offset-2")}
-          tabIndex={0}
-          role="button"
-          aria-label={FULLSCREEN_IMAGE_LABEL}
-          onClick={(ev) => ev.stopPropagation()}
-          onKeyDown={(ev) => {
-            if (ev.key === 'Enter' || ev.key === ' ') {
-              ev.stopPropagation();
-            }
-          }}
-        >
-          <img
-            src={image}
-            className={cn("max-h-[70vh] w-auto rounded-3xl object-contain shadow-[0_0_30px_4px_black] ring-2 ring-offset-2")}
-            alt=""
-          />
-        </div>
+        <img
+          src={image}
+          className={cn(
+            'max-h-[70vh] w-auto rounded-3xl object-contain shadow-[0_0_30px_4px_black] ring-2 ring-offset-2'
+          )}
+          alt=""
+        />
       )}
-      {children}
     </ModalContainer>
   );
 });
-
 FullscreenModal.displayName = 'FullscreenModal';
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────

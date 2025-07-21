@@ -1,49 +1,73 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { memo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import BookIcon from '@mui/icons-material/Book';
 import PersonIcon from '@mui/icons-material/Person';
+import { memo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Button } from '../components/formComponents';
+import { Button } from '../components';
 import { cn } from '../context/functions';
-import { useLogout, useLocation } from '../context/useContext';
-
+import { useLogout, useStoreLocation } from '../context/useContext';
 import LocationButton from './buttons/LocationButton';
 import RefreshButton from './buttons/RefreshButton';
+import CardsIcon from '../components/icons/CardsIcon';
+import PikmicardIcon from '../components/icons/PikmicardIcon';
 
-/** @description Header displays the top navigation bar with sidebar, location, and refresh controls */
+/**
+ * Header displays the top navigation bar with sidebar, location, and refresh controls.
+ * @param pick - Whether to show picking-related controls (location and refresh buttons)
+ */
 const Header = memo(({ pick = false }: { pick: boolean }) => {
   const navigate = useNavigate();
-  const { location } = useLocation();
+  const { storeLocation } = useStoreLocation();
   const { setLogout } = useLogout();
   const pickOrdersLabel = 'Orders';
   const guideLabel = 'Guide';
   const logoutLabel = 'Logout';
-  
+
   return (
-    <div className={cn("relative flex h-[5vh] w-full flex-row items-center gap-2 px-4")}>
-      <img
-        src="/pikmicard.png"
-        alt=""
-        className={cn("w-10 h-10 mr-5 shadow rounded-xl bg-amber-50/15")}
-      />
-      {pick && <LocationButton />}
-      <RefreshButton />
-      <div className={cn("flex gap-2 ml-auto")}>
+    <div
+      className={cn(
+        'sticky top-0 left-0 z-50 flex h-fit w-full flex-row items-center justify-between gap-4 px-6 pt-3 pb-1 shadow backdrop-blur'
+      )}
+    >
+      <div className={cn('flex flex-row items-center gap-4')}>
+        <PikmicardIcon
+          width={40}
+          height={40}
+          className={cn('h-10 w-10 shrink-0 rounded-xl bg-amber-50/15 shadow')}
+          style={{ display: 'block' }}
+        />
+        {pick && <LocationButton />}
+        <RefreshButton />
+      </div>
+      <div className={cn('flex items-center gap-2')}>
         <Button
           label={pickOrdersLabel}
-          onClick={() => { navigate(`/pick/${location}`); }}
-          icon={<img src="/cards.svg" alt={pickOrdersLabel} className={cn("w-5 h-5 align-middle")} />}
+          onAction={() => {
+            navigate(`/pick/${storeLocation}`);
+          }}
+          icon={
+            <CardsIcon
+              width={20}
+              height={20}
+              className={cn('h-5 w-5 shrink-0 align-middle')}
+              style={{ display: 'inline-block' }}
+            />
+          }
         />
         <Button
           label={guideLabel}
-          onClick={() => { navigate('/guide'); }}
-          icon={<BookIcon />}
+          onAction={() => {
+            navigate('/guide');
+          }}
+          icon={<BookIcon fontSize="small" />}
         />
         <Button
           label={logoutLabel}
-          onClick={() => { setLogout(true); }}
-          icon={<PersonIcon />}
+          onAction={() => {
+            setLogout(true);
+          }}
+          icon={<PersonIcon fontSize="small" />}
         />
       </div>
     </div>

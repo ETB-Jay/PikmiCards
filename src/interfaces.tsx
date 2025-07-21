@@ -1,43 +1,35 @@
 // ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────────
-import { MouseEventHandler, Ref } from 'react';
+import { ReactNode, Ref, ChangeEvent, MouseEvent } from 'react';
 
-/**
- * @description ChildrenAndClassProps are props for components with children and optional classes.
- */
+/** ChildrenAndClassProps are props for components with children and optional classes. */
 interface ChildrenAndClassProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }
 
-/**
- * @description InputProps are props for input components.
- */
+/** InputProps are props for input components. */
 interface InputProps {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
   type: string;
   value: string;
-  onChange: (ev: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (ev: ChangeEvent<HTMLInputElement>) => void;
   err: string;
   autoComplete: string;
 }
 
-/**
- * @description ButtonProps are props for button components.
- */
+/** ButtonProps are props for button components. */
 interface ButtonProps {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
-  onClick: MouseEventHandler;
+  onAction: (ev?: MouseEvent<HTMLButtonElement>) => void;
   className?: string;
   ref?: Ref<HTMLButtonElement>;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
 }
 
-/**
- * @description PopupProps are props for popup components.
- */
+/** PopupProps are props for popup components. */
 interface PopupProps {
   label: string;
   current: string;

@@ -7,6 +7,14 @@
 /* =========================
    Scrollbar Styling
    ========================= */
+html,
+body {
+  overflow-x: hidden;
+  /* Custom scrollbar styles */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -29,11 +37,6 @@
   background: transparent;
 }
 
-html,
-body {
-  overflow: hidden;
-}
-
 .BFont {
   font-family: 'Syne Mono', monospace;
 }
@@ -43,6 +46,7 @@ body {
     'Rubik',
     sans serif;
   letter-spacing: 0.02em;
+  background: var(--color-east-bay-950);
 }
 
 /* =========================

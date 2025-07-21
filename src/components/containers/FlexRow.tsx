@@ -1,0 +1,23 @@
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
+import { memo, ReactElement } from 'react';
+
+import { cn } from '../../context/functions';
+import { ChildrenAndClassProps } from '../../interfaces';
+
+// ─ Constants ────────────────────────────────────────────────────────────────────────────────────
+const BASE_FLEX_ROW_CLASSES = 'flex w-full flex-row flex-wrap items-center gap-2';
+
+/**
+ * FlexRow provides a flex row with full width and optional classes.
+ * @param children - The child components to render
+ * @param className - Additional CSS classes
+ */
+const FlexRow = memo(
+  ({ children, className = '' }: ChildrenAndClassProps): ReactElement => (
+    <div className={cn(className, BASE_FLEX_ROW_CLASSES)}>{children}</div>
+  )
+);
+FlexRow.displayName = 'FlexRow';
+
+// ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
+export default FlexRow;

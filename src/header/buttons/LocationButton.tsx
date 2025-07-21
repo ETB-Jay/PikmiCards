@@ -1,33 +1,27 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import { useState, useRef, memo } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
-import { Button } from '../../components/formComponents';
-import { useLocation } from '../../context/useContext';
-import { cn } from '../../context/functions';
+import { useState, useRef, memo, ReactElement } from 'react';
 
 import DetermineLocation from './DetermineLocation';
+import { Button } from '../../components';
+import { cn } from '../../context/functions';
+import { useStoreLocation } from '../../context/useContext';
 
 /** @description LocationButton displays a button for the current location and opens a dropdown to change it. */
-const LocationButton = memo((): React.ReactElement => {
-  const { location } = useLocation();
+const LocationButton = memo((): ReactElement => {
+  const { storeLocation } = useStoreLocation();
   const [locationPrompt, setLocationPrompt] = useState<boolean>(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <div className={cn("relative")}>
+    <div className={cn('relative')}>
       <Button
         ref={buttonRef}
-        onClick={() => setLocationPrompt((prev) => !prev)}
-        label={location}
-        icon={<KeyboardArrowDownIcon />}
+        onAction={() => setLocationPrompt((prev) => !prev)}
+        label={storeLocation}
+        icon={<KeyboardArrowDownIcon fontSize="small" />}
       />
-      {locationPrompt && (
-        <DetermineLocation
-          prompt={setLocationPrompt}
-          buttonRef={buttonRef}
-        />
-      )}
+      {locationPrompt && <DetermineLocation prompt={setLocationPrompt} buttonRef={buttonRef} />}
     </div>
   );
 });

@@ -1,32 +1,29 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import { memo, useEffect, useRef } from 'react';
+import { memo, ReactElement, RefObject, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useLocation } from '../../context/useContext';
-import { PopupOption } from '../../components/formComponents';
-import { Location } from '../../types';
+import { PopupOption } from '../../components';
 import { cn } from '../../context/functions';
+import { useStoreLocation } from '../../context/useContext';
+import { StoreLocations } from '../../types';
 
-
+// ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────
 interface DetermineLocationProps {
   prompt: (show: boolean) => void;
-  buttonRef: React.RefObject<HTMLButtonElement>;
+  buttonRef: RefObject<HTMLButtonElement>;
 }
 
 /**
  * DetermineLocation renders a dropdown for selecting a location.
  * @param prompt - Function to toggle the prompt visibility.
  */
-const DetermineLocation = memo(({
-  prompt,
-  buttonRef,
-}: DetermineLocationProps): React.ReactElement => {
-  const { location, setLocation } = useLocation();
+const DetermineLocation = memo(({ prompt, buttonRef }: DetermineLocationProps): ReactElement => {
+  const { storeLocation, setStoreLocation } = useStoreLocation();
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const handleLocationSelect = (newLocation: string) => {
-    setLocation(newLocation as Location);
+  const handleLocationSelect = (newLocation: StoreLocations) => {
+    setStoreLocation(newLocation);
     navigate(`/pick/${newLocation}`);
     prompt(false);
   };
@@ -52,10 +49,12 @@ const DetermineLocation = memo(({
   return (
     <div
       ref={ref}
-      className={cn("absolute flex flex-col py-1 text-sm font-semibold rounded shadow-2xl bg-green-smoke-200 top-10 mt-1 z-100 w-fit border-1")}
+      className={cn(
+        'bg-green-smoke-200 absolute z-100 mt-1 flex w-fit flex-col rounded border-1 py-1 text-sm font-semibold shadow-2xl'
+      )}
     >
-      <PopupOption label="Oakville" current={location} onSelect={handleLocationSelect} />
-      <PopupOption label="Newmarket" current={location} onSelect={handleLocationSelect} />
+      <PopupOption label="Oakville" current={storeLocation} onSelect={handleLocationSelect} />
+      <PopupOption label="Newmarket" current={storeLocation} onSelect={handleLocationSelect} />
     </div>
   );
 });

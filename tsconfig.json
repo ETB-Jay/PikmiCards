@@ -19,7 +19,8 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["vite/client", "vitest", "jest"]
+    "types": ["vite/client", "vitest", "jest"],
+    "baseUrl": "./",
   },
   "include": ["src", "api", "vitest.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

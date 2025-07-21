@@ -1,23 +1,27 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { useState, ChangeEvent, useEffect } from 'react';
-import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
 import LoginIcon from '@mui/icons-material/Login';
+import PersonIcon from '@mui/icons-material/Person';
+import { useState, ChangeEvent, ReactElement, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { MainContainer, FlexColCenter, ErrorBox } from '../components/containers';
-import { useAuth } from '../context/useContext';
-import { InputField, Button } from '../components/formComponents';
+import { InputField, Button, FlexColCenter, ErrorBox, Title } from '../components';
+import BasicContainer from '../components/containers/BasicContainer';
+import PikmicardBannerIcon from '../components/icons/PikmicardBannerIcon';
 import { cn } from '../context/functions';
+import { useAuth } from '../context/useContext';
 import { User } from '../types';
 
+// ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const LOGIN_TITLE = 'Login';
 const LOGIN_BUTTON_TEXT = 'Sign In';
 
 /**
- * @description Login page component for user authentication.
+ * Login page component for user authentication.
+ * Provides email and password input fields with form validation and error handling.
+ * @returns The login page component
  */
-function Login(): React.ReactElement {
+function Login(): ReactElement {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<{
@@ -27,59 +31,56 @@ function Login(): React.ReactElement {
   }>({});
   const { handleLogin } = useAuth();
   const navigate = useNavigate();
+  const employee: User = { email, password };
 
-  const employee: User = {
-    email,
-    password
-  };
-  
   return (
-    <MainContainer>
-      <FlexColCenter className={cn("max-w-xl animate-fade-in gap-6")}>
-        <img
-          src="/pikmicard.png"
-          alt=""
-          className={cn("relative top-0 z-20 w-auto h-24 drop-shadow-2xl")}
-        />
-        <FlexColCenter className='h-fit'>
-          <div className='absolute inset-0 z-0 shadow-[0_0_30px_4px] shadow-green-smoke-600 hover:shadow-[0_0_40px_2px] transition-all animate-pulse rounded-xl' />
-          <form
-            onSubmit={(ev) => {handleLogin(ev, employee, setError, navigate);}}
-            className={cn("relative z-10 flex flex-col items-center w-full gap-6 p-8 border bg-green-smoke-400/50 ring-green-smoke-600 border-green-smoke-300 rounded-xl ring-2")}
-          >
-            <h1 className={cn("mb-2 text-3xl font-extrabold tracking-wide text-center text-east-bay-200 drop-shadow")}>
-              {LOGIN_TITLE}
-            </h1>
-            <InputField
-              label="Email"
-              type="text"
-              value={email}
-              onChange={(input: ChangeEvent<HTMLInputElement>) => { setEmail(input.target.value); }}
-              icon={<PersonIcon />}
-              err={error.email || ''}
-              autoComplete='email'
-            />
-            <InputField
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(input: ChangeEvent<HTMLInputElement>) => { setPassword(input.target.value); }}
-              icon={<KeyIcon />}
-              err={error.password || ''}
-              autoComplete='current-password'
-            />
-            {error.general && <ErrorBox>{error.general}</ErrorBox>}
-            <Button
-              label={LOGIN_BUTTON_TEXT}
-              icon={<LoginIcon />}
-              onClick={(ev) => {handleLogin(ev, employee, setError, navigate);}}
-              ref={null}
-              type='submit'
-            />
-          </form>
-        </FlexColCenter>
-      </FlexColCenter>
-    </MainContainer>
+    <FlexColCenter className={cn('animate-fade-in h-screen w-fit max-w-xl min-w-lg')}>
+      <form
+        onSubmit={(ev) => {
+          handleLogin(ev, employee, setError, navigate);
+        }}
+        className="group relative flex h-full w-full flex-col items-center justify-center gap-3"
+      >
+        <PikmicardBannerIcon className={cn('mb-4 h-auto w-3/5 drop-shadow-2xl')} />
+        <BasicContainer className="flex w-full flex-col rounded-lg p-5 shadow-2xl shadow-black/40 transition-all">
+          <Title text={LOGIN_TITLE} />
+          <InputField
+            label="Email"
+            type="text"
+            value={email}
+            onChange={(input: ChangeEvent<HTMLInputElement>) => {
+              setEmail(input.target.value);
+            }}
+            icon={<PersonIcon />}
+            err={error.email || ''}
+            autoComplete="email"
+          />
+          <InputField
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(input: ChangeEvent<HTMLInputElement>) => {
+              setPassword(input.target.value);
+            }}
+            icon={<KeyIcon />}
+            err={error.password || ''}
+            autoComplete="current-password"
+          />
+          {error.general && <ErrorBox text={error.general} />}
+          <Button
+            label={LOGIN_BUTTON_TEXT}
+            icon={<LoginIcon />}
+            onAction={(ev?: MouseEvent<HTMLButtonElement>) => {
+              if (ev) {
+                handleLogin(ev, employee, setError, navigate);
+              }
+            }}
+            ref={null}
+            type="submit"
+          />
+        </BasicContainer>
+      </form>
+    </FlexColCenter>
   );
 }
 

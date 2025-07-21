@@ -1,5 +1,3 @@
-import { shopifyApi, LATEST_API_VERSION, Session } from '@shopify/shopify-api';
-
 // Utility function to fetch orders from Shopify
 async function getOrders(client) {
   let orders = [];
@@ -18,6 +16,11 @@ async function getOrders(client) {
           cursor
           node {
             id
+            name
+            email
+            phone
+            requiresShipping
+            displayFinancialStatus
             currentSubtotalLineItemsQuantity
             customer {displayName}
             shippingLines(first: 1) {edges {node {title}}}
@@ -118,6 +121,11 @@ async function getOrders(client) {
                 deliveryMethod: order.shippingLines?.edges?.[0]?.node?.title,
                 fulfillmentLocation: locationName,
                 items,
+                email: order.email || "",
+                phone: order.phone || "",
+                requiresShipping: order.requiresShipping,
+                orderNumber: order.name,
+                paid: order.displayFinancialStatus
               };
             }).filter(Boolean);
         }).filter((order) => order && order.items && order.items.length > 0);
@@ -126,7 +134,9 @@ async function getOrders(client) {
       hasNextPage = ordersData.pageInfo.hasNextPage;
       if (hasNextPage) { cursor = ordersData.edges[ordersData.edges.length - 1].cursor; }
     }
-    return orders;
+    return orders.filter((order, idx, arr) =>
+      arr.findIndex(otherOrder => otherOrder.orderID === order.orderID) === idx
+    );
   } catch (err) {
     throw new Error(err);
   }

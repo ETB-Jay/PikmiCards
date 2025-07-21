@@ -1,11 +1,12 @@
-import process from 'process';
-
-import express from 'express';
+import { LATEST_API_VERSION, Session, shopifyApi } from '@shopify/shopify-api';
+// eslint-disable-next-line import/no-unresolved
+import '@shopify/shopify-api/adapters/node';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import '@shopify/shopify-api/adapters/node';
-import { shopifyApi, LATEST_API_VERSION, Session } from '@shopify/shopify-api';
+import express from 'express';
+import process from 'process';
 
+// eslint-disable-next-line import-x/extensions, import/namespace
 import { getOrders, writeOrders } from './ordersUtils.js';
 
 dotenv.config();
@@ -86,7 +87,6 @@ app.post('/api/orders/write', async (req, res) => {
     const result = await writeOrders(client, orderID, value);
     res.status(200).json(result);
   } catch (err) {
-    console.error('Write order error:', err);
     res.status(500).json({ error: err.message });
   }
 }); 
