@@ -3,7 +3,7 @@ async function getOrders(client) {
   const orders = [];
   let hasNextPage = true;
   let cursor = null;
-  const seenOrderIDs = new Set();
+  const seenOrderKeys = new Set();
 
   const toTitleCase = (str) =>
     str.replace(/\w\S*/g, (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase());
@@ -100,8 +100,9 @@ async function getOrders(client) {
           }
           if (items.length === 0) { continue; }
 
-          // Deduplicate by orderID
-          if (!seenOrderIDs.has(order.id)) {
+          // Deduplicate by order number and location
+          const orderKey = `${order.name}-${locationName}`;
+          if (!seenOrderKeys.has(orderKey)) {
             orders.push({
               orderID: order.id,
               customerName: order.customer?.displayName
@@ -118,7 +119,7 @@ async function getOrders(client) {
               orderNumber: order.name,
               paid: order.displayFinancialStatus
             });
-            seenOrderIDs.add(order.id);
+            seenOrderKeys.add(orderKey);
           }
         }
       }

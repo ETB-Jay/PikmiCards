@@ -34,6 +34,9 @@ interface PopupProps {
   label: string;
   current: string;
   onSelect: (val: string) => void;
+  deletable?: boolean;
+  onDelete?: (val: string) => void;
+  deleteTitle?: string;
 }
 
 // ─ Exports ───────────────────────────────────────────────────────────────────────────────────────
