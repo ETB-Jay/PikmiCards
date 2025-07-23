@@ -12,7 +12,7 @@ interface InputProps {
   icon: ReactNode;
   label: string;
   type: string;
-  value: string;
+  value: string | number;
   onChange: (ev: ChangeEvent<HTMLInputElement>) => void;
   err: string;
   autoComplete: string;

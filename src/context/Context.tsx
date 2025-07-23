@@ -3,34 +3,51 @@ import { createContext } from 'react';
 
 import type {
   OrdersContextType,
-  OrderDisplayContextType,
   FullscreenContextType,
   ConfirmContextType,
   LogoutContextType,
   StoreLocationContextType,
   AuthContextType,
 } from './ContextInterfaces';
+import type { Order } from '../types';
+import type { Dispatch, SetStateAction } from 'react';
 
 /** OrdersContextType stores the fetched order data from Shopify */
 const OrdersContext = createContext<OrdersContextType>({
   orders: [],
   setOrders: () => {},
-  fetchOrders: async () => {},
+  fetchOrders: () => Promise.resolve([]),
   fromOrderDataToOrder: () => [],
 });
 OrdersContext.displayName = 'OrdersContext';
 
-/** OrderDisplayContextType manages the displayed orders */
+// OrderDisplayContext: only for orderDisplay and setOrderDisplay
+interface OrderDisplayContextType {
+  orderDisplay: Order[];
+  setOrderDisplay: Dispatch<SetStateAction<Order[]>>;
+}
 const OrderDisplayContext = createContext<OrderDisplayContextType>({
   orderDisplay: [],
   setOrderDisplay: () => {},
+});
+OrderDisplayContext.displayName = 'OrderDisplayContext';
+
+// OrderSelectionContext: for selection state and handlers
+interface OrderSelectionContextType {
+  selectedItems: Set<string>;
+  setSelectedItems: Dispatch<SetStateAction<Set<string>>>;
+  handleSelect: (itemID: string) => void;
+  handleClear: () => void;
+  handleConfirm: () => void;
+}
+const OrderSelectionContext = createContext<OrderSelectionContextType>({
   selectedItems: new Set(),
   setSelectedItems: () => {},
   handleSelect: () => {},
-  handleConfirm: () => {},
   handleClear: () => {},
+  handleConfirm: () => {},
 });
-OrderDisplayContext.displayName = 'OrderDisplayContext';
+OrderSelectionContext.displayName = 'OrderSelectionContext';
 
 /** FullscreenContextType manages the fullscreen mdoal state */
 const FullscreenContext = createContext<FullscreenContextType>({
@@ -74,6 +91,7 @@ AuthContext.displayName = 'AuthContext';
 export {
   OrdersContext,
   OrderDisplayContext,
+  OrderSelectionContext,
   FullscreenContext,
   ConfirmContext,
   LogoutContext,

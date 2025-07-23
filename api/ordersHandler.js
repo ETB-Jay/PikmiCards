@@ -1,6 +1,6 @@
+import { shopifyApi, LATEST_API_VERSION, Session } from '@shopify/shopify-api';
 import process from "process";
 
-import { shopifyApi, LATEST_API_VERSION, Session } from '@shopify/shopify-api';
 import { getOrders, writeOrders } from './ordersUtils';
 
 async function getOrdersHandler(req, res) {

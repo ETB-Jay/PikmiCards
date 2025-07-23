@@ -4,7 +4,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Button } from '../components';
+import Button from '../components/ui/Button';
 import { cn } from '../context/functions';
 import { useLogout, useStoreLocation } from '../context/useContext';
 import LocationButton from './buttons/LocationButton';
@@ -16,7 +16,7 @@ import PikmicardIcon from '../components/icons/PikmicardIcon';
  * Header displays the top navigation bar with sidebar, location, and refresh controls.
  * @param pick - Whether to show picking-related controls (location and refresh buttons)
  */
-const Header = memo(({ pick = false }: { pick: boolean }) => {
+const Header = memo(() => {
   const navigate = useNavigate();
   const { storeLocation } = useStoreLocation();
   const { setLogout } = useLogout();
@@ -32,12 +32,12 @@ const Header = memo(({ pick = false }: { pick: boolean }) => {
     >
       <div className={cn('flex flex-row items-center gap-4')}>
         <PikmicardIcon
-          width={40}
-          height={40}
+          width={10}
+          height={10}
           className={cn('h-10 w-10 shrink-0 rounded-xl bg-amber-50/15 shadow')}
           style={{ display: 'block' }}
         />
-        {pick && <LocationButton />}
+        <LocationButton />
         <RefreshButton />
       </div>
       <div className={cn('flex items-center gap-2')}>

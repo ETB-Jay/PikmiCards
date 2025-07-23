@@ -7,7 +7,7 @@ import { OrdersContext } from '../Context';
 const OrdersProvider = ({ children }: PropsWithChildren): ReactElement => {
   const [orders, setOrders] = useState<OrderData[]>([]);
 
-  const fetchOrders = useCallback(async (): Promise<void> => {
+  const fetchOrders = useCallback(async (): Promise<OrderData[]> => {
     try {
       setOrders([]);
       const response = await fetch('/api/orders');
@@ -17,6 +17,7 @@ const OrdersProvider = ({ children }: PropsWithChildren): ReactElement => {
       }
       const orders = JSON.parse(text);
       setOrders(orders);
+      return orders;
     } catch (err) {
       throw new Error((err as Error).message);
     }
@@ -50,6 +51,7 @@ const OrdersProvider = ({ children }: PropsWithChildren): ReactElement => {
             status: 'unPicked' as Status,
             set: item.itemSet ?? '',
             box: null,
+            itemBrand: item.itemBrand
           })),
         }))
         .filter(Boolean)

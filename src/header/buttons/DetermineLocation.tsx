@@ -2,7 +2,7 @@
 import { memo, ReactElement, RefObject, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { PopupOption } from '../../components';
+import PopupOption from '../../components/ui/PopupOption';
 import { cn } from '../../context/functions';
 import { useStoreLocation } from '../../context/useContext';
 import { StoreLocations } from '../../types';

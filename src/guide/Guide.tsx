@@ -1,9 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { ReactElement } from 'react';
+import { ReactElement, memo } from 'react';
 
 import { Title, Subtitle, Description, Text } from '../components';
 import { cn } from '../context/functions';
-import Header from '../header/Header';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const GUIDE_TEXT = {
@@ -92,34 +91,30 @@ const Section = ({
  * Displays sections for picklist, queue, and box grid usage instructions.
  * @returns The guide page component with navigation header and instruction sections
  */
-function Guide(): ReactElement {
-  return (
-    <>
-      <Header pick={false} />
-      <div className={cn('flex h-full w-full max-w-screen-lg flex-col gap-2')}>
-        <div className={cn('flex flex-col')}>
-          <Title text={GUIDE_TEXT.title} />
-          <Subtitle text={GUIDE_TEXT.subtitle} />
-        </div>
-        <Section
-          title={GUIDE_TEXT.keywords.picklist}
-          subtitleParts={GUIDE_TEXT.pick.picklist.subtitle}
-          features={GUIDE_TEXT.pick.picklist.features}
-        />
-        <Section
-          title={GUIDE_TEXT.keywords.queue}
-          subtitleParts={GUIDE_TEXT.pick.queue.subtitle}
-          features={GUIDE_TEXT.pick.queue.features}
-        />
-        <Section
-          title={GUIDE_TEXT.keywords.box}
-          subtitleParts={GUIDE_TEXT.pick.box.subtitle}
-          features={GUIDE_TEXT.pick.box.features}
-        />
-      </div>
-    </>
-  );
-}
+const Guide = memo((): ReactElement => (
+  <div className={cn('flex h-full w-full max-w-screen-lg flex-col gap-2')}>
+    <div className={cn('flex flex-col')}>
+      <Title text={GUIDE_TEXT.title} />
+      <Subtitle text={GUIDE_TEXT.subtitle} />
+    </div>
+    <Section
+      title={GUIDE_TEXT.keywords.picklist}
+      subtitleParts={GUIDE_TEXT.pick.picklist.subtitle}
+      features={GUIDE_TEXT.pick.picklist.features}
+    />
+    <Section
+      title={GUIDE_TEXT.keywords.queue}
+      subtitleParts={GUIDE_TEXT.pick.queue.subtitle}
+      features={GUIDE_TEXT.pick.queue.features}
+    />
+    <Section
+      title={GUIDE_TEXT.keywords.box}
+      subtitleParts={GUIDE_TEXT.pick.box.subtitle}
+      features={GUIDE_TEXT.pick.box.features}
+    />
+  </div>
+));
+Guide.displayName = "Guide"
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default Guide;

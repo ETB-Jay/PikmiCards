@@ -23,7 +23,7 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
     <path
       d="M277.707 255.57C199.441 81.3252 341.537 53.7675 359.374 70.6757"
       stroke="white"
-      stroke-width="5"
+      strokeWidth="5"
     />
     <path
       d="M303.891 328.346C305.85 320.678 306.886 316.365 311.969 309.423L315.201 312.577C315.201 312.577 324.895 284.192 342.667 270C349.13 292.077 372.328 304.475 421.835 326.769C423.976 316.416 427.067 311.738 434.76 304.692C434.76 318.884 476.767 339.384 479.999 361.461L391.137 393L307.122 393L303.891 386.692C302.629 382.997 301.921 380.926 300.66 377.231C299.326 372.061 298.839 368.796 299.044 361.461C299.676 354.294 300.03 350.607 300.66 345.692C301.433 340.714 301.983 337.495 303.891 328.346Z"
@@ -42,7 +42,7 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
       rx="322"
       transform="rotate(-12.0171 2.37258 323.358)"
       fill="white"
-      fill-opacity="0.2"
+      fillOpacity="0.2"
     />
     <rect
       x="2.37258"
@@ -52,7 +52,7 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
       rx="322"
       transform="rotate(-12.0171 2.37258 323.358)"
       stroke="white"
-      stroke-width="4"
+      strokeWidth="4"
     />
     <mask id="path-7-inside-1_23_2" fill="white">
       <rect
@@ -77,7 +77,7 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
       rx="5"
       transform="matrix(0.991411 -0.130785 0.121042 0.992647 544.09 625.962)"
       stroke="black"
-      stroke-width="20"
+      strokeWidth="20"
       mask="url(#path-7-inside-1_23_2)"
     />
     <mask id="path-8-inside-2_23_2" fill="white">
@@ -103,7 +103,7 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
       rx="5"
       transform="matrix(0.953769 0.300542 -0.279651 0.960102 658.253 593.736)"
       stroke="black"
-      stroke-width="20"
+      strokeWidth="20"
       mask="url(#path-8-inside-2_23_2)"
     />
     <mask id="path-9-inside-3_23_2" fill="white">
@@ -129,7 +129,7 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
       rx="5"
       transform="matrix(0.79311 0.609078 -0.600746 0.79944 763.177 612.026)"
       stroke="black"
-      stroke-width="20"
+      strokeWidth="20"
       mask="url(#path-9-inside-3_23_2)"
     />
     <g filter="url(#filter5_d_23_2)">
@@ -138,8 +138,8 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         cy="75"
         r="10"
         fill="white"
-        fill-opacity="0.97"
-        shape-rendering="crispEdges"
+        fillOpacity="0.97"
+        shapeRendering="crispEdges"
       />
     </g>
     <g filter="url(#filter6_d_23_2)">
@@ -178,7 +178,7 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         fill="white"
       />
       <g filter="url(#filter10_i_23_2)">
-        <ellipse cx="1454" cy="518" rx="19" ry="18" fill="#8E1414" fill-opacity="0.85" />
+        <ellipse cx="1454" cy="518" rx="19" ry="18" fill="#8E1414" fillOpacity="0.85" />
       </g>
       <ellipse
         cx="1484.41"
@@ -236,9 +236,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="88.6593"
         height="88.0161"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
         <feColorMatrix
           in="SourceAlpha"
@@ -265,9 +265,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="195.426"
         height="269.496"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
         <feColorMatrix
           in="SourceAlpha"
@@ -288,9 +288,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="235.546"
         height="288.988"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
         <feColorMatrix
           in="SourceAlpha"
@@ -311,9 +311,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="275.18"
         height="292.539"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
         <feColorMatrix
           in="SourceAlpha"
@@ -340,9 +340,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="148.6"
         height="148.6"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix
           in="SourceAlpha"
           type="matrix"
@@ -369,9 +369,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="320"
         height="165"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix
           in="SourceAlpha"
           type="matrix"
@@ -392,9 +392,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="21.1178"
         height="27.5057"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
         <feColorMatrix
           in="SourceAlpha"
@@ -421,9 +421,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="2572.88"
         height="415.087"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix
           in="SourceAlpha"
           type="matrix"
@@ -444,9 +444,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="2564.08"
         height="365.2"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix
           in="SourceAlpha"
           type="matrix"
@@ -467,9 +467,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="38"
         height="36"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
         <feColorMatrix
           in="SourceAlpha"
@@ -496,9 +496,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="64.5132"
         height="66.4762"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix
           in="SourceAlpha"
           type="matrix"
@@ -530,9 +530,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="60.6948"
         height="59.5494"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
         <feColorMatrix
           in="SourceAlpha"
@@ -553,9 +553,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="61.8462"
         height="67.9354"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
         <feColorMatrix
           in="SourceAlpha"
@@ -576,9 +576,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="66.6541"
         height="59.5568"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix
           in="SourceAlpha"
           type="matrix"
@@ -610,9 +610,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="58.1831"
         height="50.1995"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix
           in="SourceAlpha"
           type="matrix"
@@ -644,9 +644,9 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
         width="50.0115"
         height="50.0115"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix
           in="SourceAlpha"
           type="matrix"

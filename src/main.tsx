@@ -27,7 +27,7 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: (
-          <MainContainer>
+          <MainContainer header={false}>
             <Login />
           </MainContainer>
         ),
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
         path: 'pick/:location',
         element: (
           <ProtectedRoute>
-            <MainContainer>
+            <MainContainer header >
               <Orders />
             </MainContainer>
           </ProtectedRoute>
@@ -46,7 +46,7 @@ const router = createBrowserRouter([
         path: 'guide',
         element: (
           <ProtectedRoute>
-            <MainContainer>
+            <MainContainer header>
               <Guide />
             </MainContainer>
           </ProtectedRoute>

@@ -5,7 +5,6 @@ import CardPicker from './CardPicker';
 import LoadingAnimation from './LoadingAnimation';
 import { ErrorBox } from '../components';
 import { useOrders, useOrderDisplay, useStoreLocation } from '../context/useContext';
-import Header from '../header/Header';
 
 /**
  * Orders renders the card picker and manages order fetching and display logic.
@@ -20,34 +19,30 @@ const Orders = memo((): ReactElement => {
   useEffect(() => {
     const loadOrders = async () => {
       try {
-        await fetchOrders();
+        const fetched = await fetchOrders();
+        setOrderDisplay([]);
+        if (fetched.length > 0) {
+          const filteredOrders = fromOrderDataToOrder(fetched, storeLocation);
+          setOrderDisplay(filteredOrders);
+        }
+        setError(undefined);
       } catch (err) {
         setError((err as Error).message);
       }
-    };
-    loadOrders();
-  }, [storeLocation, fetchOrders]);
-
-  useEffect(() => {
-    setOrderDisplay([]);
-    if (orders.length > 0) {
-      const filteredOrders = fromOrderDataToOrder(orders, storeLocation);
-      setOrderDisplay(filteredOrders);
     }
-    setError(undefined);
-  }, [orders, storeLocation, fromOrderDataToOrder]);
+    loadOrders();
+  }, [storeLocation, fromOrderDataToOrder])
 
   const pickDisplay =
-    orderDisplay.length === 0 && orders.length === 0 ? <LoadingAnimation /> : <CardPicker />;
+    orderDisplay.length === 0 || orders.length === 0 ? <LoadingAnimation /> : <CardPicker />;
 
   return (
-    <div className="relative h-screen w-full">
-      <Header pick={orderDisplay.length !== 0} />
+    <>
       {pickDisplay}
       {error && (
         <ErrorBox text={error} className="absolute right-1/2 bottom-20 z-10 w-fit translate-1/2" />
       )}
-    </div>
+    </>
   );
 });
 Orders.displayName = 'Orders';

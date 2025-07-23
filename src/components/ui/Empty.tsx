@@ -15,7 +15,7 @@ const Empty = memo(
         'flex h-full w-full flex-col items-center justify-center rounded-2xl bg-green-50/10 p-5 text-center text-lg'
       )}
     >
-      <OpenBoxIcon className="mx-auto mb-2 h-16 w-16 text-white" />
+      <OpenBoxIcon className="mx-auto mb-2 h-8 w-8 text-white" />
       <span className="BFont text-white">{text}</span>
     </div>
   )

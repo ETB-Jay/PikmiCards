@@ -9,6 +9,7 @@ import {
   AuthContext,
   StoreLocationContext,
   LogoutContext,
+  OrderSelectionContext,
 } from './Context';
 
 // ─ Custom Hooks ────────────────────────────────────────────────────────────────────────────────────
@@ -27,6 +28,15 @@ const useOrders = () => {
  */
 const useOrderDisplay = () => {
   const context = useContext(OrderDisplayContext);
+  return context;
+};
+
+/**
+ * @description useOrderSelection returns the OrderSelectionContext value.
+ * @throws Error if used outside OrderSelectionProvider.
+ */
+const useOrderSelection = () => {
+  const context = useContext(OrderSelectionContext);
   return context;
 };
 
@@ -80,6 +90,7 @@ export {
   useOrders,
   useFullscreen,
   useOrderDisplay,
+  useOrderSelection,
   useConfirm,
   useStoreLocation,
   useAuth,

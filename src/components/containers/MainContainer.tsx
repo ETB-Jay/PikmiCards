@@ -1,13 +1,21 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { memo, ReactElement } from 'react';
+import { memo, ReactElement, Suspense, lazy } from 'react';
 
 import { cn } from '../../context/functions';
+import Header from '../../header/Header';
 import { ChildrenAndClassProps } from '../../interfaces';
-import Background from '../ui/Background';
+
+// Lazy-load the animated background
+const LazyBackground = lazy(() => import('../ui/Background'));
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const BASE_MAIN_CONTAINER_CLASSES =
-  'relative flex h-full min-h-0 w-full flex-col items-center justify-center gap-3 px-5 select-none';
+  'relative flex h-full min-h-0 w-full flex-col items-center justify-center gap-3 select-none';
+
+//
+interface MainContainerProps extends ChildrenAndClassProps {
+  header: boolean;
+}
 
 /**
  * MainContainer wraps the app content in a scrollable container with a background.
@@ -15,16 +23,21 @@ const BASE_MAIN_CONTAINER_CLASSES =
  * @param className - Additional CSS classes
  */
 const MainContainer = memo(
-  ({ children, className }: ChildrenAndClassProps): ReactElement => (
+  ({ children, className, header }: MainContainerProps): ReactElement => (
     <>
-      <Background
-        particleColors={['#ffffff']}
-        particleCount={200}
-        particleSpread={20}
-        speed={0.01}
-        particleBaseSize={100}
-      />
-      <div className={cn(BASE_MAIN_CONTAINER_CLASSES, className)}>{children}</div>
+      <Suspense fallback={<div className="bg-east-bay-950 fixed inset-0 h-full w-full overflow-hidden" style={{ pointerEvents: 'none', zIndex: -1 }} />}>
+        <LazyBackground
+          particleColors={['#ffffff']}
+          particleCount={400}
+          particleSpread={20}
+          speed={0.01}
+          particleBaseSize={100}
+        />
+      </Suspense>
+      <div className={cn(BASE_MAIN_CONTAINER_CLASSES, className)}>
+        {header && <Header />}
+        {children}
+      </div>
     </>
   )
 );

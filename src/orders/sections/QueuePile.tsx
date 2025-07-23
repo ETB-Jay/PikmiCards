@@ -33,7 +33,7 @@ const QueuePile = (): ReactElement => {
     [items]
   );
 
-  return <FlexColCenter className={cn('h- h-full flex-1')}>{content}</FlexColCenter>;
+  return <FlexColCenter className={cn('h-full flex-1')}>{content}</FlexColCenter>;
 };
 
 QueuePile.displayName = 'QueuePile';

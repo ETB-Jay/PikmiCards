@@ -10,7 +10,7 @@ interface OrdersContextType {
   /** Updates the order state */
   setOrders: (order: OrderData[]) => void;
   /** Pulls data from the Shopify server backend */
-  fetchOrders: () => Promise<void>;
+  fetchOrders: () => Promise<OrderData[]>;
   /** Converts OrderData[] to Order[] for a given location */
   fromOrderDataToOrder: (order: OrderData[], storeLocation: StoreLocations) => Order[];
 }

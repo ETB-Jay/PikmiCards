@@ -3,6 +3,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import {
   KeyboardEvent,
+  memo,
   MouseEvent,
   ReactElement,
   SyntheticEvent,
@@ -12,7 +13,7 @@ import {
 
 import Tags from './Tags';
 import { findItemDataByID, cn } from '../../context/functions';
-import { useFullscreen, useOrderDisplay, useOrders } from '../../context/useContext';
+import { useFullscreen, useOrderSelection, useOrders } from '../../context/useContext';
 import { Item, ItemData } from '../../types';
 import BasicContainer from '../containers/BasicContainer';
 import ImageDisplay from '../ui/ImageDisplay';
@@ -23,7 +24,7 @@ interface OrderCardProps {
   largeDisplay: boolean;
   selectable: boolean;
   onImageClick?: (url: string) => void;
-  onCardClick?: (event: MouseEvent<HTMLDivElement>) => void;
+  imageLoading?: 'eager' | 'lazy';
 }
 
 /**
@@ -33,16 +34,16 @@ interface OrderCardProps {
  * @param selectable - Whether the card can be selected
  * @param onImageClick - Optional callback when image is clicked
  */
-const OrderCard = ({
+const OrderCard = memo(({
   item,
   largeDisplay,
   selectable,
   onImageClick,
-  onCardClick,
+  imageLoading = 'lazy'
 }: OrderCardProps): ReactElement | null => {
   const { openFullscreen } = useFullscreen();
   const { orders } = useOrders();
-  const { selectedItems, handleSelect } = useOrderDisplay();
+  const { selectedItems, handleSelect } = useOrderSelection();
 
   const isItem = (obj: any): obj is Item => 'status' in obj;
 
@@ -65,11 +66,11 @@ const OrderCard = ({
   const handleSelectionIconClick = useCallback(
     (ev: MouseEvent<HTMLDivElement>) => {
       ev.stopPropagation();
-      if (itemData) {
+      if (itemData && selectable) {
         handleSelect(itemData.itemID);
       }
     },
-    [itemData, handleSelect]
+    [itemData, handleSelect, selectable]
   );
 
   const handleSelectionIconKeyDown = useCallback(
@@ -83,9 +84,7 @@ const OrderCard = ({
   );
 
   const cardContent = useMemo(() => {
-    if (!itemData) {
-      return null;
-    }
+    if (!itemData) { return null; }
     return largeDisplay ? (
       (() => {
         const tags = <Tags item={itemData} />;
@@ -103,16 +102,18 @@ const OrderCard = ({
         <div className="absolute bottom-2 left-2 rounded-2xl bg-black/80 px-1.5 py-0.5 text-xs font-semibold text-white">
           {itemData.itemQuantity}
         </div>
-        <div
-          className="absolute top-2 right-2"
-          onClick={handleSelectionIconClick}
-          onKeyDown={handleSelectionIconKeyDown}
-          tabIndex={0}
-          role="button"
-          aria-label={selectionAriaLabel}
-        >
-          {selectionIcon}
-        </div>
+        {selectable && (
+          <div
+            className="absolute top-2 right-2"
+            onClick={handleSelectionIconClick}
+            onKeyDown={handleSelectionIconKeyDown}
+            tabIndex={0}
+            role="button"
+            aria-label={selectionAriaLabel}
+          >
+            {selectionIcon}
+          </div>
+        )}
       </>
     );
   }, [
@@ -122,6 +123,7 @@ const OrderCard = ({
     selectionAriaLabel,
     handleSelectionIconClick,
     handleSelectionIconKeyDown,
+    selectable,
   ]);
 
   const handleImageClick = useCallback(
@@ -143,28 +145,23 @@ const OrderCard = ({
   const handleCardClick = useCallback(
     (ev: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => {
       ev.stopPropagation();
-      if (!itemData) {
-        return;
-      }
-      if (onCardClick && ev.type === 'click') {
-        onCardClick(ev as MouseEvent<HTMLDivElement>);
-      } else if (selectable) {
+      if (!itemData) { return; }
+      if (selectable) {
         handleSelect(itemData.itemID);
-      } else {
-        handleImageClick();
+      } else if (onImageClick) {
+        onImageClick(itemData.imageUrl);
       }
     },
-    [selectable, handleSelect, itemData, handleImageClick, onCardClick]
+    [selectable, handleSelect, itemData, onImageClick]
   );
 
   const cardClass = cn(
-    'relative bg-green-smoke-800/60 hover:bg-green-smoke-800/80 active:bg-green-smoke-900/80 hover:scale-101 cursor-pointer flex flex-row gap-3 object-contain p-2 h-fit w-auto rounded-xl transition-all relative',
+    'relative flex flex-row gap-3 object-contain p-2 h-fit w-auto rounded-xl transition-all',
+    'bg-green-smoke-800/60 hover:bg-green-smoke-800/80 active:bg-green-smoke-900/80 hover:scale-101 cursor-pointer',
     selectable && selected && 'brightness-90 opacity-70 ring-2 ring-green-950'
   );
 
-  if (!itemData) {
-    return null;
-  }
+  if (!itemData) { return null; }
 
   return (
     <BasicContainer
@@ -187,11 +184,13 @@ const OrderCard = ({
           'inline-block h-auto max-h-22 w-auto min-w-14 cursor-pointer object-contain transition-all hover:opacity-80 hover:brightness-40'
         )}
         onClick={handleImageClick}
+        loading={imageLoading}
       />
       {cardContent}
     </BasicContainer>
   );
-};
+});
+OrderCard.displayName = "OrderCard"
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default OrderCard;

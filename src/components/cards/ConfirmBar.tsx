@@ -3,9 +3,9 @@ import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import { ReactElement, memo } from 'react';
 
-import { Button } from '..';
 import { cn } from '../../context/functions';
-import { useOrderDisplay } from '../../context/useContext';
+import { useOrderSelection } from '../../context/useContext';
+import Button from '../ui/Button';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const CONFIRM_BUTTON_TEXT = 'Confirm';
@@ -19,7 +19,7 @@ const CLEAR_BUTTON_TEXT = 'Clear Items';
  * @returns The confirmation bar React element, or null if nothing is selected
  */
 const ConfirmBar = memo((): ReactElement | null => {
-  const { handleConfirm, handleClear, selectedItems } = useOrderDisplay();
+  const { handleConfirm, handleClear, selectedItems } = useOrderSelection();
   if (selectedItems.size === 0) {
     return null;
   }

@@ -1,21 +1,19 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import { useState, useCallback, useMemo, PropsWithChildren, ReactElement } from 'react';
 
-import { Order, ItemID, Status } from '../../types';
-import { OrderDisplayContext } from '../Context';
+import { OrderDisplayContext, OrderSelectionContext } from '../Context';
+
+import type { Order, Status } from '../../types';
 
 const OrderDisplayProvider = ({ children }: PropsWithChildren): ReactElement => {
   const [orderDisplay, setOrderDisplay] = useState<Order[]>([]);
-  const [selectedItems, setSelectedItems] = useState<Set<ItemID>>(new Set());
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
-  const handleSelect = useCallback((itemID: ItemID) => {
+  const handleSelect = useCallback((itemID: string) => {
     setSelectedItems((prev) => {
       const newSet = new Set(prev);
-      if (newSet.has(itemID)) {
-        newSet.delete(itemID);
-      } else {
-        newSet.add(itemID);
-      }
+      if (newSet.has(itemID)) { newSet.delete(itemID); }
+      else { newSet.add(itemID); }
       return newSet;
     });
   }, []);
@@ -25,39 +23,48 @@ const OrderDisplayProvider = ({ children }: PropsWithChildren): ReactElement => 
   }, []);
 
   const handleConfirm = useCallback(() => {
+    if (selectedItems.size === 0) { return; }
+
     const displayedOrderIDs = new Set(
       orderDisplay.filter((order) => order.box !== null).map((order) => order.orderID)
     );
 
-    const updatedOrderDisplay = orderDisplay.map((order) => ({
-      ...order,
-      items: order.items.map((item) =>
-        selectedItems.has(item.itemID)
-          ? {
-              ...item,
-              status: (displayedOrderIDs.has(item.orderID) ? 'inBox' : 'queue') as Status,
-            }
-          : item
-      ),
-    }));
-    setOrderDisplay(updatedOrderDisplay);
+    let changed = false;
+    const updatedOrderDisplay = orderDisplay.map((order) => {
+      let orderChanged = false;
+      const newItems = order.items.map((item) => {
+        if (selectedItems.has(item.itemID)) {
+          const newStatus = displayedOrderIDs.has(order.orderID) ? 'inBox' : 'queue';
+          if (item.status !== newStatus) {
+            orderChanged = true;
+            changed = true;
+            return { ...item, status: newStatus };
+          }
+        }
+        return item;
+      });
+      if (orderChanged) {
+        return { ...order, items: newItems };
+      }
+      return order;
+    });
+
+    if (changed) {
+      setOrderDisplay(updatedOrderDisplay);
+    }
     setSelectedItems(new Set());
-  }, [orderDisplay, selectedItems]);
+  }, [orderDisplay, selectedItems, setOrderDisplay]);
 
-  const value = useMemo(
-    () => ({
-      orderDisplay,
-      setOrderDisplay,
-      selectedItems,
-      setSelectedItems,
-      handleSelect,
-      handleConfirm,
-      handleClear,
-    }),
-    [orderDisplay, selectedItems, handleSelect, handleConfirm, handleClear]
+  const orderDisplayValue = useMemo(() => ({ orderDisplay, setOrderDisplay }), [orderDisplay, setOrderDisplay]);
+  const orderSelectionValue = useMemo(() => ({ selectedItems, setSelectedItems, handleSelect, handleClear, handleConfirm }), [selectedItems, setSelectedItems, handleSelect, handleClear, handleConfirm]);
+
+  return (
+    <OrderDisplayContext.Provider value={orderDisplayValue}>
+      <OrderSelectionContext.Provider value={orderSelectionValue}>
+        {children}
+      </OrderSelectionContext.Provider>
+    </OrderDisplayContext.Provider>
   );
-
-  return <OrderDisplayContext.Provider value={value}>{children}</OrderDisplayContext.Provider>;
 };
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────

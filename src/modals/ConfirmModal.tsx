@@ -24,7 +24,6 @@ import { Order, ItemData, OrderData } from '../types';
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const UNRETRIEVED_TITLE = 'Unretrieved Items';
 const RETRIEVED_TITLE = 'Retrieved Items';
-const EMPTY_PREVIEW_TEXT = 'Click an item to preview';
 const EMPTY_PREVIEW_ALT = 'No preview selected';
 const EMPTY_BOX_TEXT = 'No unretrieved items';
 
@@ -140,7 +139,7 @@ DisplayItems.displayName = 'DisplayItems';
 const PreviewContent = memo(({ previewItem }: { previewItem: ItemData | null }) =>
   previewItem ? (
     <div className={cn('flex flex-col items-center gap-2')}>
-      <ImageDisplay imageUrl={previewItem.imageUrl} className={cn('h-full max-h-80 w-auto')} />
+      <ImageDisplay imageUrl={previewItem.imageUrl} className={cn('h-full max-h-80 w-auto')} mode='fullscreen' loading="eager" />
       <span className={cn('text-green-smoke-100 truncate text-sm font-medium whitespace-nowrap')}>
         {previewItem.itemName}
       </span>
@@ -154,20 +153,6 @@ const PreviewContent = memo(({ previewItem }: { previewItem: ItemData | null }) 
   )
 );
 PreviewContent.displayName = 'PreviewContent';
-
-/** EmptyImagePreview displays the empty preview image and message. */
-const EmptyImagePreview = memo(() => (
-  <div className={cn('flex h-full w-full flex-col items-center justify-center gap-2')}>
-    <img
-      src="/EmptyImage.svg"
-      alt={EMPTY_PREVIEW_ALT}
-      className={cn('h-full max-h-30 w-full max-w-xs object-contain opacity-60')}
-      style={{ display: 'block', margin: '0 auto' }}
-    />
-    <div className={cn('text-gray-400')}>{EMPTY_PREVIEW_TEXT}</div>
-  </div>
-));
-EmptyImagePreview.displayName = 'EmptyImagePreview';
 
 /** ConfirmModal displays a modal for confirming order completion and viewing item details. */
 const ConfirmModal = memo(({ order }: { order: Order }) => {

@@ -1,32 +1,50 @@
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { memo, ReactEventHandler, SyntheticEvent } from 'react';
+import { memo, SyntheticEvent } from 'react';
 
-import { cn } from '../../context/functions';
-
-// ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────
 interface ImageDisplayProps {
   imageUrl: string;
   alt?: string;
-  onClick?: ReactEventHandler;
-  onError?: ReactEventHandler;
+  onClick?: (ev: SyntheticEvent) => void;
   className?: string;
+  widths?: number[];
+  loading?: 'lazy' | 'eager';
+  mode?: 'thumbnail' | 'fullscreen'; 
 }
 
 /**
- * Displays an image with optional click and error handlers.
- * @param imageUrl - The URL of the image to display
- * @param alt - Alternative text for the image
- * @param onClick - Optional click handler function
- * @param onError - Optional error handler function
- * @param className - Additional CSS classes
+ * Responsive image for thumbnail or fullscreen display.
  */
 const ImageDisplay = memo(
-  ({ imageUrl, alt = 'image button', onClick, onError, className = '' }: ImageDisplayProps) => {
+  ({
+    imageUrl,
+    alt = 'image',
+    onClick,
+    className = '',
+    widths = [80, 120, 256, 800, 1200],
+    loading = 'lazy',
+    mode = 'thumbnail',
+  }: ImageDisplayProps) => {
     const handleClick = (ev: SyntheticEvent) => {
-      if (onClick) {
-        onClick(ev);
-      }
+      onClick?.(ev);
     };
+
+    const separator = imageUrl.includes('?') ? '&' : '?';
+
+    const srcSet = widths
+      .map((ww) => `${imageUrl}${separator}width=${ww}&format=webp ${ww}w`)
+      .join(', ');
+
+    const sizes =
+      mode === 'fullscreen'
+        ? '100vw'
+        : '80px';
+
+    const fetchPriority = mode === 'thumbnail' ? 'high' : 'auto';
+
+    const defaultWidth =
+      mode === 'fullscreen'
+        ? widths[widths.length - 1]
+        : widths.find((ww) => ww >= 80) || widths[0];
+
     return (
       <div
         tabIndex={0}
@@ -38,14 +56,20 @@ const ImageDisplay = memo(
             handleClick(ev);
           }
         }}
-        onError={onError}
       >
-        <img className={cn(className)} src={imageUrl} alt={alt} loading="lazy" />
+        <img
+          className={className}
+          src={`${imageUrl}${separator}width=${defaultWidth}&format=webp`}
+          srcSet={srcSet}
+          sizes={sizes}
+          alt={alt}
+          loading={loading}
+          fetchPriority={fetchPriority}
+        />
       </div>
     );
   }
 );
-
 ImageDisplay.displayName = 'ImageDisplay';
 
 // ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────

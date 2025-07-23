@@ -45,6 +45,7 @@ interface ItemData {
   itemName: string;
   itemQuantity: number;
   itemLocation: StoreLocations;
+  itemBrand: string | null;
   itemSet: string | null;
   itemRarity: string | null;
   itemPrinting: string | null;
@@ -76,6 +77,7 @@ interface Order {
 interface Item {
   itemID: ItemID;
   orderID: OrderID;
+  itemBrand: string | null,
   status: Status;
   set: string;
   box: number | null;
@@ -99,6 +101,19 @@ interface User {
 interface ConfirmResponse {
   employee: string;
   location: StoreLocations;
+}
+
+/**
+ * Filters is the list of Filters
+ * @property box - The box number. null if nothing
+ * @property game - 
+ * @property set - 
+ * @property rarity - 
+ */
+interface Filters {
+  box: number;
+  game: string;
+  set: string;
 }
 
 // ─ Variables ────────────────────────────────────────────────────────────────────────────────────
@@ -137,4 +152,5 @@ export type {
   StoreLocations,
   Status,
   User,
+  Filters
 };
