@@ -15,7 +15,6 @@ export { default as BasicContainer } from './containers/BasicContainer';
 export { default as GridContainer } from './containers/GridContainer';
 
 // Text
-export { default as Description } from './text/Description';
 export { default as SectionTitle } from './text/SectionTitle';
 export { default as Subtitle } from './text/Subtitle';
 export { default as Text } from './text/Text';
@@ -40,6 +39,7 @@ export { default as CardsIcon } from './icons/CardsIcon';
 export { default as ClosedBoxIcon } from './icons/ClosedBoxIcon';
 export { default as EmptyImage } from './icons/EmptyImage';
 export { default as OpenBoxIcon } from './icons/OpenBoxIcon';
+export { default as PikmicardGuideBannerIcon } from './icons/PikmicardGuideBannerIcon';
 export { default as PikmicardBannerIcon } from './icons/PikmicardBannerIcon';
 export { default as PikmicardIcon } from './icons/PikmicardIcon';
 export { default as ShoppingCartIcon } from './icons/ShoppingCartIcon';

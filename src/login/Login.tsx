@@ -41,7 +41,7 @@ function Login(): ReactElement {
         }}
         className="group relative flex h-full w-full flex-col items-center justify-center gap-3"
       >
-        <PikmicardBannerIcon className={cn('mb-4 h-auto w-3/5 drop-shadow-2xl')} />
+        <PikmicardBannerIcon className={cn('mb-4 h-auto w-3/5 drop-shadow-2xl hover:scale-110 transition-transform')} />
         <BasicContainer className="flex w-full flex-col rounded-lg p-5 shadow-2xl shadow-black/40 transition-all">
           <Title text={LOGIN_TITLE} />
           <InputField

@@ -23,7 +23,6 @@ const NORMAL_INPUT_CLASSES = 'bg-white/80 border-green-smoke-200 focus:ring-gree
  * @param type - Input type (text, password, number, etc.)
  * @param value - Current input value
  * @param onChange - Change handler function
- * @param autoComplete - Autocomplete attribute value
  * @param err - Error message to display
  * @param min - Minimum value for numeric inputs
  * @param max - Maximum value for numeric inputs
@@ -35,7 +34,6 @@ const InputField = memo(
     type,
     value,
     onChange,
-    autoComplete,
     err,
     min,
     max,
@@ -60,7 +58,7 @@ const InputField = memo(
           value={value}
           aria-label={label.replace(/\s+/g, '-').toLowerCase()}
           onChange={onChange}
-          autoComplete={autoComplete}
+          autoComplete='off'
           min={min}
           max={max}
         />

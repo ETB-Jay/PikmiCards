@@ -8,7 +8,7 @@ import { cn } from '../../context/functions';
 import FlexRow from '../containers/FlexRow';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
-const NEW_STRING = 'Add New Customer';
+const NEW_STRING = 'Add New Employee';
 
 // ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────
 interface SelectEmployeeProps {
@@ -118,7 +118,7 @@ const SelectEmployee = ({
   );
 
   const Dropdown = (
-    <div className="bg-green-smoke-900/90 border-green-smoke-600/20 absolute top-full left-0 z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-xl border shadow-lg">
+    <div className={cn("bg-green-smoke-900/90 border-green-smoke-600/20 absolute left-0 z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-xl border shadow-lg", employeeList.length > 2 ? 'bottom-full': 'top-full')}>
       {employeeList.map((employee: string, idx: number) => (
         <div
           key={employee}

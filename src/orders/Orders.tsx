@@ -1,5 +1,5 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { useEffect, memo, useState, ReactElement } from 'react';
+import { useEffect, memo, useState, ReactElement, useCallback, useMemo } from 'react';
 
 import CardPicker from './CardPicker';
 import LoadingAnimation from './LoadingAnimation';
@@ -16,25 +16,31 @@ const Orders = memo((): ReactElement => {
   const { storeLocation } = useStoreLocation();
   const [error, setError] = useState<string>();
 
-  useEffect(() => {
-    const loadOrders = async () => {
-      try {
-        const fetched = await fetchOrders();
-        setOrderDisplay([]);
-        if (fetched.length > 0) {
-          const filteredOrders = fromOrderDataToOrder(fetched, storeLocation);
-          setOrderDisplay(filteredOrders);
-        }
-        setError(undefined);
-      } catch (err) {
-        setError((err as Error).message);
+  const loadOrders = useCallback(async () => {
+    try {
+      const fetched = await fetchOrders();
+      setOrderDisplay([]);
+      if (fetched.length > 0) {
+        const filteredOrders = fromOrderDataToOrder(fetched, storeLocation);
+        setOrderDisplay(filteredOrders);
       }
+      setError(undefined);
+    } catch (err) {
+      setError((err as Error).message);
     }
-    loadOrders();
-  }, [storeLocation, fromOrderDataToOrder])
+  }, [fetchOrders, fromOrderDataToOrder, storeLocation, setOrderDisplay]);
 
-  const pickDisplay =
-    orderDisplay.length === 0 || orders.length === 0 ? <LoadingAnimation /> : <CardPicker />;
+  useEffect(() => {
+    loadOrders();
+  }, [loadOrders]);
+  
+  useEffect(() => {
+    setError(undefined);
+  }, [orders, orderDisplay, storeLocation]);
+
+  const pickDisplay = useMemo(() => {
+    return orderDisplay.length === 0 || orders.length === 0 ? <LoadingAnimation /> : <CardPicker />;
+  }, [orderDisplay.length, orders.length]);
 
   return (
     <>

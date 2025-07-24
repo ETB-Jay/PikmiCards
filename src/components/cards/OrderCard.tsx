@@ -13,7 +13,7 @@ import {
 
 import Tags from './Tags';
 import { findItemDataByID, cn } from '../../context/functions';
-import { useFullscreen, useOrderSelection, useOrders } from '../../context/useContext';
+import { useFullscreen, useOrderDisplay, useOrderSelection, useOrders } from '../../context/useContext';
 import { Item, ItemData } from '../../types';
 import BasicContainer from '../containers/BasicContainer';
 import ImageDisplay from '../ui/ImageDisplay';
@@ -43,6 +43,7 @@ const OrderCard = memo(({
 }: OrderCardProps): ReactElement | null => {
   const { openFullscreen } = useFullscreen();
   const { orders } = useOrders();
+  const { orderDisplay } = useOrderDisplay();
   const { selectedItems, handleSelect } = useOrderSelection();
 
   const isItem = (obj: any): obj is Item => 'status' in obj;
@@ -62,6 +63,12 @@ const OrderCard = memo(({
       <CheckBoxOutlineBlankIcon className="text-white" />
     );
   }
+
+  const inBoxCardClass = useMemo(() => {
+    const itemOrder = orderDisplay.find(display => display.orderID === item.orderID);
+    if (!itemOrder || itemOrder.box === null) { return '' };
+    return 'bg-green-smoke-900'
+  }, [orderDisplay, item.orderID]);
 
   const handleSelectionIconClick = useCallback(
     (ev: MouseEvent<HTMLDivElement>) => {
@@ -85,19 +92,21 @@ const OrderCard = memo(({
 
   const cardContent = useMemo(() => {
     if (!itemData) { return null; }
-    return largeDisplay ? (
-      (() => {
-        const tags = <Tags item={itemData} />;
-        return (
-          <div className={cn('flex min-w-0 flex-1 flex-col')}>
-            <span className={cn('text-silver-100 md:text-md mb-2 text-sm font-semibold text-wrap')}>
-              {itemData.itemName}
-            </span>
-            <div className={cn('flex min-w-0 flex-row flex-wrap gap-2 sm:gap-3')}>{tags}</div>
+    
+    if (largeDisplay) {
+      return (
+        <div className={cn('flex min-w-0 flex-1 flex-col')}>
+          <span className={cn('text-silver-100 md:text-md mb-2 text-sm font-semibold text-wrap')}>
+            {itemData.itemName}
+          </span>
+          <div className={cn('flex min-w-0 flex-row flex-wrap gap-2 sm:gap-3')}>
+            <Tags item={itemData} />
           </div>
-        );
-      })()
-    ) : (
+        </div>
+      );
+    }
+    
+    return (
       <>
         <div className="absolute bottom-2 left-2 rounded-2xl bg-black/80 px-1.5 py-0.5 text-xs font-semibold text-white">
           {itemData.itemQuantity}
@@ -155,18 +164,19 @@ const OrderCard = memo(({
     [selectable, handleSelect, itemData, onImageClick]
   );
 
-  const cardClass = cn(
+  const cardClass = useMemo(() => cn(
     'relative flex flex-row gap-3 object-contain p-2 h-fit w-auto rounded-xl transition-all',
     'bg-green-smoke-800/60 hover:bg-green-smoke-800/80 active:bg-green-smoke-900/80 hover:scale-101 cursor-pointer',
-    selectable && selected && 'brightness-90 opacity-70 ring-2 ring-green-950'
-  );
+    selectable && selected && 'brightness-90 opacity-70 ring-2 ring-green-950',
+    inBoxCardClass
+  ), [selectable, selected, inBoxCardClass]);
 
   if (!itemData) { return null; }
 
   return (
     <BasicContainer
       clickable={selectable}
-      className={cn(cardClass)}
+      className={cn(cardClass, )}
       onClick={handleCardClick}
       tabIndex={0}
       role="button"

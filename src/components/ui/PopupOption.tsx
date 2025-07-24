@@ -1,6 +1,6 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
 import ClearIcon from '@mui/icons-material/Clear';
-import { memo, ReactNode } from 'react';
+import { memo, ReactNode, MouseEvent } from 'react';
 
 import { cn } from '../../context/functions';
 import { PopupProps } from '../../interfaces';
@@ -17,7 +17,7 @@ import { PopupProps } from '../../interfaces';
 const PopupOption = memo(({ label, current, onSelect, deletable = false, onDelete, deleteTitle }: PopupProps): ReactNode => {
   const handleClick = () => label !== current && onSelect(label);
 
-  const handleDelete = (event: React.MouseEvent) => {
+  const handleDelete = (event: MouseEvent) => {
     event.stopPropagation();
     onDelete?.(label);
   };

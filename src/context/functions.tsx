@@ -42,6 +42,7 @@ const getOrderKeys = (orders: OrderData[]): Order[] =>
     box: null,
     items: order.items.map((item) => ({
       itemID: item.itemID,
+      itemBrand: item.itemBrand,
       orderID: order.orderID,
       set: item.itemSet ?? '',
       status: 'unPicked' as Status,

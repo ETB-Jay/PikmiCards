@@ -1,17 +1,18 @@
 import { shopifyApi, LATEST_API_VERSION, Session } from '@shopify/shopify-api';
 import process from "process";
 
-import { getOrders, writeOrders } from './ordersUtils';
+// eslint-disable-next-line import-x/extensions, import/namespace
+import { getOrders, writeOrders } from './ordersUtils.js';
+
+const {
+  VITE_SHOPIFY_API_KEY,
+  VITE_SHOPIFY_API_SECRET,
+  VITE_SHOPIFY_STORE_DOMAIN,
+  VITE_SHOPIFY_ACCESS_TOKEN,
+} = process.env;
 
 async function getOrdersHandler(req, res) {
   try {
-    const {
-      VITE_SHOPIFY_API_KEY,
-      VITE_SHOPIFY_API_SECRET,
-      VITE_SHOPIFY_STORE_DOMAIN,
-      VITE_SHOPIFY_ACCESS_TOKEN,
-    } = process.env;
-
     if (!VITE_SHOPIFY_API_KEY || !VITE_SHOPIFY_API_SECRET || !VITE_SHOPIFY_STORE_DOMAIN || !VITE_SHOPIFY_ACCESS_TOKEN) {
       res.status(500).json({ error: 'Missing required Shopify environment variables.' });
       return;
@@ -53,13 +54,6 @@ async function writeOrdersHandler(req, res) {
     res.status(405).json({ error: 'Method not allowed' });
     return;
   }
-
-  const {
-    VITE_SHOPIFY_API_KEY,
-    VITE_SHOPIFY_API_SECRET,
-    VITE_SHOPIFY_STORE_DOMAIN,
-    VITE_SHOPIFY_ACCESS_TOKEN,
-  } = process.env;
 
   if (!VITE_SHOPIFY_API_KEY || !VITE_SHOPIFY_API_SECRET || !VITE_SHOPIFY_STORE_DOMAIN || !VITE_SHOPIFY_ACCESS_TOKEN) {
     res.status(500).json({ error: 'Missing required Shopify environment variables.' });

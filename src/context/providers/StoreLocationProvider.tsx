@@ -6,7 +6,7 @@ import { StoreLocationContext } from '../Context';
 
 const StoreLocationProvider = ({ children }: PropsWithChildren): ReactElement => {
   const [storeLocation, setStoreLocation] = useState<StoreLocations>(
-    () => (localStorage.getItem('storeLocation') as StoreLocations) || 'Oakville'
+    () => (localStorage.getItem('storeLocation') as StoreLocations) || 'ETB Oakville'
   );
 
   useEffect(() => {

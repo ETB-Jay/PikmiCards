@@ -9,7 +9,15 @@ import { cn } from '../../context/functions';
  */
 const Subtitle = memo(
   ({ text }: { text: string }): ReactElement => (
-    <h2 className={cn('mb-1 text-center text-2xl font-bold text-green-200')}>{text}</h2>
+    <h2
+      className={cn(
+      'mb-3 text-2xl font-semibold text-white',
+      'relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-24',
+      'after:bg-gradient-to-r after:from-blue-500 after:to-purple-600 after:rounded-full'
+    )}
+    >
+      {text}
+    </h2>
   )
 );
 Subtitle.displayName = 'Subtitle';

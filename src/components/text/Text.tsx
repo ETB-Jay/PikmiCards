@@ -4,7 +4,7 @@ import { memo, ReactElement } from 'react';
 import { cn } from '../../context/functions';
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
-const BASE_TEXT_CLASSES = 'mb-2 text-green-100';
+const BASE_TEXT_CLASSES = 'text-white text-md font-semibold';
 
 /**
  * Text renders a styled paragraph.

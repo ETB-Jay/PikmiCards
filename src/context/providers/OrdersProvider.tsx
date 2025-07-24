@@ -23,7 +23,7 @@ const OrdersProvider = ({ children }: PropsWithChildren): ReactElement => {
     }
   }, []);
 
-  const assignBoxes = (orders: Order[]): Order[] => {
+  const assignBoxes = useCallback((orders: Order[]): Order[] => {
     return orders.map((order, idx) => {
       const boxNum = idx < 24 ? idx + 1 : null;
       return {
@@ -35,7 +35,7 @@ const OrdersProvider = ({ children }: PropsWithChildren): ReactElement => {
         })),
       };
     });
-  };
+  }, []);
 
   const fromOrderDataToOrder = useCallback(
     (orders: OrderData[], location: StoreLocations): Order[] => {
@@ -58,7 +58,7 @@ const OrdersProvider = ({ children }: PropsWithChildren): ReactElement => {
         .filter((order) => order.items.length > 0);
       return assignBoxes(transformed);
     },
-    []
+    [assignBoxes]
   );
 
   const value = useMemo(
