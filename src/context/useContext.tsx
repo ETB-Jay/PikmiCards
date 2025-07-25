@@ -1,5 +1,5 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { useContext } from 'react';
+import { useContext } from "react";
 
 import {
   OrdersContext,
@@ -10,7 +10,7 @@ import {
   StoreLocationContext,
   LogoutContext,
   OrderSelectionContext,
-} from './Context';
+} from "./Context";
 
 // ─ Custom Hooks ────────────────────────────────────────────────────────────────────────────────────
 /**

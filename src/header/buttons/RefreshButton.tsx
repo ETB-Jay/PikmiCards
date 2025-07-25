@@ -1,9 +1,9 @@
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import RefreshIcon from '@mui/icons-material/Refresh';
-import { memo, ReactElement } from 'react';
+// ─ Imports ───────────────────────────────────────────────────────────────────────────────────────
+import RefreshIcon from "@mui/icons-material/Refresh";
+import { memo, ReactElement } from "react";
 
-import Button from '../../components/ui/Button';
-import { useOrders } from '../../context/useContext';
+import Button from "../../components/ui/Button";
+import { useOrders } from "../../context/useContext";
 
 /** @description RefreshButton displays a button to refresh the order list */
 const RefreshButton = memo((): ReactElement => {
@@ -20,7 +20,7 @@ const RefreshButton = memo((): ReactElement => {
   );
 });
 
-RefreshButton.displayName = 'RefreshButton';
+RefreshButton.displayName = "RefreshButton";
 
-// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────
 export default RefreshButton;

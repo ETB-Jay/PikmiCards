@@ -1,15 +1,12 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { useEffect, memo, useState, ReactElement, useCallback, useMemo } from 'react';
+import { useEffect, memo, useState, ReactElement, useCallback, useMemo } from "react";
 
-import CardPicker from './CardPicker';
-import LoadingAnimation from './LoadingAnimation';
-import { ErrorBox } from '../components';
-import { useOrders, useOrderDisplay, useStoreLocation } from '../context/useContext';
+import CardPicker from "./CardPicker";
+import LoadingAnimation from "./LoadingAnimation";
+import { ErrorBox } from "../components";
+import { useOrders, useOrderDisplay, useStoreLocation } from "../context/useContext";
 
-/**
- * Orders renders the card picker and manages order fetching and display logic.
- * Fetches orders from Shopify, formats them, and displays loading or content.
- */
+/** Orders renders the card picker and order loading screen */
 const Orders = memo((): ReactElement => {
   const { orders, fetchOrders, fromOrderDataToOrder } = useOrders();
   const { orderDisplay, setOrderDisplay } = useOrderDisplay();
@@ -33,7 +30,7 @@ const Orders = memo((): ReactElement => {
   useEffect(() => {
     loadOrders();
   }, [loadOrders]);
-  
+
   useEffect(() => {
     setError(undefined);
   }, [orders, orderDisplay, storeLocation]);
@@ -45,13 +42,14 @@ const Orders = memo((): ReactElement => {
   return (
     <>
       {pickDisplay}
-      {error && (
-        <ErrorBox text={error} className="absolute right-1/2 bottom-20 z-10 w-fit translate-1/2" />
-      )}
+      {error && <ErrorBox
+        text={error}
+        className="absolute right-1/2 bottom-20 z-10 w-fit translate-1/2" />
+      }
     </>
   );
 });
-Orders.displayName = 'Orders';
+Orders.displayName = "Orders";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default Orders;

@@ -1,5 +1,5 @@
 // ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────────
-import { ReactNode, Ref, ChangeEvent, MouseEvent } from 'react';
+import { ReactNode, Ref, ChangeEvent, MouseEvent } from "react";
 
 /** ChildrenAndClassProps are props for components with children and optional classes. */
 interface ChildrenAndClassProps {
@@ -26,7 +26,7 @@ interface ButtonProps {
   className?: string;
   ref?: Ref<HTMLButtonElement>;
   disabled?: boolean;
-  type?: 'button' | 'submit' | 'reset';
+  type?: "button" | "submit" | "reset";
 }
 
 /** PopupProps are props for popup components. */

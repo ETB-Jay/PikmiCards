@@ -1,11 +1,11 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { PropsWithChildren, useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { PropsWithChildren, useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 
-import app from '../../firebase';
+import app from "../../firebase";
 
-import type { User as FirebaseUser } from 'firebase/auth';
+import type { User as FirebaseUser } from "firebase/auth";
 
 const ProtectedRoute = ({ children }: PropsWithChildren) => {
   const [loading, setLoading] = useState(true);

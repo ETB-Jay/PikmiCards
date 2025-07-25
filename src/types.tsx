@@ -77,7 +77,7 @@ interface Order {
 interface Item {
   itemID: ItemID;
   orderID: OrderID;
-  itemBrand: string | null,
+  itemBrand: string | null;
   status: Status;
   set: string;
   box: number | null;
@@ -106,9 +106,9 @@ interface ConfirmResponse {
 /**
  * Filters is the list of Filters
  * @property box - The box number. null if nothing
- * @property game - 
- * @property set - 
- * @property rarity - 
+ * @property game -
+ * @property set -
+ * @property rarity -
  */
 interface Filters {
   box: number;
@@ -117,19 +117,13 @@ interface Filters {
 }
 
 // ─ Variables ────────────────────────────────────────────────────────────────────────────────────
-/**
- * OrderID is a unique identifier for an Order (string, typically Shopify order ID).
- */
+/** OrderID is a unique identifier for an Order (string, typically Shopify order ID) */
 type OrderID = string;
 
-/**
- * ItemID is a unique identifier for an Item (string, typically Shopify line item ID).
- */
+/** ItemID is a unique identifier for an Item (string, typically Shopify line item ID) */
 type ItemID = string;
 
-/**
- * StoreLocations represents the location details for where an item or order is stored or fulfilled.
- */
+/** StoreLocations represents the location details for where an item or order is stored or fulfilled */
 type StoreLocations = string;
 
 /**
@@ -138,7 +132,7 @@ type StoreLocations = string;
  * - 'queue': Item is queued for boxing or further processing
  * - 'inBox': Item has been picked and placed in a box
  */
-type Status = 'unPicked' | 'queue' | 'inBox';
+type Status = "unPicked" | "queue" | "inBox";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export type {
@@ -152,5 +146,5 @@ export type {
   StoreLocations,
   Status,
   User,
-  Filters
+  Filters,
 };

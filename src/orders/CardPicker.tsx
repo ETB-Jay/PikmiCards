@@ -1,55 +1,56 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { memo, ReactElement, useCallback, useMemo, useState } from 'react';
+import { memo, ReactElement, useCallback, useMemo, useState } from "react";
 
-import ConfirmBar from '../components/cards/ConfirmBar';
-import BasicContainer from '../components/containers/GridContainer';
-import Filter from '../components/ui/Filter';
-import { cn } from '../context/functions';
-import CardGridDisplay from './sections/CardGridDisplay';
-import QueuePile from './sections/QueuePile';
-import ToPick from './sections/ToPick';
+import ConfirmBar from "../components/cards/ConfirmBar";
+import BasicContainer from "../components/containers/GridContainer";
+import Filter from "../components/ui/Filter";
+import { cn } from "../context/functions";
+import CardGridDisplay from "./sections/CardGridDisplay";
+import QueuePile from "./sections/QueuePile";
+import ToPick from "./sections/ToPick";
 
-import type { Filters } from '../types';
+import type { Filters } from "../types";
 
-/**
- * CardPicker is the main layout for the picking workflow.
- * It displays the ToPick, CardGridDisplay, and QueuePile sections in a grid.
- */
+/** CardPicker displays the card picker components */
 const CardPicker = memo((): ReactElement => {
   const [filters, setFilters] = useState<Filters>({
     box: 0,
     game: "",
-    set: ""
+    set: "",
   });
 
   const handleFiltersChange = useCallback((newFilters: Filters) => {
     setFilters(newFilters);
   }, []);
 
-  const gridClassName = useMemo(() => cn(
-    'm-auto px-5 grid h-fit min-h-[76vh] w-full max-w-screen-2xl gap-2',
-    'grid-cols-1',
-    'lg:auto-rows-auto lg:grid-cols-2',
-    'py-2'
-  ), []);
+  const gridClassName = useMemo(
+    () => 
+      cn(
+        "m-auto px-5 grid h-fit min-h-[76vh] w-full max-w-screen-2xl gap-2",
+        "grid-cols-1",
+        "lg:auto-rows-auto lg:grid-cols-2",
+        "py-2"
+      ),
+    []
+  );
 
   return (
     <div className={gridClassName}>
-      <BasicContainer className="h-fit w-full lg:row-span-2">
-        <Filter onChange={handleFiltersChange} /> 
+      <BasicContainer className="h-fit lg:row-span-2">
+        <Filter onChange={handleFiltersChange} />
         <ToPick filters={filters} />
       </BasicContainer>
-      <BasicContainer className="h-full w-full">
+      <BasicContainer className="relative flex-row flex-wrap gap-2 p-2">
         <CardGridDisplay />
       </BasicContainer>
-      <BasicContainer className="h-full min-h-30 w-full">
+      <BasicContainer className="min-h-30">
         <QueuePile />
       </BasicContainer>
       <ConfirmBar />
     </div>
   );
 });
-CardPicker.displayName = 'CardPicker';
+CardPicker.displayName = "CardPicker";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default CardPicker;

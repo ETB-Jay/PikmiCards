@@ -1,8 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { useState, useCallback, useMemo, PropsWithChildren, ReactElement } from 'react';
+import { useState, useCallback, useMemo, PropsWithChildren, ReactElement } from "react";
 
-import { OrderData, Order, Status, StoreLocations } from '../../types';
-import { OrdersContext } from '../Context';
+import { OrderData, Order, Status, StoreLocations } from "../../types";
+import { OrdersContext } from "../Context";
 
 const OrdersProvider = ({ children }: PropsWithChildren): ReactElement => {
   const [orders, setOrders] = useState<OrderData[]>([]);
@@ -10,10 +10,10 @@ const OrdersProvider = ({ children }: PropsWithChildren): ReactElement => {
   const fetchOrders = useCallback(async (): Promise<OrderData[]> => {
     try {
       setOrders([]);
-      const response = await fetch('/api/orders');
+      const response = await fetch("/api/orders");
       const text = await response.text();
       if (!response.ok) {
-        throw new Error('Failed to fetch orders');
+        throw new Error("Failed to fetch orders");
       }
       const orders = JSON.parse(text);
       setOrders(orders);
@@ -48,10 +48,10 @@ const OrdersProvider = ({ children }: PropsWithChildren): ReactElement => {
           items: order.items.map((item) => ({
             itemID: item.itemID,
             orderID: item.orderID,
-            status: 'unPicked' as Status,
-            set: item.itemSet ?? '',
+            status: "unPicked" as Status,
+            set: item.itemSet ?? "",
             box: null,
-            itemBrand: item.itemBrand
+            itemBrand: item.itemBrand,
           })),
         }))
         .filter(Boolean)

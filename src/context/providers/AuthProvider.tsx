@@ -1,11 +1,11 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { useMemo, FormEvent, PropsWithChildren, ReactElement } from 'react';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useMemo, FormEvent, PropsWithChildren, ReactElement } from "react";
 
-import app from '../../firebase';
-import { User } from '../../types';
-import { AuthContext } from '../Context';
-import { useStoreLocation } from '../useContext';
+import app from "../../firebase";
+import { User } from "../../types";
+import { AuthContext } from "../Context";
+import { useStoreLocation } from "../useContext";
 
 /**
  * @description AuthProvider go
@@ -23,10 +23,10 @@ const AuthProvider = ({ children }: PropsWithChildren): ReactElement => {
     ev.preventDefault();
     const newError: { email?: string; password?: string; general?: string } = {};
     if (!user.email.trim()) {
-      newError.email = 'Email is required.';
+      newError.email = "Email is required.";
     }
     if (!user.password.trim()) {
-      newError.password = 'Password is required.';
+      newError.password = "Password is required.";
     }
     if (newError.email || newError.password) {
       setError(newError);
@@ -42,7 +42,7 @@ const AuthProvider = ({ children }: PropsWithChildren): ReactElement => {
         }, 500);
       });
     } catch {
-      setError({ general: 'Invalid Email/Password' });
+      setError({ general: "Invalid Email/Password" });
     }
   };
   const value = useMemo(() => ({ handleLogin }), [handleLogin]);

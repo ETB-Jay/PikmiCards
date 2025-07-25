@@ -1,5 +1,5 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { createContext } from 'react';
+import { createContext } from "react";
 
 import type {
   OrdersContextType,
@@ -8,9 +8,9 @@ import type {
   LogoutContextType,
   StoreLocationContextType,
   AuthContextType,
-} from './ContextInterfaces';
-import type { Order } from '../types';
-import type { Dispatch, SetStateAction } from 'react';
+} from "./ContextInterfaces";
+import type { Order } from "../types";
+import type { Dispatch, SetStateAction } from "react";
 
 /** OrdersContextType stores the fetched order data from Shopify */
 const OrdersContext = createContext<OrdersContextType>({
@@ -19,7 +19,7 @@ const OrdersContext = createContext<OrdersContextType>({
   fetchOrders: () => Promise.resolve([]),
   fromOrderDataToOrder: () => [],
 });
-OrdersContext.displayName = 'OrdersContext';
+OrdersContext.displayName = "OrdersContext";
 
 // OrderDisplayContext: only for orderDisplay and setOrderDisplay
 interface OrderDisplayContextType {
@@ -30,7 +30,7 @@ const OrderDisplayContext = createContext<OrderDisplayContextType>({
   orderDisplay: [],
   setOrderDisplay: () => {},
 });
-OrderDisplayContext.displayName = 'OrderDisplayContext';
+OrderDisplayContext.displayName = "OrderDisplayContext";
 
 // OrderSelectionContext: for selection state and handlers
 interface OrderSelectionContextType {
@@ -47,14 +47,14 @@ const OrderSelectionContext = createContext<OrderSelectionContextType>({
   handleClear: () => {},
   handleConfirm: () => {},
 });
-OrderSelectionContext.displayName = 'OrderSelectionContext';
+OrderSelectionContext.displayName = "OrderSelectionContext";
 
 /** FullscreenContextType manages the fullscreen mdoal state */
 const FullscreenContext = createContext<FullscreenContextType>({
   openFullscreen: () => {},
   closeFullscreen: () => {},
 });
-FullscreenContext.displayName = 'FullscreenContext';
+FullscreenContext.displayName = "FullscreenContext";
 
 /** ConfirmContextType manages the confirm modal state */
 const ConfirmContext = createContext<ConfirmContextType>({
@@ -63,29 +63,29 @@ const ConfirmContext = createContext<ConfirmContextType>({
   closeConfirm: () => {},
   onConfirm: () => {},
 });
-ConfirmContext.displayName = 'ConfirmContext';
+ConfirmContext.displayName = "ConfirmContext";
 
 /** LogoutContextType manages the logout modal state */
 const LogoutContext = createContext<LogoutContextType>({
   logout: false,
   setLogout: () => {},
 });
-LogoutContext.displayName = 'LogoutContext';
+LogoutContext.displayName = "LogoutContext";
 
 /** LocationContextType manages the location state */
 const StoreLocationContext = createContext<StoreLocationContextType>({
   /** The current location being picked from */
-  storeLocation: 'Oakville',
+  storeLocation: "Oakville",
   /** Function to set location */
   setStoreLocation: () => {},
 });
-StoreLocationContext.displayName = 'StoreLocationContext';
+StoreLocationContext.displayName = "StoreLocationContext";
 
 /** AuthContextType manages the authentication process */
 const AuthContext = createContext<AuthContextType>({
   handleLogin: async () => {},
 });
-AuthContext.displayName = 'AuthContext';
+AuthContext.displayName = "AuthContext";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export {

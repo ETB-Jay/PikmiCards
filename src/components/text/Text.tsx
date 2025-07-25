@@ -1,19 +1,16 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { memo, ReactElement } from 'react';
-
-import { cn } from '../../context/functions';
-
-// ─ Constants ────────────────────────────────────────────────────────────────────────────────────
-const BASE_TEXT_CLASSES = 'text-white text-md font-semibold';
+import { memo, ReactElement } from "react";
 
 /**
  * Text renders a styled paragraph.
  * @param text - The paragraph text to display
  */
-const Text = memo(
-  ({ text }: { text: string }): ReactElement => <p className={cn(BASE_TEXT_CLASSES)}>{text}</p>
+const Text = memo(({ text }: { text: string }): ReactElement =>
+  <p className="text-white text-md font-semibold">
+    {text}
+  </p>
 );
-Text.displayName = 'Text';
+Text.displayName = "Text";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default Text;

@@ -1,6 +1,7 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { SVGProps, memo } from 'react';
+import { SVGProps, memo } from "react";
 
+/** Renders the empty placeholder image */
 const EmptyImage = memo((props: SVGProps<SVGSVGElement>) => (
   <svg
     width="740"
@@ -18,7 +19,7 @@ const EmptyImage = memo((props: SVGProps<SVGSVGElement>) => (
     <circle cx="500" cy="167" r="55" stroke="white" strokeWidth="40" />
   </svg>
 ));
-EmptyImage.displayName = 'EmptyImage';
+EmptyImage.displayName = "EmptyImage";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default EmptyImage;

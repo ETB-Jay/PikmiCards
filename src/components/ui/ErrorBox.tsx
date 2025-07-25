@@ -1,8 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import WarningIcon from '@mui/icons-material/Warning';
-import { memo, useState } from 'react';
+import WarningIcon from "@mui/icons-material/Warning";
+import { memo, useState } from "react";
 
-import { cn } from '../../context/functions';
+import { cn } from "../../context/functions";
 
 // ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────
 interface ErrorBoxProps {
@@ -13,10 +13,10 @@ interface ErrorBoxProps {
 
 // ─ Constants ──────────────────────────────────────────────────────────────────────────────────────
 const Warning = memo(() => <WarningIcon fontSize="small" color="error" />);
-Warning.displayName = 'Warning';
+Warning.displayName = "Warning";
 
 const BASE_ERROR_BOX_CLASSES =
-  'animate-shake rounded-lg bg-red-800/40 px-3 py-2 text-center text-xs font-semibold text-red-100 ring-2 ring-red-950 flex items-center gap-2';
+  "animate-shake rounded-lg bg-red-800/40 px-3 py-2 text-center text-xs font-semibold text-red-100 ring-2 ring-red-950 flex items-center gap-2";
 
 /**
  * ErrorBox provides a styled box for error or info messages.
@@ -30,14 +30,14 @@ const ErrorBox = memo(({ text, className, small }: ErrorBoxProps) => {
   if (small) {
     return (
       <div
-        className={cn('relative flex items-center justify-center', className)}
+        className={cn("relative flex items-center justify-center", className)}
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
         onFocus={() => setShow(true)}
         onBlur={() => setShow(false)}
         tabIndex={0}
         role="button"
-        style={{ outline: 'none' }}
+        style={{ outline: "none" }}
       >
         <Warning />
         {show && (
@@ -56,7 +56,7 @@ const ErrorBox = memo(({ text, className, small }: ErrorBoxProps) => {
     </div>
   );
 });
-ErrorBox.displayName = 'ErrorBox';
+ErrorBox.displayName = "ErrorBox";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default ErrorBox;

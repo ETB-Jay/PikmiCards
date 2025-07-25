@@ -1,8 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { memo, ReactElement } from 'react';
+import { memo, ReactElement } from "react";
 
-import { cn } from '../../context/functions';
-import OpenBoxIcon from '../icons/OpenBoxIcon';
+import { cn } from "../../context/functions";
+import OpenBoxIcon from "../icons/OpenBoxIcon";
 
 /**
  * Empty renders a styled visual for when something is empty.
@@ -12,7 +12,7 @@ const Empty = memo(
   ({ text }: { text: string }): ReactElement => (
     <div
       className={cn(
-        'flex h-full w-full flex-col items-center justify-center rounded-2xl bg-green-50/10 p-5 text-center text-lg'
+        "flex h-full w-full flex-col items-center justify-center rounded-2xl bg-green-50/10 p-5 text-center text-lg"
       )}
     >
       <OpenBoxIcon className="mx-auto mb-2 h-8 w-8 text-white" />
@@ -20,7 +20,7 @@ const Empty = memo(
     </div>
   )
 );
-Empty.displayName = 'Empty';
+Empty.displayName = "Empty";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default Empty;

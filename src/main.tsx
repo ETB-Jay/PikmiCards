@@ -1,31 +1,31 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-router-dom';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider, Navigate, Outlet } from "react-router-dom";
 
-import { MainContainer } from './components';
-import AppProviders from './context/Providers';
-import ProtectedRoute from './context/providers/ProtectedRoute';
-import Guide from './guide/Guide';
-import Login from './login/Login';
-import Orders from './orders/Orders';
+import { MainContainer } from "./components";
+import AppProviders from "./context/Providers";
+import ProtectedRoute from "./context/providers/ProtectedRoute";
+import Guide from "./guide/Guide";
+import Login from "./login/Login";
+import Orders from "./orders/Orders";
 
-import './root.css';
+import "./root.css";
 
 // ─ Router Configuration ─────────────────────────────────────────────────────────────────────────
 /** Application router configuration with protected and public routes */
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: (
       <AppProviders>
         <Outlet />
       </AppProviders>
     ),
     children: [
-      { path: '', element: <Navigate to="/login" replace /> },
+      { path: "", element: <Navigate to="/login" replace /> },
       {
-        path: 'login',
+        path: "login",
         element: (
           <MainContainer header={false}>
             <Login />
@@ -33,17 +33,17 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'pick/:location',
+        path: "pick/:location",
         element: (
           <ProtectedRoute>
-            <MainContainer header >
+            <MainContainer header>
               <Orders />
             </MainContainer>
           </ProtectedRoute>
         ),
       },
       {
-        path: 'guide',
+        path: "guide",
         element: (
           <ProtectedRoute>
             <MainContainer header>
@@ -58,10 +58,10 @@ const router = createBrowserRouter([
 
 // ─ Application Render ───────────────────────────────────────────────────────────────────────────
 /** Root element for the React application */
-const rootElement = document.getElementById('root');
+const rootElement = document.getElementById("root");
 
 if (!rootElement) {
-  throw new Error('Root element not found');
+  throw new Error("Root element not found");
 }
 
 createRoot(rootElement).render(

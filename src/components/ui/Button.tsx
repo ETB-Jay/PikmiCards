@@ -1,15 +1,15 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { ReactNode, memo } from 'react';
+import { ReactNode, memo } from "react";
 
-import { cn } from '../../context/functions';
-import { ButtonProps } from '../../interfaces';
+import { cn } from "../../context/functions";
+import { ButtonProps } from "../../interfaces";
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const BASE_BUTTON_CLASSES =
-  'focus:ring-green-smoke-800 BFont inline-flex items-center justify-center rounded-xl px-2 py-1 font-semibold text-white shadow-md transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none';
-const DISABLED_BUTTON_CLASSES = 'cursor-not-allowed bg-gray-400';
+  "focus:ring-green-smoke-800 BFont inline-flex items-center justify-center rounded-xl px-2 py-1 font-semibold text-white shadow-md transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none";
+const DISABLED_BUTTON_CLASSES = "cursor-not-allowed bg-gray-400";
 const ENABLED_BUTTON_CLASSES =
-  'bg-green-smoke-600 hover:bg-green-smoke-700 active:bg-green-smoke-800 cursor-pointer';
+  "bg-green-smoke-600 hover:bg-green-smoke-700 active:bg-green-smoke-800 cursor-pointer";
 
 /**
  * Button renders a styled button with icon and label support.
@@ -26,10 +26,10 @@ const Button = memo(
     icon,
     label,
     onAction,
-    className = '',
+    className = "",
     disabled,
     ref,
-    type = 'button',
+    type = "button",
   }: ButtonProps): ReactNode => {
     return (
       <button
@@ -44,7 +44,7 @@ const Button = memo(
         onClick={onAction}
         disabled={disabled}
         onKeyDown={(ev) => {
-          if (ev.key === 'Enter' || ev.key === ' ') {
+          if (ev.key === "Enter" || ev.key === " ") {
             ev.preventDefault();
             onAction();
           }
@@ -58,7 +58,7 @@ const Button = memo(
     );
   }
 );
-Button.displayName = 'Button';
+Button.displayName = "Button";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default Button;

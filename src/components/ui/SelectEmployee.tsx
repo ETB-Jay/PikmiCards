@@ -1,14 +1,14 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { useState, MouseEvent, ReactElement, KeyboardEvent, useEffect } from 'react';
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useState, MouseEvent, ReactElement, KeyboardEvent, useEffect } from "react";
 
-import EmployeeInput from './EmployeeInput';
-import { cn } from '../../context/functions';
-import FlexRow from '../containers/FlexRow';
+import EmployeeInput from "./EmployeeInput";
+import { cn } from "../../context/functions";
+import FlexRow from "../containers/FlexRow";
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
-const NEW_STRING = 'Add New Employee';
+const NEW_STRING = "Add New Employee";
 
 // ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────
 interface SelectEmployeeProps {
@@ -23,7 +23,7 @@ interface SelectEmployeeProps {
  */
 const getEmployees = (): string[] => {
   try {
-    return JSON.parse(localStorage.getItem('employees') || '[]');
+    return JSON.parse(localStorage.getItem("employees") || "[]");
   } catch {
     return [];
   }
@@ -36,21 +36,19 @@ const getEmployees = (): string[] => {
  */
 const SelectEmployee = ({
   confirmedEmployee,
-  setConfirmedEmployee,
+  setConfirmedEmployee
 }: SelectEmployeeProps): ReactElement => {
   const [employeeList, setEmployeeList] = useState<string[]>([]);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [showInput, setShowInput] = useState(false);
-  const [newEmployee, setNewEmployee] = useState('');
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [showInput, setShowInput] = useState<boolean>(false);
+  const [newEmployee, setNewEmployee] = useState<string>("");
 
   const updateEmployeeList = () => {
     const listofEmployees = getEmployees();
     setEmployeeList(listofEmployees);
   };
 
-  useEffect(() => {
-    updateEmployeeList();
-  }, []);
+  useEffect(() => { updateEmployeeList(); }, []);
 
   const handleAddNewClick = () => {
     setShowInput(true);
@@ -61,16 +59,16 @@ const SelectEmployee = ({
     const trimmed = newEmployee.trim();
     if (trimmed && !employeeList.includes(trimmed)) {
       const updated = [...employeeList, trimmed];
-      localStorage.setItem('employees', JSON.stringify(updated));
+      localStorage.setItem("employees", JSON.stringify(updated));
       updateEmployeeList();
-      setNewEmployee('');
+      setNewEmployee("");
       setShowInput(false);
       setShowDropdown(false);
     }
   };
 
   const handleCancelAdd = () => {
-    setNewEmployee('');
+    setNewEmployee("");
     setShowInput(false);
     setShowDropdown(false);
   };
@@ -87,10 +85,10 @@ const SelectEmployee = ({
     ev.stopPropagation();
     const updated = [...employeeList];
     updated.splice(idx, 1);
-    localStorage.setItem('employees', JSON.stringify(updated));
+    localStorage.setItem("employees", JSON.stringify(updated));
     updateEmployeeList();
-    setConfirmedEmployee('');
-    setNewEmployee('');
+    setConfirmedEmployee("");
+    setNewEmployee("");
   };
 
   const employeeInputOrButton = showInput ? (
@@ -104,21 +102,29 @@ const SelectEmployee = ({
   ) : (
     <button
       type="button"
-      className="text-green-smoke-50 bg-green-smoke-700/70 hover:bg-green-smoke-700/90 flex w-full flex-row items-center justify-between rounded-xl px-3 py-1 shadow-sm transition-all duration-200"
+      className={cn(
+        "flex w-full flex-row items-center justify-between rounded-xl px-3 py-1 shadow-sm transition-all duration-200",
+        "text-green-smoke-50 bg-green-smoke-700/70 hover:bg-green-smoke-700/90 "
+      )}
       onClick={() => setShowDropdown((prev) => !prev)}
     >
-      <span className="text-sm">{confirmedEmployee || 'Select Employee'}</span>
+      <span className="text-sm">{confirmedEmployee || "Select Employee"}</span>
       <ArrowDropDownIcon
         className={cn(
-          'text-green-smoke-50 transform transition-transform duration-200',
-          showDropdown && 'rotate-180'
+          "text-green-smoke-50 transform transition-transform duration-200",
+          showDropdown && "rotate-180"
         )}
       />
     </button>
   );
 
   const Dropdown = (
-    <div className={cn("bg-green-smoke-900/90 border-green-smoke-600/20 absolute left-0 z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-xl border shadow-lg", employeeList.length > 2 ? 'bottom-full': 'top-full')}>
+    <div
+      className={cn(
+        "bg-green-smoke-900/90 border-green-smoke-600/20 absolute left-0 z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-xl border shadow-lg",
+        employeeList.length > 2 ? "bottom-full" : "top-full"
+      )}
+    >
       {employeeList.map((employee: string, idx: number) => (
         <div
           key={employee}
@@ -127,21 +133,19 @@ const SelectEmployee = ({
           tabIndex={0}
           role="button"
           onKeyDown={(ev) => {
-            if (ev.key === 'Enter' || ev.key === ' ') {
+            if (ev.key === "Enter" || ev.key === " ") {
               handleConfirmEmployee(employee);
             }
           }}
         >
-          <span>{employee}</span>
+          <span className="truncate max-w-11/12">{employee}</span>
           <span
             className="absolute top-1/2 right-2 ml-2 -translate-y-1/2 cursor-pointer hover:brightness-75"
-            onClick={(ev) => {
-              handleRemoveEmployee(ev, idx);
-            }}
+            onClick={(ev) => { handleRemoveEmployee(ev, idx); }}
             tabIndex={0}
             role="button"
             onKeyDown={(ev) => {
-              if (ev.key === 'Enter' || ev.key === ' ') {
+              if (ev.key === "Enter" || ev.key === " ") {
                 handleRemoveEmployee(ev, idx);
               }
             }}
@@ -156,7 +160,7 @@ const SelectEmployee = ({
         tabIndex={0}
         role="button"
         onKeyDown={(ev) => {
-          if (ev.key === 'Enter' || ev.key === ' ') {
+          if (ev.key === "Enter" || ev.key === " ") {
             handleAddNewClick();
           }
         }}

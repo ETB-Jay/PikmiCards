@@ -1,7 +1,7 @@
 // ─ Context Interfaces ───────────────────────────────────────────────────────────────
-import { Dispatch, SetStateAction, FormEvent } from 'react';
+import { Dispatch, SetStateAction, FormEvent } from "react";
 
-import { Order, OrderData, ItemID, User, StoreLocations } from '../types';
+import { Order, OrderData, ItemID, User, StoreLocations } from "../types";
 
 // OrdersContextType stores the fetched order data from Shopify and related actions.
 interface OrdersContextType {

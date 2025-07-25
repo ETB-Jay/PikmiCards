@@ -1,10 +1,10 @@
 // ─ Imports  ─────────────────────────────────────────────────────────────────────────────────────
-import { useState, useCallback, useMemo, PropsWithChildren, ReactElement } from 'react';
+import { useState, useCallback, useMemo, PropsWithChildren, ReactElement } from "react";
 
-import ConfirmModal from '../../modals/ConfirmModal';
-import { Order, StoreLocations } from '../../types';
-import { ConfirmContext } from '../Context';
-import { useOrderDisplay } from '../useContext';
+import ConfirmModal from "../../modals/ConfirmModal";
+import { Order, StoreLocations } from "../../types";
+import { ConfirmContext } from "../Context";
+import { useOrderDisplay } from "../useContext";
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
 const NUMBER_BOXES = 24;
@@ -45,10 +45,10 @@ const ConfirmProvider = ({ children }: PropsWithChildren): ReactElement => {
         }
       };
 
-      await fetch('/api/orders/write', {
-        method: 'POST',
+      await fetch("/api/orders/write", {
+        method: "POST",
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           orderID: confirmedOrder()[0].orderID,
           value: {

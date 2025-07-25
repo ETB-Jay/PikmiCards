@@ -1,8 +1,8 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { Renderer, Camera, Geometry, Program, Mesh } from 'ogl';
-import { useEffect, useRef, useMemo, FC } from 'react';
+import { Renderer, Camera, Geometry, Program, Mesh } from "ogl";
+import { useEffect, useRef, useMemo, FC } from "react";
 
-import { cn } from '../../context/functions';
+import { cn } from "../../context/functions";
 
 // ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────
 interface BackgroundProps {
@@ -20,8 +20,8 @@ interface BackgroundProps {
   className?: string;
 }
 
-// ─ Constants ──────────────────────────────────────────────────────────────────────────────────────
-const DEFAULT_COLORS: string[] = ['#1a237e', '#1976d2', '#64b5f6', '#0d47a1', '#1565c0'];
+// ─ Constants ─────────────────────────────────────────────────────────────────────────────────────
+const DEFAULT_COLORS: string[] = ["#1a237e", "#1976d2", "#64b5f6", "#0d47a1", "#1565c0"];
 
 const vertex = /* glsl */ `
   attribute vec3 position;
@@ -83,12 +83,12 @@ const fragment = /* glsl */ `
 `;
 
 const hexToRgb = (hexValue: string): [number, number, number] => {
-  let hex = hexValue.replace(/^#/, '');
+  let hex = hexValue.replace(/^#/, "");
   if (hex.length === 3) {
     hex = hex
-      .split('')
+      .split("")
       .map((char) => char + char)
-      .join('');
+      .join("");
   }
   const intValue = parseInt(hex, 16);
   const red = ((intValue >> 16) & 255) / 255;
@@ -154,7 +154,7 @@ const Background: FC<BackgroundProps> = ({
       renderer.setSize(width, height);
       camera.perspective({ aspect: gl.canvas.width / gl.canvas.height });
     };
-    window.addEventListener('resize', resize, false);
+    window.addEventListener("resize", resize, false);
     resize();
 
     const handleMouseMove = (event: MouseEvent) => {
@@ -165,7 +165,7 @@ const Background: FC<BackgroundProps> = ({
     };
 
     if (moveParticlesOnHover) {
-      container.addEventListener('mousemove', handleMouseMove);
+      container.addEventListener("mousemove", handleMouseMove);
     }
 
     const count = particleCount;
@@ -246,9 +246,9 @@ const Background: FC<BackgroundProps> = ({
     animationFrameId = requestAnimationFrame(update);
 
     return () => {
-      window.removeEventListener('resize', resize);
+      window.removeEventListener("resize", resize);
       if (moveParticlesOnHover) {
-        container.removeEventListener('mousemove', handleMouseMove);
+        container.removeEventListener("mousemove", handleMouseMove);
       }
       cancelAnimationFrame(animationFrameId);
       if (container.contains(gl.canvas)) {
@@ -272,8 +272,8 @@ const Background: FC<BackgroundProps> = ({
   return (
     <div
       ref={containerRef}
-      className={cn('bg-east-bay-950 fixed inset-0 h-full w-full overflow-hidden', className)}
-      style={{ pointerEvents: 'none', zIndex: -1 }}
+      className={cn("bg-east-bay-950 fixed inset-0 h-full w-full overflow-hidden", className)}
+      style={{ pointerEvents: "none", zIndex: -1 }}
     />
   );
 };

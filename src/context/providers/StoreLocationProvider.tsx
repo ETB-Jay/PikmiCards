@@ -1,16 +1,16 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { useState, useMemo, useEffect, PropsWithChildren, ReactElement } from 'react';
+import { useState, useMemo, useEffect, PropsWithChildren, ReactElement } from "react";
 
-import { StoreLocations } from '../../types';
-import { StoreLocationContext } from '../Context';
+import { StoreLocations } from "../../types";
+import { StoreLocationContext } from "../Context";
 
 const StoreLocationProvider = ({ children }: PropsWithChildren): ReactElement => {
   const [storeLocation, setStoreLocation] = useState<StoreLocations>(
-    () => (localStorage.getItem('storeLocation') as StoreLocations) || 'ETB Oakville'
+    () => (localStorage.getItem("storeLocation") as StoreLocations) || "ETB Oakville"
   );
 
   useEffect(() => {
-    localStorage.setItem('storeLocation', storeLocation);
+    localStorage.setItem("storeLocation", storeLocation);
   }, [storeLocation]);
 
   const value = useMemo(

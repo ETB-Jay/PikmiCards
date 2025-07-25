@@ -1,42 +1,40 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import { useState, memo, useMemo } from 'react';
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import { useState, memo, useMemo } from "react";
 
 import {
   Button,
-  SectionTitle,
   Empty,
   ImageDisplay,
-  ScrollContainer,
   FlexColCenter,
   FlexRow,
   ModalContainer,
-  OrderCard,
   SelectEmployee,
   Tags,
   TagPill,
   EmptyImage,
-} from '../components';
-import { findOrderDataByOrder, cn } from '../context/functions';
-import { useConfirm, useStoreLocation, useOrderDisplay, useOrders } from '../context/useContext';
-import { Order, ItemData, OrderData } from '../types';
+  DisplayItems,
+  Text,
+} from "../components";
+import { findOrderDataByOrder, cn } from "../context/functions";
+import { useConfirm, useStoreLocation, useOrderDisplay, useOrders } from "../context/useContext";
+import { Order, OrderData, Item, ItemData, StoreLocations } from "../types";
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
-const UNRETRIEVED_TITLE = 'Unretrieved Items';
-const RETRIEVED_TITLE = 'Retrieved Items';
-const EMPTY_PREVIEW_ALT = 'No preview selected';
-const EMPTY_BOX_TEXT = 'No unretrieved items';
+const UNRETRIEVED_TITLE = "Unretrieved Items";
+const RETRIEVED_TITLE = "Retrieved Items";
+const EMPTY_PREVIEW_ALT = "No preview selected";
 
 /** TagPillContent renders a label-value pair for use in a TagPill. */
 const TagPillContent = ({ label, value }: { label: string; value: string | null | undefined }) => {
-  const colon = ':';
+  const colon = ":";
   return [
     <span key="label" className="mr-1 font-bold">
       {String(label)}
       {colon}
     </span>,
     <span key="value" className="font-normal">
-      {value ?? ''}
+      {value ?? ""}
     </span>,
   ];
 };
@@ -44,17 +42,17 @@ const TagPillContent = ({ label, value }: { label: string; value: string | null 
 /** Returns an array of order field objects for tag display. */
 const getOrderFields = (orderData: OrderData) => [
   {
-    label: 'Order ID',
+    label: "Order ID",
     value:
-      typeof orderData.orderID === 'string'
-        ? orderData.orderID.replace(/^#/, '')
+      typeof orderData.orderID === "string"
+        ? orderData.orderID.replace(/^#/, "")
         : orderData.orderID,
   },
-  { label: 'Delivery', value: orderData.deliveryMethod },
-  { label: 'Email', value: orderData.email },
-  { label: 'Phone', value: orderData.phone },
-  { label: 'Requires Shipping', value: orderData.requiresShipping ? 'Yes' : 'No' },
-  { label: 'Paid', value: orderData.paid },
+  { label: "Delivery", value: orderData.deliveryMethod },
+  { label: "Email", value: orderData.email },
+  { label: "Phone", value: orderData.phone },
+  { label: "Requires Shipping", value: orderData.requiresShipping ? "Yes" : "No" },
+  { label: "Paid", value: orderData.paid },
 ];
 
 /** Renders tag pills for customer/order fields. */
@@ -68,91 +66,84 @@ const CustomerTags = (orderFields: { label: string; value: string | null | undef
   </div>
 );
 
-/** Helper to get items by a filter on their status. */
-const getItemsByFilter = (
-  order: Order,
-  itemMap: Record<string, ItemData>,
-  filterFn: (status: string) => boolean
-): ItemData[] =>
-  order.items
-    .filter((item) => filterFn(item.status))
-    .map((item) => itemMap[item.itemID])
-    .filter(Boolean) as ItemData[];
+/** Gets the full ItemData for a given Item using the orders context */
+const getItemData = (
+  item: Item,
+  orders: OrderData[],
+  storeLocation: StoreLocations
+): ItemData | undefined => {
+  return findItemDataByOrder(orders, item, storeLocation);
+};
 
-/** DisplayContent renders a list of items or an empty state. */
-const DisplayContent = memo(
-  ({ content, onSelect }: { content: ItemData[]; onSelect: (item: ItemData) => void }) =>
-    content.length === 0 ? (
-      <Empty text={EMPTY_BOX_TEXT} />
-    ) : (
-      <FlexRow>
-        {content.map((item) => (
-          <div
-            key={item.itemID}
-            onClick={() => onSelect(item)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(ev) => {
-              if (ev.key === 'Enter' || ev.key === ' ') {
-                onSelect(item);
-              }
-            }}
-            style={{ cursor: 'pointer' }}
-          >
-            <OrderCard
-              item={item}
-              largeDisplay={false}
-              selectable={false}
-              onImageClick={() => onSelect(item)}
-            />
-          </div>
-        ))}
-      </FlexRow>
-    )
-);
-DisplayContent.displayName = 'DisplayContent';
-
-/** DisplayItems renders a titled section with scrollable item content. */
-const DisplayItems = memo(
-  ({
-    content,
-    title,
-    onSelect,
-  }: {
-    content: ItemData[];
-    title: string;
-    onSelect: (item: ItemData) => void;
-  }) => (
-    <>
-      <SectionTitle>{title}</SectionTitle>
-      <div className={cn('rounded-2xl bg-black/10 p-2')}>
-        <ScrollContainer className={cn('max-h-35 w-full flex-row flex-wrap')}>
-          <DisplayContent content={content} onSelect={onSelect} />
-        </ScrollContainer>
-      </div>
-    </>
-  )
-);
-DisplayItems.displayName = 'DisplayItems';
+/** Helper function to find ItemData by Item and location */
+const findItemDataByOrder = (
+  orders: OrderData[],
+  item: Item,
+  storeLocation: StoreLocations
+): ItemData | undefined => {
+  const orderData = orders.find(
+(order) => order.orderID === item.orderID && order.fulfillmentLocation.includes(storeLocation)
+  );
+  return orderData?.items.find((itemData) => itemData.itemID === item.itemID);
+};
 
 /** PreviewContent displays a preview of the selected item, or a placeholder if none is selected. */
-const PreviewContent = memo(({ previewItem }: { previewItem: ItemData | null }) =>
-  previewItem ? (
-    <div className={cn('flex flex-col items-center gap-2')}>
-      <ImageDisplay imageUrl={previewItem.imageUrl} className={cn('h-full max-h-80 w-auto')} mode='fullscreen' loading="eager" />
-      <span className={cn('text-green-smoke-100 truncate text-sm font-medium whitespace-nowrap')}>
-        {previewItem.itemName}
+const PreviewContent = memo(({ previewItem, orders, storeLocation }: {
+  previewItem: Item | null;
+  orders: OrderData[];
+  storeLocation: StoreLocations;
+}) => {
+  const itemData = previewItem ? getItemData(previewItem, orders, storeLocation) : null;
+
+  return itemData ? (
+    <div className={cn("flex flex-col items-center gap-2")}>
+      <ImageDisplay
+        imageUrl={itemData.imageUrl}
+        className={cn("h-full max-h-80 w-auto")}
+        mode="fullscreen"
+        loading="eager"
+      />
+      <span className={cn("text-green-smoke-100 truncate text-sm font-medium whitespace-nowrap")}>
+        {itemData.itemName}
       </span>
-      <Tags item={previewItem} className="items-center justify-center" />
+      <Tags item={itemData} className="items-center justify-center" />
     </div>
   ) : (
-    <div className={cn('flex flex-col items-center justify-center w-full h-full')}> 
-      <EmptyImage className="h-40 w-auto opacity-60 mb-2" />
+    <div className={cn("flex h-full w-full flex-col items-center justify-center")}>
+      <EmptyImage className="mb-2 h-40 w-auto opacity-60" />
       <span className="text-gray-400">{EMPTY_PREVIEW_ALT}</span>
     </div>
-  )
-);
-PreviewContent.displayName = 'PreviewContent';
+  );
+});
+PreviewContent.displayName = "PreviewContent";
+
+/** ItemContentSection renders a section with title and items display */
+const ItemContentSection = memo(({ title, items, onImageClick }: {
+  title: string,
+  items: Item[],
+  onImageClick: (content: string | Item | null) => void,
+}) => {
+  const content = items.length === 0 ? (
+    <Empty text="No items" />
+  ) : (
+    <DisplayItems
+      items={items}
+      className={cn("rounded-2xl bg-black/10 p-2 max-h-35 w-full flex-row flex-wrap")}
+      err="No items"
+      selectable={false}
+      largeDisplay={false}
+      onImageClick={onImageClick}
+    />
+  );
+
+  return (
+    <>
+      <Text text={title} />
+      {content}
+    </>
+  );
+});
+ItemContentSection.displayName = "ItemContentSection";
 
 /** ConfirmModal displays a modal for confirming order completion and viewing item details. */
 const ConfirmModal = memo(({ order }: { order: Order }) => {
@@ -160,64 +151,69 @@ const ConfirmModal = memo(({ order }: { order: Order }) => {
   const { orderDisplay } = useOrderDisplay();
   const { onConfirm } = useConfirm();
   const { storeLocation } = useStoreLocation();
-  const [previewItem, setPreviewItem] = useState<ItemData | null>(null);
-  const [employee, setEmployee] = useState<string>('');
+  const [previewItem, setPreviewItem] = useState<Item | null>(null);
+  const [employee, setEmployee] = useState<string>("");
 
   // Find the order data for the current order and location
   const orderData = findOrderDataByOrder(orders, order, storeLocation);
 
-  // Map itemID to ItemData for quick lookup
-  const itemMap = useMemo(() => {
-    if (!orderData) {
-      return {};
-    }
-    return Object.fromEntries(orderData.items.map((item) => [item.itemID, item]));
-  }, [orderData]);
+  const getItemsByFilter = (order: Order, filterFn: (status: string) => boolean) => (
+    order.items.filter((item) => filterFn(item.status)).filter(Boolean)
+  );
 
-  if (!orderData) {
-    return null;
-  }
+  const unretrievedItems = useMemo(() =>
+    getItemsByFilter(order, (status) => status !== "inBox")
+    , [order]);
 
-  const unretrievedItems = getItemsByFilter(order, itemMap, (status) => status !== 'inBox');
-  const retrievedItems = getItemsByFilter(order, itemMap, (status) => status === 'inBox');
+  const retrievedItems = useMemo(() =>
+    getItemsByFilter(order, (status) => status === "inBox")
+    , [order]);
 
-  /** Handler for confirming the order. */
-  const handleConfirm = () => {
-    onConfirm(order, orderDisplay, employee, storeLocation);
+  /** Handler for image click to set preview item. */
+  const handleImageClick = (content: string | Item | null) => {
+    if (content && typeof content === "object" && "itemID" in content) { setPreviewItem(content); }
+    else { setPreviewItem(null); }
   };
 
+  /** Handler for confirming the order. */
+  const handleConfirm = () => { onConfirm(order, orderDisplay, employee, storeLocation); };
+
   /** Only allow confirm if all items are retrieved and an employee is selected. */
-  const canConfirm = (retrievedItems.length === orderData.numberItems) && employee;
+  const canConfirm = useMemo(() =>
+    (retrievedItems.length === order.items.length) && employee
+    , [retrievedItems, order.items, employee]);
+
+  if (!orderData) { return null; }
 
   return (
     <ModalContainer>
       <div
-        className={cn('flex min-w-[70vw] flex-row items-center justify-center gap-5')}
+        className={cn("flex min-w-[70vw] flex-row items-center justify-center gap-5")}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
       >
-        <div className={cn('flex w-full flex-col items-center justify-center gap-4')}>
-          <FlexColCenter className={cn('w-full gap-4')}>
-            <div className={cn('flex flex-col gap-2')}>
-              <span id="modal-title" className={cn('text-center text-lg font-bold text-white')}>
+        <div className={cn("flex w-full flex-col items-center justify-center gap-4")}>
+          <FlexColCenter className={cn("w-full gap-4")}>
+            <div className={cn("flex flex-col gap-2")}>
+              <span id="modal-title" className={cn("text-center text-lg font-bold text-white")}>
                 {orderData.customerName}
               </span>
               {CustomerTags(getOrderFields(orderData))}
             </div>
-            <div className={cn('flex h-full w-full flex-1/2 flex-col gap-3')}>
-              <DisplayItems
-                content={unretrievedItems}
+            <div className={cn("flex h-full w-full flex-1/2 flex-col gap-3")}>
+              <ItemContentSection
                 title={UNRETRIEVED_TITLE}
-                onSelect={setPreviewItem}
+                items={unretrievedItems}
+                onImageClick={handleImageClick}
               />
-              <DisplayItems
-                content={retrievedItems}
+              <ItemContentSection
                 title={RETRIEVED_TITLE}
-                onSelect={setPreviewItem}
+                items={retrievedItems}
+                onImageClick={handleImageClick}
               />
             </div>
-            <FlexRow className={cn('!flex-nowrap justify-center gap-4')}>
+            <FlexRow className={cn("!flex-nowrap justify-center gap-4")}>
               <SelectEmployee confirmedEmployee={employee} setConfirmedEmployee={setEmployee} />
               <Button
                 icon={<ThumbUpAltIcon fontSize="small" />}
@@ -230,16 +226,16 @@ const ConfirmModal = memo(({ order }: { order: Order }) => {
         </div>
         <div
           className={cn(
-            'hidden h-full w-full flex-2/3 flex-col items-center justify-center rounded-2xl bg-black/10 p-5 md:flex'
+            "hidden flex-col items-center justify-center rounded-2xl bg-black/10 p-2 md:flex"
           )}
         >
-          <PreviewContent previewItem={previewItem} />
+          <PreviewContent previewItem={previewItem} orders={orders} storeLocation={storeLocation} />
         </div>
       </div>
     </ModalContainer>
   );
 });
-ConfirmModal.displayName = 'ConfirmModal';
+ConfirmModal.displayName = "ConfirmModal";
 
-// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────
 export default ConfirmModal;

@@ -13,7 +13,7 @@ async function getOrders(client) {
       const query = `
       {
         orders(first: 50, 
-          after: ${cursor ? `"${cursor}"` : 'null'}, 
+          after: ${cursor ? `"${cursor}"` : "null"}, 
           query: "created_at:>${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled", 
           reverse: true) {
           edges {
@@ -57,7 +57,7 @@ async function getOrders(client) {
 
       const response = await client.request(query, {});
       const ordersData = response.data?.orders;
-      if (!ordersData?.edges) { throw new Error('Invalid response from Shopify API'); }
+      if (!ordersData?.edges) { throw new Error("Invalid response from Shopify API"); }
 
       for (const edge of ordersData.edges) {
         const order = edge.node;
@@ -67,7 +67,7 @@ async function getOrders(client) {
         if (order.metafield?.value) {
           try {
             pickedLocations = JSON.parse(order.metafield.value).map(
-              (picked) => `ETB ${picked.location}`
+              (picked) => picked.location
             );
           } catch { /* ignore parse errors */ }
         }
@@ -88,14 +88,14 @@ async function getOrders(client) {
               itemName: item.name.split(" - ")[0] || item.name,
               itemQuantity: item.quantity,
               itemLocation: locationName,
-              itemBrand: tags?.find((tag) => tag.startsWith('Brand_'))?.replace('Brand_', '') || null,
-              itemSet: tags?.find((tag) => tag.startsWith('Set_'))?.replace('Set_', '') || null,
-              itemRarity: tags?.find((tag) => tag.startsWith('Rarity_'))?.replace('Rarity_', '') || null,
-              itemPrinting: item.variant?.title === 'Default Title' ? null : item.variant?.title,
+              itemBrand: tags?.find((tag) => tag.startsWith("Brand_"))?.replace("Brand_", "") || null,
+              itemSet: tags?.find((tag) => tag.startsWith("Set_"))?.replace("Set_", "") || null,
+              itemRarity: tags?.find((tag) => tag.startsWith("Rarity_"))?.replace("Rarity_", "") || null,
+              itemPrinting: item.variant?.title === "Default Title" ? null : item.variant?.title,
               imageUrl:
                 item.variant?.image?.url ||
                 item.product?.featuredImage?.url ||
-                'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png',
+                "https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png",
             });
           }
           if (items.length === 0) { continue; }
@@ -147,7 +147,7 @@ async function writeOrders(client, orderID, value) {
   try {
     const metafieldResponse = await client.request(getMetafieldQuery, { variables: { id: orderID } });
     const metafieldValue =
-      metafieldResponse.body?.order?.metafield?.value ||
+      metafieldResponse.data?.order?.metafield?.value ||
       metafieldResponse.order?.metafield?.value ||
       null;
     if (metafieldValue) { currentMetafield = JSON.parse(metafieldValue); }

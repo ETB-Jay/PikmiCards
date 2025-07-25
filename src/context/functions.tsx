@@ -1,7 +1,7 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { twMerge } from 'tailwind-merge';
+import { twMerge } from "tailwind-merge";
 
-import { OrderData, ItemData, ItemID, Order, Status, StoreLocations, Item } from '../types';
+import { OrderData, ItemData, ItemID, Order, Status, StoreLocations, Item } from "../types";
 
 // ─ Utility Functions ────────────────────────────────────────────────────────────────────────────
 
@@ -44,8 +44,8 @@ const getOrderKeys = (orders: OrderData[]): Order[] =>
       itemID: item.itemID,
       itemBrand: item.itemBrand,
       orderID: order.orderID,
-      set: item.itemSet ?? '',
-      status: 'unPicked' as Status,
+      set: item.itemSet ?? "",
+      status: "unPicked" as Status,
       box: null,
     })),
   }));
@@ -90,7 +90,7 @@ const cn = (...inputs: (string | undefined | null | false)[]): string => {
 
 /** @description returnLarger compares two Items by set, then box, then itemID */
 function returnLarger(item1: Item, item2: Item): number {
-  const keys: (keyof Item)[] = ['set', 'box', 'itemID'];
+  const keys: (keyof Item)[] = ["set", "box", "itemID"];
   for (const key of keys) {
     const value1 = item1[key];
     const value2 = item2[key];

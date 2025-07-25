@@ -1,13 +1,13 @@
-// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────────
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useState, useRef, memo, ReactElement } from 'react';
+// ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { useState, useRef, memo, ReactElement } from "react";
 
-import DetermineLocation from './DetermineLocation';
-import Button from '../../components/ui/Button';
-import { cn } from '../../context/functions';
-import { useOrderDisplay, useStoreLocation } from '../../context/useContext';
+import DetermineLocation from "./DetermineLocation";
+import Button from "../../components/ui/Button";
+import { cn } from "../../context/functions";
+import { useOrderDisplay, useStoreLocation } from "../../context/useContext";
 
-/** @description LocationButton displays a button for the current location and opens a dropdown to change it. */
+/** LocationButton displays a button for the current location and opens a dropdown to change it. */
 const LocationButton = memo((): ReactElement => {
   const { orderDisplay } = useOrderDisplay();
   const { storeLocation } = useStoreLocation();
@@ -15,7 +15,7 @@ const LocationButton = memo((): ReactElement => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <div className={cn('relative')}>
+    <div className={cn("relative")}>
       <Button
         ref={buttonRef}
         onAction={() => setLocationPrompt((prev) => !prev)}
@@ -27,7 +27,7 @@ const LocationButton = memo((): ReactElement => {
     </div>
   );
 });
-LocationButton.displayName = 'LocationButton';
+LocationButton.displayName = "LocationButton";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default LocationButton;
