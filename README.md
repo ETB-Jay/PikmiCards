@@ -1,5 +1,3 @@
-# PikmiCards
-
 <div align="center">
   <img height="350" alt="banner" src="https://github.com/user-attachments/assets/4931c28c-3acd-4eaf-9789-39b0024b900b" />
   <br/>
