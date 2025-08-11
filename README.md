@@ -1,7 +1,5 @@
-# PikmiCards
-
 <div align="center">
-  <img height="300" alt="PikmiCards Banner" src="https://github.com/user-attachments/assets/412b9291-10b6-4e12-b026-9f1fbb247350" />
+  <img height="350" alt="banner" src="https://github.com/user-attachments/assets/4931c28c-3acd-4eaf-9789-39b0024b900b" />
   <br/>
   <br/>
   <p>
@@ -9,7 +7,7 @@
     <a href="#"><img src="https://img.shields.io/badge/license-MIT-green" alt="license" /></a>
     <a href="#"><img src="https://img.shields.io/badge/build-passing-brightgreen" alt="build" /></a>
   </p>
-  <p><b>PikmiCards</b> is a TCG card picking system originally designed by Michael Zhang for Enter the Battlefield (ETB), built with React, Tailwind CSS, and Shopify.</p>
+  <p><b>Pikmicards</b> is a TCG card picking system originally designed by Michael Zhang for Enter the Battlefield (ETB), built with React, Tailwind CSS, Firebase Authentication, and Shopify's GraphQL Admin API.</p>
 </div>
 
 ---
