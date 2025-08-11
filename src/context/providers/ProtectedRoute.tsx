@@ -7,6 +7,7 @@ import app from "../../firebase";
 
 import type { User as FirebaseUser } from "firebase/auth";
 
+/** Protected Route authenticates the user */
 const ProtectedRoute = ({ children }: PropsWithChildren) => {
   const [loading, setLoading] = useState(true);
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
@@ -20,14 +21,10 @@ const ProtectedRoute = ({ children }: PropsWithChildren) => {
     return () => unsubscribe();
   }, []);
 
-  if (loading) {
-    return null;
-  }
-  if (!firebaseUser) {
-    return <Navigate to="/login" />;
-  }
+  if (loading) { return null; }
+  if (!firebaseUser) { return <Navigate to="/login" />; }
   return children;
 };
 
-// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────
 export default ProtectedRoute;

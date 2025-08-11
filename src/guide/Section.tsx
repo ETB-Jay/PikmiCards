@@ -17,7 +17,7 @@ interface SectionProps {
   variant?: "primary" | "secondary" | "accent";
 }
 
-
+/** Section renders a section in the guide */
 const Section = memo(({ title, steps, variant = "primary" }: SectionProps): ReactElement => {
   const variantStyles = {
     primary: {

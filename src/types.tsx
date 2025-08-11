@@ -105,13 +105,12 @@ interface ConfirmResponse {
 
 /**
  * Filters is the list of Filters
- * @property box - The box number. null if nothing
- * @property game -
- * @property set -
- * @property rarity -
+ * @property boxes - Array of box numbers to filter by. Empty array means all boxes
+ * @property game - The game/brand to filter by
+ * @property set - The set name to filter by
  */
 interface Filters {
-  box: number;
+  boxes: number[];
   game: string;
   set: string;
 }

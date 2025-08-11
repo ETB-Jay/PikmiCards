@@ -9,8 +9,7 @@ import { useStoreLocation } from "../useContext";
 
 /**
  * @description AuthProvider go
- * @param param0
- * @returns
+ * @param children
  */
 const AuthProvider = ({ children }: PropsWithChildren): ReactElement => {
   const { storeLocation } = useStoreLocation();
@@ -22,12 +21,8 @@ const AuthProvider = ({ children }: PropsWithChildren): ReactElement => {
   ) => {
     ev.preventDefault();
     const newError: { email?: string; password?: string; general?: string } = {};
-    if (!user.email.trim()) {
-      newError.email = "Email is required.";
-    }
-    if (!user.password.trim()) {
-      newError.password = "Password is required.";
-    }
+    if (!user.email.trim()) { newError.email = "Email is required."; }
+    if (!user.password.trim()) { newError.password = "Password is required."; }
     if (newError.email || newError.password) {
       setError(newError);
       return;

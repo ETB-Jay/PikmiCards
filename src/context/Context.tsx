@@ -21,7 +21,7 @@ const OrdersContext = createContext<OrdersContextType>({
 });
 OrdersContext.displayName = "OrdersContext";
 
-// OrderDisplayContext: only for orderDisplay and setOrderDisplay
+/** OrderDisplayContext: only for orderDisplay and setOrderDisplay */
 interface OrderDisplayContextType {
   orderDisplay: Order[];
   setOrderDisplay: Dispatch<SetStateAction<Order[]>>;
@@ -32,7 +32,7 @@ const OrderDisplayContext = createContext<OrderDisplayContextType>({
 });
 OrderDisplayContext.displayName = "OrderDisplayContext";
 
-// OrderSelectionContext: for selection state and handlers
+/** OrderSelectionContext: for selection state and handlers */
 interface OrderSelectionContextType {
   selectedItems: Set<string>;
   setSelectedItems: Dispatch<SetStateAction<Set<string>>>;

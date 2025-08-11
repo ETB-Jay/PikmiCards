@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
@@ -17,21 +18,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          if (!id.includes("node_modules")) {
-            return;
-          }
-          if (id.includes("react") || id.includes("react-dom")) {
-            return "vendor";
-          }
-          if (id.includes("react-router")) {
-            return "router";
-          }
-          if (id.includes("@mui/icons-material")) {
-            return "ui";
-          }
-          if (id.includes("firebase")) {
-            return "firebase";
-          }
+          if (!id.includes("node_modules")) { return; }
+          if (id.includes("react") || id.includes("react-dom")) { return "vendor"; }
+          if (id.includes("react-router")) { return "router"; }
+          if (id.includes("@mui/icons-material")) { return "ui"; }
+          if (id.includes("firebase")) { return "firebase"; }
           return "vendor";
         },
       },

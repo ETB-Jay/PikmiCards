@@ -5,7 +5,7 @@ import { memo, ReactElement } from "react";
 import Button from "../../components/ui/Button";
 import { useOrders } from "../../context/useContext";
 
-/** @description RefreshButton displays a button to refresh the order list */
+/** RefreshButton displays a button to refresh the order list */
 const RefreshButton = memo((): ReactElement => {
   const { fetchOrders } = useOrders();
 

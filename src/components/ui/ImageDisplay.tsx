@@ -10,9 +10,7 @@ interface ImageDisplayProps {
   mode?: "thumbnail" | "fullscreen";
 }
 
-/**
- * Responsive image for thumbnail or fullscreen display.
- */
+/** Responsive image for thumbnail or fullscreen display */
 const ImageDisplay = memo(
   ({
     imageUrl,
@@ -75,7 +73,7 @@ const ImageDisplay = memo(
           sizes={imageProps.sizes}
           alt={alt}
           loading={loading}
-          fetchPriority={imageProps.fetchPriority}
+          fetchPriority={imageProps.fetchPriority as "high" | "auto" | "low" | undefined}
         />
       </div>
     );
@@ -83,5 +81,5 @@ const ImageDisplay = memo(
 );
 ImageDisplay.displayName = "ImageDisplay";
 
-// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────────
+// ─ Exports ───────────────────────────────────────────────────────────────────────────────────────
 export default ImageDisplay;

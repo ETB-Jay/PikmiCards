@@ -11,7 +11,8 @@ import { InputProps } from "../../interfaces";
 const BASE_INPUT_CONTAINER_CLASSES =
   "relative flex h-full w-full min-w-fit flex-col items-center justify-center";
 const BASE_INPUT_CLASSES =
-  "w-full rounded-lg border py-1.5 pr-5 pl-12 text-sm text-stone-800 shadow-sm transition-all placeholder:text-stone-600 focus:ring-2 focus:outline-none sm:pl-10";
+  "w-full rounded-lg border py-1.5 pr-5 pl-11 text-sm text-stone-800 shadow-sm transition-all" +
+  "placeholder:text-stone-600 focus:ring-2 focus:outline-none sm:pl-10";
 const ERROR_INPUT_CLASSES = "bg-rose-100/80 border-rose-700 focus:ring-rose-950";
 const NORMAL_INPUT_CLASSES = "bg-white/80 border-green-smoke-200 focus:ring-green-smoke-400";
 

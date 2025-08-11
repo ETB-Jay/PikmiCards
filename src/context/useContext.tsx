@@ -12,9 +12,9 @@ import {
   OrderSelectionContext,
 } from "./Context";
 
-// ─ Custom Hooks ────────────────────────────────────────────────────────────────────────────────────
+// ─ Custom Hooks ──────────────────────────────────────────────────────────────────────────────────
 /**
- * @description useOrders returns the OrdersContext value.
+ * useOrders returns the OrdersContext value.
  * @throws Error if used outside OrdersProvider.
  */
 const useOrders = () => {
@@ -23,7 +23,7 @@ const useOrders = () => {
 };
 
 /**
- * @description useOrderDisplay returns the OrderDisplayContext value.
+ * useOrderDisplay returns the OrderDisplayContext value.
  * @throws Error if used outside OrderDisplayProvider.
  */
 const useOrderDisplay = () => {
@@ -32,7 +32,7 @@ const useOrderDisplay = () => {
 };
 
 /**
- * @description useOrderSelection returns the OrderSelectionContext value.
+ * useOrderSelection returns the OrderSelectionContext value.
  * @throws Error if used outside OrderSelectionProvider.
  */
 const useOrderSelection = () => {
@@ -41,7 +41,7 @@ const useOrderSelection = () => {
 };
 
 /**
- * @description useFullscreen returns the FullscreenContext value.
+ * useFullscreen returns the FullscreenContext value.
  * @throws Error if used outside FullscreenProvider.
  */
 const useFullscreen = () => {
@@ -50,7 +50,7 @@ const useFullscreen = () => {
 };
 
 /**
- * @description useConfirm returns the ConfirmContext value.
+ * useConfirm returns the ConfirmContext value.
  * @throws Error if used outside ConfirmProvider.
  */
 const useConfirm = () => {
@@ -59,7 +59,7 @@ const useConfirm = () => {
 };
 
 /**
- * @description useLocation returns the LocationContext value.
+ * useLocation returns the LocationContext value.
  * @throws Error if used outside LocationProvider.
  */
 const useStoreLocation = () => {
@@ -68,7 +68,7 @@ const useStoreLocation = () => {
 };
 
 /**
- * @description useAuth returns the AuthContext value.
+ * useAuth returns the AuthContext value.
  * @throws Error if used outside AuthProvider.
  */
 const useAuth = () => {
@@ -77,7 +77,7 @@ const useAuth = () => {
 };
 
 /**
- * @description useLogout returns the LogoutContext value
+ * useLogout returns the LogoutContext value
  * @throws Error if used outside AuthProvider
  */
 const useLogout = () => {

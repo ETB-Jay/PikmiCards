@@ -14,7 +14,7 @@ import type { Filters } from "../types";
 /** CardPicker displays the card picker components */
 const CardPicker = memo((): ReactElement => {
   const [filters, setFilters] = useState<Filters>({
-    box: 0,
+    boxes: [],
     game: "",
     set: "",
   });

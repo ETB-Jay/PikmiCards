@@ -103,8 +103,8 @@ const SelectEmployee = ({
     <button
       type="button"
       className={cn(
-        "flex w-full flex-row items-center justify-between rounded-xl px-3 py-1 shadow-sm transition-all duration-200",
-        "text-green-smoke-50 bg-green-smoke-700/70 hover:bg-green-smoke-700/90 "
+        "flex w-full flex-row items-center justify-between rounded-xl px-3 py-1 transition-all",
+        "duration-200 text-green-smoke-50 bg-green-smoke-700/70 hover:bg-green-smoke-700 shadow-sm"
       )}
       onClick={() => setShowDropdown((prev) => !prev)}
     >
@@ -121,14 +121,18 @@ const SelectEmployee = ({
   const Dropdown = (
     <div
       className={cn(
-        "bg-green-smoke-900/90 border-green-smoke-600/20 absolute left-0 z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-xl border shadow-lg",
+        "bg-green-smoke-900/90 border-green-smoke-600/20 absolute left-0 z-20",
+        "mt-1 max-h-40 w-full overflow-y-auto rounded-xl border shadow-lg",
         employeeList.length > 2 ? "bottom-full" : "top-full"
       )}
     >
       {employeeList.map((employee: string, idx: number) => (
         <div
           key={employee}
-          className="hover:bg-green-smoke-600 text-green-smoke-50 relative flex cursor-pointer items-center justify-between px-4 py-1 text-sm transition-colors first:rounded-t-lg"
+          className={
+            cn("hover:bg-green-smoke-600 text-green-smoke-50 relative flex cursor-pointer",
+              "items-center justify-between px-4 py-1 text-sm transition-colors first:rounded-t-lg")
+          }
           onClick={() => handleConfirmEmployee(employee)}
           tabIndex={0}
           role="button"
@@ -140,7 +144,7 @@ const SelectEmployee = ({
         >
           <span className="truncate max-w-11/12">{employee}</span>
           <span
-            className="absolute top-1/2 right-2 ml-2 -translate-y-1/2 cursor-pointer hover:brightness-75"
+            className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer hover:brightness-75"
             onClick={(ev) => { handleRemoveEmployee(ev, idx); }}
             tabIndex={0}
             role="button"
@@ -155,7 +159,10 @@ const SelectEmployee = ({
         </div>
       ))}
       <div
-        className="hover:bg-green-smoke-600 border-green-smoke-600/20 text-green-smoke-100 cursor-pointer border-t px-4 py-1 text-sm transition-colors last:rounded-b-lg"
+        className={
+          cn("hover:bg-green-smoke-600 border-green-smoke-600/20 text-green-smoke-100",
+            "cursor-pointer border-t px-4 py-1 text-sm transition-colors last:rounded-b-lg")
+        }
         onClick={handleAddNewClick}
         tabIndex={0}
         role="button"

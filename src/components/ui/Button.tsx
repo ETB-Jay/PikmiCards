@@ -5,8 +5,9 @@ import { cn } from "../../context/functions";
 import { ButtonProps } from "../../interfaces";
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
-const BASE_BUTTON_CLASSES =
-  "focus:ring-green-smoke-800 BFont inline-flex items-center justify-center rounded-xl px-2 py-1 font-semibold text-white shadow-md transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none";
+const BASE_BUTTON_CLASSES = "focus:ring-green-smoke-800 BFont flex items-center " +
+  "justify-center rounded-xl px-2 py-1 font-semibold text-white shadow-md transition-all" +
+  "focus:ring-2 focus:ring-offset-2 focus:outline-none duration-200";
 const DISABLED_BUTTON_CLASSES = "cursor-not-allowed bg-gray-400";
 const ENABLED_BUTTON_CLASSES =
   "bg-green-smoke-600 hover:bg-green-smoke-700 active:bg-green-smoke-800 cursor-pointer";
@@ -49,8 +50,9 @@ const Button = memo(
             onAction();
           }
         }}
+        aria-label={label}
       >
-        <span className="flex items-center gap-2 px-1 sm:p-0">
+        <span className="flex flex-row justify-center items-center gap-2 px-1 sm:p-0">
           {icon && icon}
           {label && <span className="hidden text-xs font-semibold sm:block">{label}</span>}
         </span>

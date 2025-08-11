@@ -34,7 +34,8 @@ const PopupOption = memo(
       <div
         role="button"
         className={cn(
-          "group relative flex w-full min-w-fit cursor-pointer flex-row items-center justify-center gap-1 rounded px-2 py-0.5 transition-colors text-xs hover:bg-black/10"
+          "group relative flex w-full min-w-fit cursor-pointer flex-row items-center",
+          "justify-center gap-1 rounded px-2 py-0.5 transition-colors text-xs hover:bg-black/10"
         )}
         onClick={handleClick}
         tabIndex={0}
@@ -51,7 +52,8 @@ const PopupOption = memo(
           <button
             type="button"
             className={cn(
-              "BFont top-1/2 cursor-pointer rounded text-red-600 opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-800"
+              "BFont top-1/2 cursor-pointer rounded text-red-600 opacity-0",
+              "transition-opacity group-hover:opacity-100 hover:text-red-800"
             )}
             onClick={handleDelete}
             title={deleteTitle}
