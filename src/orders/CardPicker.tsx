@@ -14,7 +14,8 @@ import type { Filters } from "../types";
 /** CardPicker displays the card picker components */
 const CardPicker = memo((): ReactElement => {
   const [filters, setFilters] = useState<Filters>({
-    boxes: [],
+    boxMin: null,
+    boxMax: null,
     game: "",
     set: "",
   });
@@ -28,7 +29,7 @@ const CardPicker = memo((): ReactElement => {
       cn(
         "m-auto px-5 grid h-fit min-h-[76vh] w-full max-w-screen-2xl gap-2",
         "grid-cols-1",
-        "lg:auto-rows-auto lg:grid-cols-2",
+        "lg:auto-rows-[1fr_150px] lg:grid-cols-2",
         "py-2"
       ),
     []
@@ -40,7 +41,7 @@ const CardPicker = memo((): ReactElement => {
         <Filter onChange={handleFiltersChange} />
         <ToPick filters={filters} />
       </BasicContainer>
-      <BasicContainer className="relative flex-row flex-wrap gap-2 p-2">
+      <BasicContainer className="">
         <CardGridDisplay />
       </BasicContainer>
       <BasicContainer className="min-h-30">

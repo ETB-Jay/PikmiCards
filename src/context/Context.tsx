@@ -25,10 +25,14 @@ OrdersContext.displayName = "OrdersContext";
 interface OrderDisplayContextType {
   orderDisplay: Order[];
   setOrderDisplay: Dispatch<SetStateAction<Order[]>>;
+  numberOfBoxes: number;
+  setNumberOfBoxes: Dispatch<SetStateAction<number>>;
 }
 const OrderDisplayContext = createContext<OrderDisplayContextType>({
   orderDisplay: [],
   setOrderDisplay: () => {},
+  numberOfBoxes: 24,
+  setNumberOfBoxes: () => {},
 });
 OrderDisplayContext.displayName = "OrderDisplayContext";
 

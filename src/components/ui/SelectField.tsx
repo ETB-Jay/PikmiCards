@@ -35,7 +35,7 @@ const SelectField = memo(
         onChange={onChange}
         className={cn(
           "w-full rounded-lg border py-1.5 pr-5 pl-10 text-sm text-stone-800 shadow-sm",
-          "transition-all placeholder:text-stone-600 focus:ring-2 focus:outline-none sm:pl-10",
+          "transition-all placeholder:text-stone-600 focus:ring-2 focus:outline-none pl-10",
           "bg-white/80 border-green-smoke-200 focus:ring-green-smoke-400 cursor-pointer"
         )}
       >

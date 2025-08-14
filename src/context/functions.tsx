@@ -43,6 +43,8 @@ const getOrderKeys = (orders: OrderData[]): Order[] =>
       itemID: item.itemID,
       itemBrand: item.itemBrand,
       orderID: order.orderID,
+      itemName: item.itemName,
+      itemRarity: item.itemRarity,
       set: item.itemSet ?? "",
       status: "unPicked" as Status,
       box: null,
@@ -87,7 +89,7 @@ const cn = (...inputs: (string | undefined | null | false)[]): string => {
 
 /** returnLarger compares two Items by set, then box, then itemID */
 function returnLarger(item1: Item, item2: Item): number {
-  const keys: (keyof Item)[] = ["set", "box", "itemID"];
+  const keys: (keyof Item)[] = ["set", "itemRarity", "box", "itemName"];
   for (const key of keys) {
     const value1 = item1[key];
     const value2 = item2[key];
@@ -99,5 +101,20 @@ function returnLarger(item1: Item, item2: Item): number {
   return 0;
 }
 
+/** splitByLast gets the content after the last occurence of a delimeter */
+function getLast(str: string, delimiter: string) {
+  const index = str.lastIndexOf(delimiter);
+  if (index === -1) { return str };
+  return str.substring(index + delimiter.length);
+}
+
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
-export { findOrderDataByOrder, getItemKeys, getOrderKeys, findItemDataByID, cn, returnLarger };
+export {
+  findOrderDataByOrder,
+  getItemKeys,
+  getOrderKeys,
+  findItemDataByID,
+  cn,
+  returnLarger,
+  getLast
+};

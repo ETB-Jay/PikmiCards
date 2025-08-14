@@ -22,6 +22,17 @@ const ConfirmProvider = ({ children }: PropsWithChildren): ReactElement => {
 
   const { setOrderDisplay } = useOrderDisplay();
 
+  const reassignBoxNumbers = useCallback((orders: Order[]): Order[] => {
+    return orders.map((order, index) => ({
+      ...order,
+      box: index + 1,
+      items: order.items.map((item) => ({
+        ...item,
+        box: index + 1,
+      })),
+    }));
+  }, []);
+
   const onConfirm = useCallback(
     async (orderData: Order, orderDisplay: Order[], employee: string, location: StoreLocations) => {
       const removeIdx = orderDisplay.findIndex(
@@ -58,15 +69,17 @@ const ConfirmProvider = ({ children }: PropsWithChildren): ReactElement => {
         }),
       });
 
-      setOrderDisplay(newOrderDisplay);
+      // Reassign box numbers after processing
+      const reassignedOrders = reassignBoxNumbers(newOrderDisplay);
+      setOrderDisplay(reassignedOrders);
       closeConfirm();
     },
-    [setOrderDisplay]
+    [setOrderDisplay, reassignBoxNumbers]
   );
 
   const value = useMemo(
     () => ({ confirm, openConfirm, closeConfirm, onConfirm }),
-    [confirm, onConfirm, closeConfirm, onConfirm]
+    [confirm, onConfirm]
   );
   return (
     <ConfirmContext.Provider value={value}>

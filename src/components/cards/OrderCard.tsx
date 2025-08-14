@@ -49,7 +49,7 @@ const OrderCard = memo(
   }: OrderCardProps): ReactElement | null => {
     const { openFullscreen } = useFullscreen();
     const { orders } = useOrders();
-    const { orderDisplay } = useOrderDisplay();
+    const { orderDisplay, numberOfBoxes } = useOrderDisplay();
     const { selectedItems, handleSelect } = useOrderSelection();
 
     const isItem = (obj: any): obj is Item => "status" in obj;
@@ -73,8 +73,13 @@ const OrderCard = memo(
     const inBoxCardClass = useMemo(() => {
       const itemOrder = orderDisplay.find((display) => display.orderID === item.orderID);
       if (!itemOrder || itemOrder.box === null) { return ""; }
-      return "bg-green-smoke-900";
-    }, [orderDisplay, item.orderID]);
+
+      // Check if this order is within the current grid display range
+      const orderIndex = orderDisplay.findIndex((display) => display.orderID === item.orderID);
+      const isInCurrentGrid = (orderIndex >= 0) && (orderIndex < numberOfBoxes);
+
+      return isInCurrentGrid ? "bg-green-smoke-900" : "";
+    }, [orderDisplay, item.orderID, numberOfBoxes]);
 
     const handleSelectionIconClick = useCallback(
       (ev: MouseEvent<HTMLDivElement>) => {
@@ -198,16 +203,26 @@ const OrderCard = memo(
           }
         }}
       >
-        <ImageDisplay
-          imageUrl={itemData.imageUrl}
-          alt={itemData.itemName || "Unnamed"}
-          className={cn(
-            "inline-block h-auto max-h-22 w-auto min-w-14 cursor-pointer object-contain",
-            "transition-all hover:opacity-80 hover:brightness-40"
-          )}
-          onClick={handleImageClick}
-          loading={imageLoading}
-        />
+        <div className="relative">
+          <ImageDisplay
+            imageUrl={itemData.imageUrl}
+            alt={itemData.itemName || "Unnamed"}
+            className={cn(
+              "inline-block h-auto max-h-22 w-auto min-w-14 cursor-pointer object-contain",
+              "transition-all hover:opacity-80 hover:brightness-40"
+            )}
+            onClick={handleImageClick}
+            loading={imageLoading}
+          />
+          {itemData.itemQuantity !== 1 &&
+            <div
+              className={cn("flex flex-row items-center justify-center absolute bottom-2 right-2",
+                "bg-black/80 rounded-2xl px-1 py-0.5")}
+            >
+              <span className="text-white text-xs font-semibold">{itemData.itemQuantity}</span>
+            </div>
+          }
+        </div>
         {cardContent}
       </BasicContainer>
     );

@@ -14,8 +14,8 @@ async function getOrders(client) {
       {
         orders(first: 50, 
           after: ${cursor ? `"${cursor}"` : "null"}, 
-          query: "created_at:>${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled", 
-          reverse: true) {
+          query: "created_at:>${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled"
+          ) {
           edges {
             cursor
             node {
@@ -85,7 +85,7 @@ async function getOrders(client) {
             items.push({
               itemID: item.id,
               orderID: order.id,
-              itemName: item.name.split(" - ")[0] || item.name,
+              itemName: item.name,
               itemQuantity: item.quantity,
               itemLocation: locationName,
               itemBrand: tags?.find((tag) => tag.startsWith("Brand_"))?.replace("Brand_", "") || null,

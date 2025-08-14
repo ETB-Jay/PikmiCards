@@ -7,7 +7,6 @@ import { useOrderDisplay } from "../../context/useContext";
 import { ItemData } from "../../types";
 import FlexRow from "../containers/FlexRow";
 import ClosedBoxIcon from "../icons/ClosedBoxIcon";
-import ShoppingCartIcon from "../icons/ShoppingCartIcon";
 
 
 // ─ Interfaces ────────────────────────────────────────────────────────────────────────────────────
@@ -22,17 +21,10 @@ interface TagsProps {
  * @param className - Additional CSS classes
  */
 const Tags = memo(({ item, className = "" }: TagsProps): ReactElement => {
-  const { orderDisplay } = useOrderDisplay();
+  const { orderDisplay, numberOfBoxes } = useOrderDisplay();
 
   const tags = useMemo(() => {
     const tagList: { value: string; icon?: ReactNode; alt?: string; type: string }[] = [];
-
-    tagList.push({
-      icon: <ShoppingCartIcon className="h-3 w-3 flex-shrink-0 object-contain" />,
-      alt: "Cart",
-      value: String(item.itemQuantity),
-      type: "quantity",
-    });
 
     if (item.itemPrinting) { tagList.push({ value: item.itemPrinting, type: "printing" }); }
     if (item.itemRarity) { tagList.push({ value: item.itemRarity, type: "rarity" }); }
@@ -50,12 +42,12 @@ const Tags = memo(({ item, className = "" }: TagsProps): ReactElement => {
 
     return tagList;
   }, [
-    item.itemQuantity,
     item.itemPrinting,
     item.itemRarity,
     item.itemSet,
     item.orderID,
     orderDisplay,
+    numberOfBoxes
   ]);
 
   return (
@@ -63,7 +55,11 @@ const Tags = memo(({ item, className = "" }: TagsProps): ReactElement => {
       {tags.map((tag) => (
         <TagPill
           key={`${tag.type}-${tag.value}-${item.itemID}`}
-          className={cn("inline-flex items-center gap-1.5 px-2 py-0.5 transition-colors")}
+          className={cn(
+            "inline-flex items-center gap-1.5 px-2 py-0.5 transition-colors",
+            tag.type === "printing" && tag.value.toLowerCase().includes("foil")
+              && "bg-gradient-to-br from-yellow-500 to-orange-600"
+          )}
         >
           {tag.icon}
           <span className={cn("text-xs font-medium whitespace-nowrap")}>{tag.value}</span>

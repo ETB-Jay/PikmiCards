@@ -17,7 +17,8 @@ import type { Filters } from "../../types";
 
 const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
   const [temp, setTemp] = useState<Filters>({
-    boxes: [],
+    boxMin: null,
+    boxMax: null,
     game: "",
     set: "",
   });
@@ -36,12 +37,8 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
     { value: "Gundam", label: "Gundam" },
   ], []);
 
-  const boxNumbers = useMemo(() =>
-    Array.from({ length: 24 }, (_, i) => i + 1), []
-  );
-
   const hasActiveFilters = useMemo(() => {
-    return temp.boxes.length > 0 || temp.game !== "" || temp.set !== "";
+    return temp.boxMin !== null || temp.boxMax !== null || temp.game !== "" || temp.set !== "";
   }, [temp]);
 
   const handleShowDropdown = useCallback(() => {
@@ -59,21 +56,21 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
     [temp]
   );
 
-  const handleBoxToggle = useCallback((boxNumber: number) => {
+  const handleBoxMinChange = useCallback((value: string) => {
+    const numValue = value === "" ? null : parseInt(value, 10);
     setTemp(prev => ({
       ...prev,
-      boxes: prev.boxes.includes(boxNumber)
-        ? prev.boxes.filter(b => b !== boxNumber)
-        : [...prev.boxes, boxNumber].sort((a, b) => a - b)
+      boxMin: numValue
     }));
   }, []);
 
-  const handleSelectAllBoxes = useCallback(() => {
+  const handleBoxMaxChange = useCallback((value: string) => {
+    const numValue = value === "" ? null : parseInt(value, 10);
     setTemp(prev => ({
       ...prev,
-      boxes: prev.boxes.length === 24 ? [] : boxNumbers
+      boxMax: numValue
     }));
-  }, [boxNumbers]);
+  }, []);
 
   const handleSubmit = useCallback((ev: FormEvent) => {
     ev.preventDefault();
@@ -83,7 +80,8 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
 
   const handleClear = useCallback(() => {
     const clearedFilters: Filters = {
-      boxes: [],
+      boxMin: null,
+      boxMax: null,
       game: "",
       set: "",
     };
@@ -122,7 +120,7 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
           {hasActiveFilters && (
             <span className="text-xs font-medium">
               {[
-                temp.boxes.length > 0 && `${temp.boxes.length} box${temp.boxes.length > 1 ? "es" : ""}`,
+                (temp.boxMin !== null || temp.boxMax !== null) && "boxes",
                 temp.game,
                 temp.set
               ].filter(Boolean).length}
@@ -137,33 +135,32 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
 
           <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-medium flex items-center gap-1">
-                  <ClosedBoxIcon width={16} height={16} stroke="black" />
-                  Boxes ({temp.boxes.length} selected)
-                </label>
-                <button
-                  type="button"
-                  onClick={handleSelectAllBoxes}
-                  className="text-xs text-blue-600 hover:text-blue-800 cursor-pointer"
-                >
-                  {temp.boxes.length === 24 ? "Clear All" : "Select All"}
-                </button>
-              </div>
-              <div className="grid grid-cols-6 gap-1 max-h-32 overflow-y-auto p-1 border border-gray-200 rounded">
-                {boxNumbers.map(boxNum => (
-                  <button
-                    key={boxNum}
-                    type="button"
-                    onClick={() => handleBoxToggle(boxNum)}
-                    className={`p-1 text-xs rounded border transition-colors cursor-pointer ${temp.boxes.includes(boxNum)
-                      ? "bg-blue-500 text-white border-blue-600"
-                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                      }`}
-                  >
-                    {boxNum}
-                  </button>
-                ))}
+              <label className="text-xs font-medium flex items-center gap-1">
+                <ClosedBoxIcon width={16} height={16} stroke="black" />
+                Box Range
+              </label>
+              <div className="flex gap-2 items-center">
+                <InputField
+                  label="Min Box"
+                  type="number"
+                  value={temp.boxMin?.toString() || ""}
+                  onChange={(ev) => handleBoxMinChange(ev.target.value)}
+                  autoComplete=""
+                  err=""
+                  min={1}
+                  max={24}
+                />
+                <span className="text-xs text-gray-500">to</span>
+                <InputField
+                  label="Max Box"
+                  type="number"
+                  value={temp.boxMax?.toString() || ""}
+                  onChange={(ev) => handleBoxMaxChange(ev.target.value)}
+                  autoComplete=""
+                  err=""
+                  min={1}
+                  max={24}
+                />
               </div>
             </div>
 

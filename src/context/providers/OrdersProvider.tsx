@@ -47,11 +47,13 @@ const OrdersProvider = ({ children }: PropsWithChildren): ReactElement => {
           box: null,
           items: order.items.map((item) => ({
             itemID: item.itemID,
+            itemName: item.itemName,
             orderID: item.orderID,
             status: "unPicked" as Status,
             set: item.itemSet ?? "",
             box: null,
             itemBrand: item.itemBrand,
+            itemRarity: item.itemRarity
           })),
         }))
         .filter(Boolean)

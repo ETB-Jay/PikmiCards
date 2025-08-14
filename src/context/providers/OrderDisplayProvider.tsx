@@ -7,6 +7,7 @@ import type { Order, Status } from "../../types";
 
 const OrderDisplayProvider = ({ children }: PropsWithChildren): ReactElement => {
   const [orderDisplay, setOrderDisplay] = useState<Order[]>([]);
+  const [numberOfBoxes, setNumberOfBoxes] = useState<number>(24);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
   const handleSelect = useCallback((itemID: string) => {
@@ -61,7 +62,12 @@ const OrderDisplayProvider = ({ children }: PropsWithChildren): ReactElement => 
     setSelectedItems(new Set());
   }, [selectedItems]);
 
-  const orderDisplayValue = useMemo(() => ({ orderDisplay, setOrderDisplay }), [orderDisplay]);
+  const orderDisplayValue = useMemo(() => ({ 
+    orderDisplay, 
+    setOrderDisplay, 
+    numberOfBoxes, 
+    setNumberOfBoxes 
+  }), [orderDisplay, numberOfBoxes]);
   const orderSelectionValue = useMemo(
     () => ({ selectedItems, setSelectedItems, handleSelect, handleClear, handleConfirm }),
     [selectedItems, handleSelect, handleClear, handleConfirm]

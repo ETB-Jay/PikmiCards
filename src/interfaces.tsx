@@ -1,4 +1,4 @@
-// ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────────
+// ─ Interfaces ────────────────────────────────────────────────────────────────────────────────────
 import { ReactNode, Ref, ChangeEvent, MouseEvent } from "react";
 
 /** ChildrenAndClassProps are props for components with children and optional classes. */

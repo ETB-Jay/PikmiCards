@@ -16,7 +16,7 @@ import {
   DisplayItems,
   Text,
 } from "../components";
-import { findOrderDataByOrder, cn } from "../context/functions";
+import { findOrderDataByOrder, cn, getLast } from "../context/functions";
 import { useConfirm, useStoreLocation, useOrderDisplay, useOrders } from "../context/useContext";
 import { Order, OrderData, Item, ItemData, StoreLocations } from "../types";
 
@@ -42,11 +42,8 @@ const TagPillContent = ({ label, value }: { label: string; value: string | null 
 /** Returns an array of order field objects for tag display. */
 const getOrderFields = (orderData: OrderData) => [
   {
-    label: "Order ID",
-    value:
-      typeof orderData.orderID === "string"
-        ? orderData.orderID.replace(/^#/, "")
-        : orderData.orderID,
+    label: "Order Number",
+    value: orderData.orderNumber,
   },
   { label: "Delivery", value: orderData.deliveryMethod },
   { label: "Email", value: orderData.email },
@@ -71,9 +68,9 @@ const getItemData = (
   item: Item,
   orders: OrderData[],
   storeLocation: StoreLocations
-): ItemData | undefined => {
-  return findItemDataByOrder(orders, item, storeLocation);
-};
+): ItemData | undefined => (
+  findItemDataByOrder(orders, item, storeLocation)
+);
 
 /** Helper function to find ItemData by Item and location */
 const findItemDataByOrder = (
@@ -82,7 +79,7 @@ const findItemDataByOrder = (
   storeLocation: StoreLocations
 ): ItemData | undefined => {
   const orderData = orders.find(
-(order) => order.orderID === item.orderID && order.fulfillmentLocation.includes(storeLocation)
+    (order) => order.orderID === item.orderID && order.fulfillmentLocation.includes(storeLocation)
   );
   return orderData?.items.find((itemData) => itemData.itemID === item.itemID);
 };
@@ -183,6 +180,10 @@ const ConfirmModal = memo(({ order }: { order: Order }) => {
     (retrievedItems.length === order.items.length) && employee
     , [retrievedItems, order.items, employee]);
 
+  const orderLink = useMemo(() =>
+    `https://admin.shopify.com/store/enter-the-battlefield/orders/${getLast(order.orderID, "/")}`
+    , [])
+
   if (!orderData) { return null; }
 
   return (
@@ -196,9 +197,19 @@ const ConfirmModal = memo(({ order }: { order: Order }) => {
         <div className={cn("flex w-full flex-col items-center justify-center gap-4")}>
           <FlexColCenter className={cn("w-full gap-4")}>
             <div className={cn("flex flex-col gap-2")}>
-              <span id="modal-title" className={cn("text-center text-lg font-bold text-white")}>
-                {orderData.customerName}
-              </span>
+              <a
+                href={orderLink}
+                className={
+                  cn("w-full text-center text-lg font-bold text-white",
+                    "hover:text-gray-400 transition-colors")
+                }
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span id="modal-title">
+                  {orderData.customerName}
+                </span>
+              </a>
               {CustomerTags(getOrderFields(orderData))}
             </div>
             <div className={cn("flex h-full w-full flex-1/2 flex-col gap-3")}>
