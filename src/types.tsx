@@ -38,6 +38,7 @@ interface OrderData {
  * @property itemRarity - The rarity of the item (if any)
  * @property itemPrinting - The item's print (if any)
  * @property imageUrl - The item's image URL
+ * @property price - The item's price in CAD
  */
 interface ItemData {
   itemID: ItemID;
@@ -50,6 +51,7 @@ interface ItemData {
   itemRarity: string | null;
   itemPrinting: string | null;
   imageUrl: string;
+  price: string | null;
 }
 
 /**

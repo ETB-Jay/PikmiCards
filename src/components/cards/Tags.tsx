@@ -50,6 +50,20 @@ const Tags = memo(({ item, className = "" }: TagsProps): ReactElement => {
     numberOfBoxes
   ]);
 
+  const tagClasses = (type: string) => {
+    const commonClass = (item.itemRarity === "Common") && "from-gray-700 to-gray-500";
+    const uncommonClass = (item.itemRarity === "Uncommon") && "from-gray-800 to-blue-950";
+    const rareClass = (item.itemRarity === "Rare") && "from-yellow-900 to-yellow-500";
+    const mythicClass = (item.itemRarity === "Mythic") && "from-orange-900 to-orange-500";
+
+    return cn(
+      type === "rarity" && commonClass,
+      type === "rarity" && uncommonClass,
+      type === "rarity" && rareClass,
+      type === "rarity" && mythicClass
+    );
+  };
+
   return (
     <FlexRow className={cn("min-h-[24px] flex-wrap items-center justify-start gap-x-2", className)}>
       {tags.map((tag) => (
@@ -57,8 +71,8 @@ const Tags = memo(({ item, className = "" }: TagsProps): ReactElement => {
           key={`${tag.type}-${tag.value}-${item.itemID}`}
           className={cn(
             "inline-flex items-center gap-1.5 px-2 py-0.5 transition-colors",
-            tag.type === "printing" && tag.value.toLowerCase().includes("foil")
-              && "bg-gradient-to-br from-yellow-500 to-orange-600"
+            "bg-gradient-to-br from-green-900 to-green-900",
+            tagClasses(tag.type)
           )}
         >
           {tag.icon}

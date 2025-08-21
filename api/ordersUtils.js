@@ -13,9 +13,9 @@ async function getOrders(client) {
       const query = `
       {
         orders(first: 50, 
-          after: ${cursor ? `"${cursor}"` : "null"}, 
-          query: "created_at:>${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled"
-          ) {
+          after: ${cursor ? `"${cursor}"` : "null"},           
+          query: "created_at:>${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled", 
+          reverse: true) {
           edges {
             cursor
             node {
@@ -41,7 +41,16 @@ async function getOrders(client) {
                             name
                             quantity
                             variant { title image { url } }
-                            product { featuredImage { url } tags }
+                            product { featuredImage { url } 
+                                tags
+                                contextualPricing (context: {country: CA}) {
+                                    maxVariantPricing {
+                                        price {
+                                            amount
+                                        }
+                                    }
+                                } 
+                            }
                           }
                         }
                       }
@@ -92,6 +101,7 @@ async function getOrders(client) {
               itemSet: tags?.find((tag) => tag.startsWith("Set_"))?.replace("Set_", "") || null,
               itemRarity: tags?.find((tag) => tag.startsWith("Rarity_"))?.replace("Rarity_", "") || null,
               itemPrinting: item.variant?.title === "Default Title" ? null : item.variant?.title,
+              price: item.product?.contextualPricing?.maxVariantPricing?.price?.amount || null,
               imageUrl:
                 item.variant?.image?.url ||
                 item.product?.featuredImage?.url ||

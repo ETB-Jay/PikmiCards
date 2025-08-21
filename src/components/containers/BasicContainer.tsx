@@ -28,7 +28,7 @@ const BasicContainer = memo(
     return (
       <div
         className={cn(
-          "flex flex-col gap-6 p-5 w-full h-fit rounded-xl transition-all relative",
+          "flex flex-col gap-6 p-5 w-full h-fit rounded-xl relative",
           "bg-green-smoke-500/40 object-contain",
           clickable &&
           "hover:bg-green-smoke-600/40 active:bg-green-smoke-700/60 cursor-pointer",

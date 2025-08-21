@@ -87,18 +87,50 @@ const cn = (...inputs: (string | undefined | null | false)[]): string => {
   return twMerge(...inputs.filter(Boolean));
 };
 
-/** returnLarger compares two Items by set, then box, then itemID */
+/** returnLarger compares two Items by set, then rarity (custom order), then box, then itemID */
 function returnLarger(item1: Item, item2: Item): number {
-  const keys: (keyof Item)[] = ["set", "itemRarity", "box", "itemName"];
-  for (const key of keys) {
-    const value1 = item1[key];
-    const value2 = item2[key];
-    if (value1 == null && value2 != null) { return 1; }
-    if (value1 != null && value2 == null) { return -1; }
-    if (value1! > value2!) { return 1; }
-    if (value1! < value2!) { return -1; }
+  // First compare by set
+  const set1 = item1.set || "";
+  const set2 = item2.set || "";
+  if (set1 !== set2) {
+    return set1.localeCompare(set2);
   }
-  return 0;
+
+  // Then compare by rarity with custom order
+  const rarityOrder = ["Common", "Uncommon", "Rare", "Mythic"];
+  const rarity1 = item1.itemRarity || "";
+  const rarity2 = item2.itemRarity || "";
+  
+  if (rarity1 !== rarity2) {
+    const index1 = rarityOrder.indexOf(rarity1);
+    const index2 = rarityOrder.indexOf(rarity2);
+    
+    // If both rarities are in the defined order, sort by that order
+    if (index1 !== -1 && index2 !== -1) {
+      return index1 - index2;
+    }
+    
+    // If only one is in the defined order, prioritize it
+    if (index1 !== -1) { return -1; }
+    if (index2 !== -1) { return 1; }
+    
+    // If neither is in the defined order, sort alphabetically
+    return rarity1.localeCompare(rarity2);
+  }
+
+  // Then compare by box
+  const box1 = item1.box;
+  const box2 = item2.box;
+  if (box1 !== box2) {
+    if (box1 == null && box2 != null) { return 1; }
+    if (box1 != null && box2 == null) { return -1; }
+    return box1! - box2!;
+  }
+
+  // Finally compare by itemName
+  const name1 = item1.itemName || "";
+  const name2 = item2.itemName || "";
+  return name1.localeCompare(name2);
 }
 
 /** splitByLast gets the content after the last occurence of a delimeter */
