@@ -55,12 +55,14 @@ const Tags = memo(({ item, className = "" }: TagsProps): ReactElement => {
     const uncommonClass = (item.itemRarity === "Uncommon") && "from-gray-800 to-blue-950";
     const rareClass = (item.itemRarity === "Rare") && "from-yellow-900 to-yellow-500";
     const mythicClass = (item.itemRarity === "Mythic") && "from-orange-900 to-orange-500";
+    const foilClass = (item.itemPrinting?.toLowerCase().includes("foil")) && "from-red-500 via-emerald-500 to-purple-500";
 
     return cn(
       type === "rarity" && commonClass,
       type === "rarity" && uncommonClass,
       type === "rarity" && rareClass,
-      type === "rarity" && mythicClass
+      type === "rarity" && mythicClass,
+      type === "printing" && foilClass
     );
   };
 

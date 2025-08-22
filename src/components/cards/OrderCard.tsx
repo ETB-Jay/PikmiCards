@@ -61,7 +61,7 @@ const OrderCard = memo(
     const selected = itemData ? selectedItems.has(item.itemID) : false;
     const selectionAriaLabel = selected ? 'DeSelect item' : 'Select item';
 
-    let selectionIcon = null;
+    let selectionIcon: ReactElement | null = null;
     if (selectable) {
       selectionIcon = selected ? (
         <CheckBoxIcon fontSize="small" className="text-green-500" />
@@ -114,6 +114,7 @@ const OrderCard = memo(
             <span className={cn('text-silver-100 md:text-md mb-2 text-sm font-semibold text-wrap')}>
               {itemData.itemName}
             </span>
+            {/**
             {itemData.price && (
               <div
                 className={cn(
@@ -124,6 +125,7 @@ const OrderCard = memo(
                 {`$${itemData.price}`}
               </div>
             )}
+              */}
             <div className={cn('flex min-w-0 flex-row flex-wrap gap-2 sm:gap-3')}>
               <Tags item={itemData} />
             </div>
@@ -136,6 +138,7 @@ const OrderCard = memo(
           <div className="absolute rounded-lg bg-black/80 px-1.5 py-0.5 text-xs text-white">
             {itemData.itemQuantity}
           </div>
+          {/**
           {itemData.price && (
             <div
               className={cn(
@@ -146,6 +149,7 @@ const OrderCard = memo(
               {`$${itemData.price}`}
             </div>
           )}
+          */}
           {selectable && (
             <div
               className={cn(
@@ -216,12 +220,14 @@ const OrderCard = memo(
         ),
       [selectable, selected, inBoxCardClass]
     );
-    
-    const isFoil = useMemo(() => 
-      (itemData?.itemPrinting?.toLowerCase().includes("foil") ||
-      itemData?.itemName.toLowerCase().includes("foil")) && 
-      "from-green-smoke-800 to-green-smoke-600 bg-radial hover:from-green-smoke-700 hover:to-green-smoke-500 transition-colors"
-    , [itemData]);
+
+    const isFoil = useMemo(
+      () =>
+        (itemData?.itemPrinting?.toLowerCase().includes('foil') ||
+          itemData?.itemName.toLowerCase().includes('foil')) &&
+        'bg-gradient-to-r from-red-400 via-yellow-400 to-purple-400 hover:from-red-500 hover:via-yellow-500 hover:to-purple-500 transition-colors',
+      [itemData]
+    );
 
     if (!itemData) {
       return null;
@@ -253,7 +259,7 @@ const OrderCard = memo(
             loading={imageLoading}
           />
           {isFoil && (
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
+            <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/30 to-transparent" />
           )}
           {itemData.itemQuantity !== 1 && (
             <div
