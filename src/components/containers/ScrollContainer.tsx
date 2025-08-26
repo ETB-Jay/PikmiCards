@@ -11,11 +11,7 @@ import { ChildrenAndClassProps } from "../../interfaces";
  */
 const ScrollContainer = memo(
   ({ children, className }: ChildrenAndClassProps): ReactElement => (
-    <div
-      className={cn(
-        "flex h-full w-full flex-col gap-2 overflow-auto rounded-lg",
-        className)}
-    >
+    <div className={cn("flex h-full w-full flex-col gap-2 overflow-auto rounded-lg", className)}>
       {children}
     </div>
   )

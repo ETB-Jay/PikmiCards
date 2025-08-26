@@ -9,6 +9,7 @@ import {
   AuthContext,
   StoreLocationContext,
   LogoutContext,
+  ConfirmAllContext,
   OrderSelectionContext,
 } from "./Context";
 
@@ -85,6 +86,15 @@ const useLogout = () => {
   return context;
 };
 
+/**
+ * useConfirmAll returns the ConfirmAllContext value
+ * @throws Error if used outside ConfirmAllProvider
+ */
+const useConfirmAll = () => {
+  const context = useContext(ConfirmAllContext);
+  return context;
+};
+
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export {
   useOrders,
@@ -95,4 +105,5 @@ export {
   useStoreLocation,
   useAuth,
   useLogout,
+  useConfirmAll,
 };

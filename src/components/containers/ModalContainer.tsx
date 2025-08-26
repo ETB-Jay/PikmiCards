@@ -28,7 +28,7 @@ const ModalContainer = memo(({ children, className = "" }: ChildrenAndClassProps
       aria-label={MODAL_CONTAINER_ARIA_LABEL}
       className={cn(
         "fixed inset-0 z-50 flex items-center justify-center",
-        "bg-black/50 backdrop-blur-sm cursor-pointer select-none",
+        "cursor-pointer bg-black/50 backdrop-blur-sm select-none",
         className
       )}
       tabIndex={0}
@@ -37,7 +37,9 @@ const ModalContainer = memo(({ children, className = "" }: ChildrenAndClassProps
           closeAll();
         }
       }}
-      onClick={() => { closeAll(); }}
+      onClick={() => {
+        closeAll();
+      }}
     >
       <div
         className={cn(
@@ -47,7 +49,9 @@ const ModalContainer = memo(({ children, className = "" }: ChildrenAndClassProps
           "rounded-lg p-4 shadow-2xl",
           className
         )}
-        onClick={(ev) => { ev.stopPropagation(); }}
+        onClick={(ev) => {
+          ev.stopPropagation();
+        }}
         tabIndex={0}
         role="button"
         onKeyDown={(ev) => {

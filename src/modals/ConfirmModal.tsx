@@ -68,9 +68,7 @@ const getItemData = (
   item: Item,
   orders: OrderData[],
   storeLocation: StoreLocations
-): ItemData | undefined => (
-  findItemDataByOrder(orders, item, storeLocation)
-);
+): ItemData | undefined => findItemDataByOrder(orders, item, storeLocation);
 
 /** Helper function to find ItemData by Item and location */
 const findItemDataByOrder = (
@@ -85,61 +83,74 @@ const findItemDataByOrder = (
 };
 
 /** PreviewContent displays a preview of the selected item, or a placeholder if none is selected. */
-const PreviewContent = memo(({ previewItem, orders, storeLocation }: {
-  previewItem: Item | null;
-  orders: OrderData[];
-  storeLocation: StoreLocations;
-}) => {
-  const itemData = previewItem ? getItemData(previewItem, orders, storeLocation) : null;
+const PreviewContent = memo(
+  ({
+    previewItem,
+    orders,
+    storeLocation,
+  }: {
+    previewItem: Item | null;
+    orders: OrderData[];
+    storeLocation: StoreLocations;
+  }) => {
+    const itemData = previewItem ? getItemData(previewItem, orders, storeLocation) : null;
 
-  return itemData ? (
-    <div className={cn("flex flex-col items-center gap-2")}>
-      <ImageDisplay
-        imageUrl={itemData.imageUrl}
-        className={cn("h-full max-h-80 w-auto")}
-        mode="fullscreen"
-        loading="eager"
-      />
-      <span className={cn("text-green-smoke-100 truncate text-sm font-medium whitespace-nowrap")}>
-        {itemData.itemName}
-      </span>
-      <Tags item={itemData} className="items-center justify-center" />
-    </div>
-  ) : (
-    <div className={cn("flex h-full w-full flex-col items-center justify-center")}>
-      <EmptyImage className="mb-2 h-40 w-auto opacity-60" />
-      <span className="text-gray-400">{EMPTY_PREVIEW_ALT}</span>
-    </div>
-  );
-});
+    return itemData ? (
+      <div className={cn("flex flex-col items-center gap-2")}>
+        <ImageDisplay
+          imageUrl={itemData.imageUrl}
+          className={cn("h-full max-h-80 w-auto")}
+          mode="fullscreen"
+          loading="eager"
+        />
+        <span className={cn("text-green-smoke-100 truncate text-sm font-medium whitespace-nowrap")}>
+          {itemData.itemName}
+        </span>
+        <Tags item={itemData} className="items-center justify-center" />
+      </div>
+    ) : (
+      <div className={cn("flex h-full w-full flex-col items-center justify-center")}>
+        <EmptyImage className="mb-2 h-40 w-auto opacity-60" />
+        <span className="text-gray-400">{EMPTY_PREVIEW_ALT}</span>
+      </div>
+    );
+  }
+);
 PreviewContent.displayName = "PreviewContent";
 
 /** ItemContentSection renders a section with title and items display */
-const ItemContentSection = memo(({ title, items, onImageClick }: {
-  title: string,
-  items: Item[],
-  onImageClick: (content: string | Item | null) => void,
-}) => {
-  const content = items.length === 0 ? (
-    <Empty text="No items" />
-  ) : (
-    <DisplayItems
-      items={items}
-      className={cn("rounded-2xl bg-black/10 p-2 max-h-35 w-full flex-row flex-wrap")}
-      err="No items"
-      selectable={false}
-      largeDisplay={false}
-      onImageClick={onImageClick}
-    />
-  );
+const ItemContentSection = memo(
+  ({
+    title,
+    items,
+    onImageClick,
+  }: {
+    title: string;
+    items: Item[];
+    onImageClick: (content: string | Item | null) => void;
+  }) => {
+    const content =
+      items.length === 0 ? (
+        <Empty text="No items" />
+      ) : (
+        <DisplayItems
+          items={items}
+          className={cn("max-h-35 w-full flex-row flex-wrap rounded-2xl bg-black/10 p-2")}
+          err="No items"
+          selectable={false}
+          largeDisplay={false}
+          onImageClick={onImageClick}
+        />
+      );
 
-  return (
-    <>
-      <Text text={title} />
-      {content}
-    </>
-  );
-});
+    return (
+      <>
+        <Text text={title} />
+        {content}
+      </>
+    );
+  }
+);
 ItemContentSection.displayName = "ItemContentSection";
 
 /** ConfirmModal displays a modal for confirming order completion and viewing item details. */
@@ -154,37 +165,48 @@ const ConfirmModal = memo(({ order }: { order: Order }) => {
   // Find the order data for the current order and location
   const orderData = findOrderDataByOrder(orders, order, storeLocation);
 
-  const getItemsByFilter = (order: Order, filterFn: (status: string) => boolean) => (
-    order.items.filter((item) => filterFn(item.status)).filter(Boolean)
+  const getItemsByFilter = (order: Order, filterFn: (status: string) => boolean) =>
+    order.items.filter((item) => filterFn(item.status)).filter(Boolean);
+
+  const unretrievedItems = useMemo(
+    () => getItemsByFilter(order, (status) => status !== "inBox"),
+    [order]
   );
 
-  const unretrievedItems = useMemo(() =>
-    getItemsByFilter(order, (status) => status !== "inBox")
-    , [order]);
-
-  const retrievedItems = useMemo(() =>
-    getItemsByFilter(order, (status) => status === "inBox")
-    , [order]);
+  const retrievedItems = useMemo(
+    () => getItemsByFilter(order, (status) => status === "inBox"),
+    [order]
+  );
 
   /** Handler for image click to set preview item. */
   const handleImageClick = (content: string | Item | null) => {
-    if (content && typeof content === "object" && "itemID" in content) { setPreviewItem(content); }
-    else { setPreviewItem(null); }
+    if (content && typeof content === "object" && "itemID" in content) {
+      setPreviewItem(content);
+    } else {
+      setPreviewItem(null);
+    }
   };
 
   /** Handler for confirming the order. */
-  const handleConfirm = () => { onConfirm(order, orderDisplay, employee, storeLocation); };
+  const handleConfirm = () => {
+    onConfirm(order, orderDisplay, employee, storeLocation);
+  };
 
   /** Only allow confirm if all items are retrieved and an employee is selected. */
-  const canConfirm = useMemo(() =>
-    (retrievedItems.length === order.items.length) && employee
-    , [retrievedItems, order.items, employee]);
+  const canConfirm = useMemo(
+    () => retrievedItems.length === order.items.length && employee,
+    [retrievedItems, order.items, employee]
+  );
 
-  const orderLink = useMemo(() =>
-    `https://admin.shopify.com/store/enter-the-battlefield/orders/${getLast(order.orderID, "/")}`
-    , [])
+  const orderLink = useMemo(
+    () =>
+      `https://admin.shopify.com/store/enter-the-battlefield/orders/${getLast(order.orderID, "/")}`,
+    []
+  );
 
-  if (!orderData) { return null; }
+  if (!orderData) {
+    return null;
+  }
 
   return (
     <ModalContainer>
@@ -199,16 +221,14 @@ const ConfirmModal = memo(({ order }: { order: Order }) => {
             <div className={cn("flex flex-col gap-2")}>
               <a
                 href={orderLink}
-                className={
-                  cn("w-full text-center text-lg font-bold text-white",
-                    "hover:text-gray-400 transition-colors")
-                }
+                className={cn(
+                  "w-full text-center text-lg font-bold text-white",
+                  "transition-colors hover:text-gray-400"
+                )}
                 target="_blank"
                 rel="noreferrer"
               >
-                <span id="modal-title">
-                  {orderData.customerName}
-                </span>
+                <span id="modal-title">{orderData.customerName}</span>
               </a>
               {CustomerTags(getOrderFields(orderData))}
             </div>

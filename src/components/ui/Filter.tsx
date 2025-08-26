@@ -1,4 +1,5 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import AutoAwesomeMotionIcon from "@mui/icons-material/AutoAwesomeMotion";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -21,24 +22,44 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
     boxMax: null,
     game: "",
     set: "",
+    rarity: new Set<string>(),
   });
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const filterRef = useRef<HTMLDivElement>(null);
 
-  const gameOptions = useMemo(() => [
-    { value: "", label: "All Games" },
-    { value: "Magic", label: "MTG" },
-    { value: "Pokemon", label: "Pokemon" },
-    { value: "One Piece", label: "One Piece" },
-    { value: "Flesh And Blood", label: "FaB" },
-    { value: "YuGiOh", label: "Yugioh" },
-    { value: "Lorcana", label: "Lorcana" },
-    { value: "Sorcery: Contested Realm", label: "Sorcery" },
-    { value: "Gundam", label: "Gundam" },
-  ], []);
+  const gameOptions = useMemo(
+    () => [
+      { value: "", label: "All Games" },
+      { value: "Magic", label: "MTG" },
+      { value: "Pokemon", label: "Pokemon" },
+      { value: "One Piece", label: "One Piece" },
+      { value: "Flesh And Blood", label: "FaB" },
+      { value: "YuGiOh", label: "Yugioh" },
+      { value: "Lorcana", label: "Lorcana" },
+      { value: "Sorcery: Contested Realm", label: "Sorcery" },
+      { value: "Gundam", label: "Gundam" },
+    ],
+    []
+  );
+
+  const rarityOptions = useMemo(
+    () => [
+      { value: "Common", label: "Common" },
+      { value: "Uncommon", label: "Uncommon" },
+      { value: "Rare", label: "Rare" },
+      { value: "Mythic", label: "Mythic" },
+    ],
+    []
+  );
 
   const hasActiveFilters = useMemo(() => {
-    return temp.boxMin !== null || temp.boxMax !== null || temp.game !== "" || temp.set !== "";
+    return (
+      temp.boxMin !== null ||
+      temp.boxMax !== null ||
+      temp.game !== "" ||
+      temp.set !== "" ||
+      temp.rarity.size > 0
+    );
   }, [temp]);
 
   const handleShowDropdown = useCallback(() => {
@@ -56,27 +77,42 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
     [temp]
   );
 
+  const handleRarityChange = useCallback((rarity: string) => {
+    setTemp((prev) => {
+      const newRaritySet = new Set(prev.rarity);
+      if (newRaritySet.has(rarity)) {
+        newRaritySet.delete(rarity);
+      } else {
+        newRaritySet.add(rarity);
+      }
+      return { ...prev, rarity: newRaritySet };
+    });
+  }, []);
+
   const handleBoxMinChange = useCallback((value: string) => {
     const numValue = value === "" ? null : parseInt(value, 10);
-    setTemp(prev => ({
+    setTemp((prev) => ({
       ...prev,
-      boxMin: numValue
+      boxMin: numValue,
     }));
   }, []);
 
   const handleBoxMaxChange = useCallback((value: string) => {
     const numValue = value === "" ? null : parseInt(value, 10);
-    setTemp(prev => ({
+    setTemp((prev) => ({
       ...prev,
-      boxMax: numValue
+      boxMax: numValue,
     }));
   }, []);
 
-  const handleSubmit = useCallback((ev: FormEvent) => {
-    ev.preventDefault();
-    onChange(temp);
-    setShowDropdown(false);
-  }, [onChange, temp]);
+  const handleSubmit = useCallback(
+    (ev: FormEvent) => {
+      ev.preventDefault();
+      onChange(temp);
+      setShowDropdown(false);
+    },
+    [onChange, temp]
+  );
 
   const handleClear = useCallback(() => {
     const clearedFilters: Filters = {
@@ -84,6 +120,7 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
       boxMax: null,
       game: "",
       set: "",
+      rarity: new Set<string>(),
     };
     setTemp(clearedFilters);
     onChange(clearedFilters);
@@ -108,10 +145,9 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
   return (
     <div ref={filterRef} className="sticky top-0 left-0 z-10 w-full">
       <BasicContainer
-        className={`absolute w-fit py-0 ${hasActiveFilters
-          ? "bg-blue-200 ring-blue-400/40"
-          : "bg-green-smoke-200"
-          }`}
+        className={`absolute w-fit py-0 ${
+          hasActiveFilters ? "bg-blue-200 ring-blue-400/40" : "bg-green-smoke-200"
+        }`}
         clickable
         onClick={handleShowDropdown}
       >
@@ -119,28 +155,29 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
           <FilterListIcon fontSize="small" color="inherit" />
           {hasActiveFilters && (
             <span className="text-xs font-medium">
-              {[
-                (temp.boxMin !== null || temp.boxMax !== null) && "boxes",
-                temp.game,
-                temp.set
-              ].filter(Boolean).length}
+              {
+                [
+                  (temp.boxMin !== null || temp.boxMax !== null) && "boxes",
+                  temp.game,
+                  temp.set,
+                  temp.rarity.size > 0 && `${temp.rarity.size} rarities`,
+                ].filter(Boolean).length
+              }
             </span>
           )}
         </div>
       </BasicContainer>
       {showDropdown && (
-        <BasicContainer
-          className="absolute top-6 left-0 z-10 w-96 bg-amber-100 p-3 text-xs ring-amber-400/40"
-        >
-
+        <BasicContainer className="absolute top-6 left-0 z-10 w-96 bg-amber-100 p-3 text-xs ring-amber-400/40">
           <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
             <div className="space-y-2">
-              <label className="text-xs font-medium flex items-center gap-1">
+              <div className="flex items-center gap-1 text-xs font-medium">
                 <ClosedBoxIcon width={16} height={16} stroke="black" />
                 Box Range
-              </label>
-              <div className="flex gap-2 items-center">
+              </div>
+              <div className="flex items-center gap-2">
                 <InputField
+                  icon={<ClosedBoxIcon width={16} height={16} stroke="black" />}
                   label="Min Box"
                   type="number"
                   value={temp.boxMin?.toString() || ""}
@@ -152,6 +189,7 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
                 />
                 <span className="text-xs text-gray-500">to</span>
                 <InputField
+                  icon={<ClosedBoxIcon width={16} height={16} stroke="black" />}
                   label="Max Box"
                   type="number"
                   value={temp.boxMax?.toString() || ""}
@@ -182,6 +220,32 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
               autoComplete=""
               err=""
             />
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-1 text-xs font-medium">
+                <AutoAwesomeIcon fontSize="small" />
+                Rarity
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {rarityOptions.map((option) => (
+                  <label
+                    key={option.value}
+                    className="flex cursor-pointer items-center gap-2"
+                    htmlFor={`rarity-${option.value}`}
+                  >
+                    <input
+                      id={`rarity-${option.value}`}
+                      type="checkbox"
+                      checked={temp.rarity.has(option.value)}
+                      onChange={() => handleRarityChange(option.value)}
+                      className="rounded"
+                      aria-label={option.label}
+                    />
+                    <span className="text-xs">{option.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
 
             <div className="flex gap-2 pt-2">
               <Button

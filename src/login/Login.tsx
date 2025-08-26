@@ -42,9 +42,7 @@ function Login(): ReactElement {
         <PikmicardBannerIcon
           className={cn("mb-4 h-auto w-3/5 drop-shadow-2xl transition-transform hover:scale-110")}
         />
-        <BasicContainer
-          className="flex w-full flex-col rounded-lg p-5 shadow-2xl shadow-black/40 transition-all"
-        >
+        <BasicContainer className="flex w-full flex-col rounded-lg p-5 shadow-2xl shadow-black/40 transition-all">
           <InputField
             label="Email"
             type="text"

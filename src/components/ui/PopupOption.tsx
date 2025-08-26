@@ -35,7 +35,7 @@ const PopupOption = memo(
         role="button"
         className={cn(
           "group relative flex w-full min-w-fit cursor-pointer flex-row items-center",
-          "justify-center gap-1 rounded px-2 py-0.5 transition-colors text-xs hover:bg-black/10"
+          "justify-center gap-1 rounded px-2 py-0.5 text-xs transition-colors hover:bg-black/10"
         )}
         onClick={handleClick}
         tabIndex={0}

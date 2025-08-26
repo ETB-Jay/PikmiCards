@@ -42,12 +42,9 @@ const Orders = memo((): ReactElement => {
   return (
     <>
       {pickDisplay}
-      {error &&
-        <ErrorBox
-          text={error}
-          className="absolute right-1/2 bottom-20 z-10 w-fit translate-1/2"
-        />
-      }
+      {error && (
+        <ErrorBox text={error} className="absolute right-1/2 bottom-20 z-10 w-fit translate-1/2" />
+      )}
     </>
   );
 });

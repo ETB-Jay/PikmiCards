@@ -36,7 +36,7 @@ const getEmployees = (): string[] => {
  */
 const SelectEmployee = ({
   confirmedEmployee,
-  setConfirmedEmployee
+  setConfirmedEmployee,
 }: SelectEmployeeProps): ReactElement => {
   const [employeeList, setEmployeeList] = useState<string[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
@@ -48,7 +48,9 @@ const SelectEmployee = ({
     setEmployeeList(listofEmployees);
   };
 
-  useEffect(() => { updateEmployeeList(); }, []);
+  useEffect(() => {
+    updateEmployeeList();
+  }, []);
 
   const handleAddNewClick = () => {
     setShowInput(true);
@@ -104,7 +106,7 @@ const SelectEmployee = ({
       type="button"
       className={cn(
         "flex w-full flex-row items-center justify-between rounded-xl px-3 py-1 transition-all",
-        "duration-200 text-green-smoke-50 bg-green-smoke-700/70 hover:bg-green-smoke-700 shadow-sm"
+        "text-green-smoke-50 bg-green-smoke-700/70 hover:bg-green-smoke-700 shadow-sm duration-200"
       )}
       onClick={() => setShowDropdown((prev) => !prev)}
     >
@@ -129,10 +131,10 @@ const SelectEmployee = ({
       {employeeList.map((employee: string, idx: number) => (
         <div
           key={employee}
-          className={
-            cn("hover:bg-green-smoke-600 text-green-smoke-50 relative flex cursor-pointer",
-              "items-center justify-between px-4 py-1 text-sm transition-colors first:rounded-t-lg")
-          }
+          className={cn(
+            "hover:bg-green-smoke-600 text-green-smoke-50 relative flex cursor-pointer",
+            "items-center justify-between px-4 py-1 text-sm transition-colors first:rounded-t-lg"
+          )}
           onClick={() => handleConfirmEmployee(employee)}
           tabIndex={0}
           role="button"
@@ -142,10 +144,12 @@ const SelectEmployee = ({
             }
           }}
         >
-          <span className="truncate max-w-11/12">{employee}</span>
+          <span className="max-w-11/12 truncate">{employee}</span>
           <span
             className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer hover:brightness-75"
-            onClick={(ev) => { handleRemoveEmployee(ev, idx); }}
+            onClick={(ev) => {
+              handleRemoveEmployee(ev, idx);
+            }}
             tabIndex={0}
             role="button"
             onKeyDown={(ev) => {
@@ -159,10 +163,10 @@ const SelectEmployee = ({
         </div>
       ))}
       <div
-        className={
-          cn("hover:bg-green-smoke-600 border-green-smoke-600/20 text-green-smoke-100",
-            "cursor-pointer border-t px-4 py-1 text-sm transition-colors last:rounded-b-lg")
-        }
+        className={cn(
+          "hover:bg-green-smoke-600 border-green-smoke-600/20 text-green-smoke-100",
+          "cursor-pointer border-t px-4 py-1 text-sm transition-colors last:rounded-b-lg"
+        )}
         onClick={handleAddNewClick}
         tabIndex={0}
         role="button"

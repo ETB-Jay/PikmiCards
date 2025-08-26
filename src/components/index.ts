@@ -24,6 +24,7 @@ export { default as SelectEmployee } from "./ui/SelectEmployee";
 export { default as ImageDisplay } from "./ui/ImageDisplay";
 export { default as PopupOption } from "./ui/PopupOption";
 export { default as Button } from "./ui/Button";
+export { default as ModalConfirmButton } from "./ui/ModalConfirmButton";
 export { default as Empty } from "./ui/Empty";
 export { default as InputField } from "./ui/InputField";
 export { default as EmployeeInput } from "./ui/EmployeeInput";

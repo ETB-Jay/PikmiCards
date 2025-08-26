@@ -72,6 +72,20 @@ const ConfirmProvider = ({ children }: PropsWithChildren): ReactElement => {
       // Reassign box numbers after processing
       const reassignedOrders = reassignBoxNumbers(newOrderDisplay);
       setOrderDisplay(reassignedOrders);
+
+      // Update sessionStorage with confirmed item IDs
+      const confirmedItemIDs = new Set<string>();
+      reassignedOrders.forEach((order) => {
+        order.items.forEach((item) => {
+          if (item.status === "inBox" || item.status === "queue") {
+            confirmedItemIDs.add(item.itemID);
+          }
+        });
+      });
+
+      // Persist confirmed item IDs to sessionStorage
+      sessionStorage.setItem("confirmed", JSON.stringify(Array.from(confirmedItemIDs)));
+
       closeConfirm();
     },
     [setOrderDisplay, reassignBoxNumbers]

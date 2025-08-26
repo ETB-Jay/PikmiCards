@@ -17,7 +17,7 @@ const ImageDisplay = memo(
     alt = "image",
     onClick,
     className = "",
-    widths = [80, 120, 256, 800, 1200],
+    widths = [60, 80, 120, 256, 800, 1200],
     loading = "lazy",
     mode = "thumbnail",
   }: ImageDisplayProps) => {
@@ -39,19 +39,27 @@ const ImageDisplay = memo(
 
     const imageProps = useMemo(() => {
       const separator = imageUrl.includes("?") ? "&" : "?";
+
+      // Use different compression settings based on mode
+      const compressionParams =
+        mode === "thumbnail" ? "&format=webp&quality=75" : "&format=webp&quality=85";
+
       const srcSet = widths
-        .map((ww) => `${imageUrl}${separator}width=${ww}&format=webp ${ww}w`)
+        .map((ww) => `${imageUrl}${separator}width=${ww}${compressionParams} ${ww}w`)
         .join(", ");
 
-      const sizes = mode === "fullscreen" ? "100vw" : "80px";
+      // Reduced from 80px to 60px
+      const sizes = mode === "fullscreen" ? "100vw" : "60px";
       const fetchPriority = mode === "thumbnail" ? "high" : "auto";
+
+      // Use smaller default width for thumbnails
       const defaultWidth =
         mode === "fullscreen"
           ? widths[widths.length - 1]
-          : widths.find((ww) => ww >= 80) || widths[0];
+          : widths.find((ww) => ww >= 60) || widths[0];
 
       return {
-        src: `${imageUrl}${separator}width=${defaultWidth}&format=webp`,
+        src: `${imageUrl}${separator}width=${defaultWidth}${compressionParams}`,
         srcSet,
         sizes,
         fetchPriority,

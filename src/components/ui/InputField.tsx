@@ -40,7 +40,7 @@ const InputField = memo(
     max,
   }: InputProps & { min?: number; max?: number }) => {
     const [showPassword, setShowPassword] = useState(false);
-    const isPassword = (type === "password");
+    const isPassword = type === "password";
     const inputType = isPassword && showPassword ? "text" : type;
     const passwordIcon = showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />;
     const passwordAriaLabel = showPassword ? "Hide password" : "Show password";

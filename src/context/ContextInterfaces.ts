@@ -72,6 +72,14 @@ interface LogoutContextType {
   setLogout: Dispatch<SetStateAction<boolean>>;
 }
 
+// ConfirmAllContextType manages the confirm all modal state and actions.
+interface ConfirmAllContextType {
+  /** Whether the confirm all modal is open */
+  confirmAll: boolean;
+  /** Opens or closes the confirm all modal */
+  setConfirmAll: Dispatch<SetStateAction<boolean>>;
+}
+
 // StoreLocationContextType manages the current store location state.
 interface StoreLocationContextType {
   /** The current store location */
@@ -101,6 +109,7 @@ export type {
   ConfirmContextType,
   AuthContextType,
   LogoutContextType,
+  ConfirmAllContextType,
   FullscreenContextType,
   OrdersContextType,
   OrderDisplayContextType,

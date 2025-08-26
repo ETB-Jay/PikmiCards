@@ -9,7 +9,8 @@ import { cn } from "../context/functions";
 const LOADING_TEXT = "Loading";
 
 /** LoadingAnimation renders a spaceship loading indicator with optional progress. */
-const LoadingAnimation = memo((): ReactElement => (
+const LoadingAnimation = memo(
+  (): ReactElement => (
     <FlexColCenter className={cn("gap-4")}>
       <div className={cn("animate-float-spin")}>
         <div

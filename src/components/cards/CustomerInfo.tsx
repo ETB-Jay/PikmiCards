@@ -39,14 +39,16 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps): ReactElement | 
   );
 
   const orderData = findOrderDataByOrder(orders, order, storeLocation);
-  if (!orderData) { return null; }
+  if (!orderData) {
+    return null;
+  }
 
   return (
     <BasicContainer
       clickable
       className={cn(
         "h-fit max-h-8 w-[calc(50%-0.5rem)] flex-row items-center justify-between",
-        "px-2 py-1 text-xs text-green-100 transition-all duration-150",
+        "px-2 py-1 text-xs text-green-100 transition-colors duration-150",
         unretrievedCount === 0 && "bg-emerald-900 hover:bg-emerald-950"
       )}
       onClick={(event) => {
@@ -63,20 +65,22 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps): ReactElement | 
         }
       }}
     >
-      <p className={cn("max-w-1/3 truncate font-semibold")}>{orderData.customerName}</p>
+      <p className={cn("max-w-full truncate font-semibold")}>{orderData.customerName}</p>
       <div className={cn("flex flex-row gap-2")}>
         <TagPill>
           <ClosedBoxIcon className={cn("inline-block h-4 w-4")} />
           {order.box || index}
         </TagPill>
-        <TagPill>
-          <CardPickedIcon className={cn("inline-block h-4 w-4")} />
-          {retrievedCount}
-        </TagPill>
-        <TagPill>
-          <CardNotPickedIcon className={cn("inline-block h-4 w-4")} />
-          {unretrievedCount}
-        </TagPill>
+        <div className="hidden md:flex md:flex-row md:gap-2">
+          <TagPill>
+            <CardPickedIcon className={cn("inline-block h-4 w-4")} />
+            {retrievedCount}
+          </TagPill>
+          <TagPill>
+            <CardNotPickedIcon className={cn("inline-block h-4 w-4")} />
+            {unretrievedCount}
+          </TagPill>
+        </div>
       </div>
     </BasicContainer>
   );

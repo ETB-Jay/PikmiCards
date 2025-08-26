@@ -15,21 +15,47 @@ export default defineConfig({
     },
   },
   build: {
+    // Enable minification and optimization
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        // Remove console.log in production
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          if (!id.includes("node_modules")) { return; }
-          if (id.includes("react") || id.includes("react-dom")) { return "vendor"; }
-          if (id.includes("react-router")) { return "router"; }
-          if (id.includes("@mui/icons-material")) { return "ui"; }
-          if (id.includes("firebase")) { return "firebase"; }
-          return "vendor";
-        },
+        // Let Vite handle chunk splitting automatically
+        manualChunks: undefined,
+        // Optimize chunk naming
+        chunkFileNames: "js/[name]-[hash].js",
+        entryFileNames: "js/[name]-[hash].js",
+        assetFileNames: "assets/[name]-[hash].[ext]"
       },
     },
     chunkSizeWarningLimit: 1000,
+    // Enable source maps for debugging (disable in production if needed)
+    sourcemap: false,
+    // Optimize dependencies
+    commonjsOptions: {
+      include: [/node_modules/],
+    },
   },
   optimizeDeps: {
-    include: ["react", "react-dom", "react-router-dom"],
+    include: [
+      "react", 
+      "react-dom", 
+      "react-router-dom",
+      "@mui/icons-material",
+      "firebase/app",
+      "firebase/auth",
+      "firebase/firestore"
+    ],
+    exclude: ["@shopify/shopify-api", "@shopify/graphql-client"]
+  },
+  // Development optimizations
+  esbuild: {
+    drop: ["console", "debugger"],
   },
 });

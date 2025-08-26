@@ -21,8 +21,12 @@ const AuthProvider = ({ children }: PropsWithChildren): ReactElement => {
   ) => {
     ev.preventDefault();
     const newError: { email?: string; password?: string; general?: string } = {};
-    if (!user.email.trim()) { newError.email = "Email is required."; }
-    if (!user.password.trim()) { newError.password = "Password is required."; }
+    if (!user.email.trim()) {
+      newError.email = "Email is required.";
+    }
+    if (!user.password.trim()) {
+      newError.password = "Password is required.";
+    }
     if (newError.email || newError.password) {
       setError(newError);
       return;

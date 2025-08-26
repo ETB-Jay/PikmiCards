@@ -8,11 +8,10 @@ import { ItemData } from "../../types";
 import FlexRow from "../containers/FlexRow";
 import ClosedBoxIcon from "../icons/ClosedBoxIcon";
 
-
 // ─ Interfaces ────────────────────────────────────────────────────────────────────────────────────
 interface TagsProps {
-  item: ItemData,
-  className?: string,
+  item: ItemData;
+  className?: string;
 }
 
 /**
@@ -26,9 +25,15 @@ const Tags = memo(({ item, className = "" }: TagsProps): ReactElement => {
   const tags = useMemo(() => {
     const tagList: { value: string; icon?: ReactNode; alt?: string; type: string }[] = [];
 
-    if (item.itemPrinting) { tagList.push({ value: item.itemPrinting, type: "printing" }); }
-    if (item.itemRarity) { tagList.push({ value: item.itemRarity, type: "rarity" }); }
-    if (item.itemSet) { tagList.push({ value: item.itemSet, type: "set" }); }
+    if (item.itemPrinting) {
+      tagList.push({ value: item.itemPrinting, type: "printing" });
+    }
+    if (item.itemRarity) {
+      tagList.push({ value: item.itemRarity, type: "rarity" });
+    }
+    if (item.itemSet) {
+      tagList.push({ value: item.itemSet, type: "set" });
+    }
 
     const order = orderDisplay.find((order) => order.orderID === item.orderID);
     if (order && order.box) {
@@ -41,21 +46,16 @@ const Tags = memo(({ item, className = "" }: TagsProps): ReactElement => {
     }
 
     return tagList;
-  }, [
-    item.itemPrinting,
-    item.itemRarity,
-    item.itemSet,
-    item.orderID,
-    orderDisplay,
-    numberOfBoxes
-  ]);
+  }, [item.itemPrinting, item.itemRarity, item.itemSet, item.orderID, orderDisplay, numberOfBoxes]);
 
   const tagClasses = (type: string) => {
-    const commonClass = (item.itemRarity === "Common") && "from-gray-700 to-gray-500";
-    const uncommonClass = (item.itemRarity === "Uncommon") && "from-gray-800 to-blue-950";
-    const rareClass = (item.itemRarity === "Rare") && "from-yellow-900 to-yellow-500";
-    const mythicClass = (item.itemRarity === "Mythic") && "from-orange-900 to-orange-500";
-    const foilClass = (item.itemPrinting?.toLowerCase().includes("foil")) && "from-red-500 via-emerald-500 to-purple-500";
+    const commonClass = item.itemRarity === "Common" && "from-gray-800 to-blue-950";
+    const uncommonClass = item.itemRarity === "Uncommon" && "from-gray-700 to-gray-500";
+    const rareClass = item.itemRarity === "Rare" && "from-yellow-900 to-yellow-500";
+    const mythicClass = item.itemRarity === "Mythic" && "from-orange-900 to-orange-500";
+    const foilClass =
+      item.itemPrinting?.toLowerCase().includes("foil") &&
+      "from-red-500 via-emerald-500 to-purple-500";
 
     return cn(
       type === "rarity" && commonClass,
@@ -83,8 +83,7 @@ const Tags = memo(({ item, className = "" }: TagsProps): ReactElement => {
       ))}
     </FlexRow>
   );
-}
-);
+});
 Tags.displayName = "Tags";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────

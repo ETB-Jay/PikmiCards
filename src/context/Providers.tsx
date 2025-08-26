@@ -2,6 +2,7 @@
 import { ReactNode } from "react";
 
 import AuthProvider from "./providers/AuthProvider";
+import ConfirmAllProvider from "./providers/ConfirmAllProvider";
 import ConfirmProvider from "./providers/ConfirmProvider";
 import FullscreenProvider from "./providers/FullscreenProvider";
 import LogoutProvider from "./providers/LogoutProvider";
@@ -17,7 +18,9 @@ const AppProviders = ({ children }: { children: ReactNode }) => (
         <OrderDisplayProvider>
           <ConfirmProvider>
             <FullscreenProvider>
-              <LogoutProvider>{children}</LogoutProvider>
+              <LogoutProvider>
+                <ConfirmAllProvider>{children}</ConfirmAllProvider>
+              </LogoutProvider>
             </FullscreenProvider>
           </ConfirmProvider>
         </OrderDisplayProvider>

@@ -18,6 +18,7 @@ const CardPicker = memo((): ReactElement => {
     boxMax: null,
     game: "",
     set: "",
+    rarity: new Set<string>(),
   });
 
   const handleFiltersChange = useCallback((newFilters: Filters) => {
@@ -25,11 +26,11 @@ const CardPicker = memo((): ReactElement => {
   }, []);
 
   const gridClassName = useMemo(
-    () => 
+    () =>
       cn(
         "m-auto px-5 grid h-fit min-h-[76vh] w-full max-w-screen-2xl gap-2",
         "grid-cols-1",
-        "lg:auto-rows-[1fr_150px] lg:grid-cols-2",
+        "lg:grid-rows-[auto_1fr] lg:grid-cols-2",
         "py-2"
       ),
     []
@@ -41,7 +42,7 @@ const CardPicker = memo((): ReactElement => {
         <Filter onChange={handleFiltersChange} />
         <ToPick filters={filters} />
       </BasicContainer>
-      <BasicContainer className="">
+      <BasicContainer>
         <CardGridDisplay />
       </BasicContainer>
       <BasicContainer className="min-h-30">

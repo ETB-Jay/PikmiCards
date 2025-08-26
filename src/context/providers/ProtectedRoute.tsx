@@ -21,8 +21,12 @@ const ProtectedRoute = ({ children }: PropsWithChildren) => {
     return () => unsubscribe();
   }, []);
 
-  if (loading) { return null; }
-  if (!firebaseUser) { return <Navigate to="/login" />; }
+  if (loading) {
+    return null;
+  }
+  if (!firebaseUser) {
+    return <Navigate to="/login" />;
+  }
   return children;
 };
 

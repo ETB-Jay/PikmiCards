@@ -16,8 +16,7 @@ import { cn } from "../context/functions";
 const PICK_THEN_CONFIRM_STEPS = [
   {
     title: "Pick Items",
-    description:
-      "Go through the Item Card list and pick the items in any order you prefer",
+    description: "Go through the Item Card list and pick the items in any order you prefer",
     icon: <CardsIcon className="h-6 w-6 text-purple-300" />,
   },
   {
@@ -55,8 +54,7 @@ const PICK_AND_CONFIRM_TOGETHER_STEPS = [
 const IMPORTANT_NOTES_STEPS = [
   {
     title: "ItemPick List Sorting",
-    description:
-      "The ItemPick list is sorted by Set, Box Number, itemID, and then Alphabetical",
+    description: "The ItemPick list is sorted by Set, Box Number, itemID, and then Alphabetical",
   },
   {
     title: "Order Confirmation",
@@ -89,21 +87,13 @@ const Guide = memo(
         <PikmicardGuideBannerIcon className="h-fit max-w-lg" />
       </div>
 
-      <div
-        className={cn(
-          "w-full rounded-lg bg-green-950/30 p-2 shadow-lg backdrop-blur-sm"
-        )}
-      >
+      <div className={cn("w-full rounded-lg bg-green-950/30 p-2 shadow-lg backdrop-blur-sm")}>
         <ImageDisplay imageUrl="display.png" mode="fullscreen" />
       </div>
 
       <Text text="There are 2 methods to use Pikmicards:" />
       <div className="flex flex-row gap-6">
-        <Section
-          title="Pick, then Confirm"
-          variant="primary"
-          steps={PICK_THEN_CONFIRM_STEPS}
-        />
+        <Section title="Pick, then Confirm" variant="primary" steps={PICK_THEN_CONFIRM_STEPS} />
 
         <Section
           title="Pick and Confirm Together"
@@ -112,11 +102,7 @@ const Guide = memo(
         />
       </div>
 
-      <Section
-        title="Other Important Notes"
-        variant="accent"
-        steps={IMPORTANT_NOTES_STEPS}
-      />
+      <Section title="Other Important Notes" variant="accent" steps={IMPORTANT_NOTES_STEPS} />
     </div>
   )
 );

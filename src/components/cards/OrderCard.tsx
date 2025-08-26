@@ -1,6 +1,6 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import {
   KeyboardEvent,
   memo,
@@ -9,19 +9,19 @@ import {
   SyntheticEvent,
   useCallback,
   useMemo,
-} from 'react';
+} from "react";
 
-import Tags from './Tags';
-import { findItemDataByID, cn } from '../../context/functions';
+import Tags from "./Tags";
+import { findItemDataByID, cn } from "../../context/functions";
 import {
   useFullscreen,
   useOrderDisplay,
   useOrderSelection,
   useOrders,
-} from '../../context/useContext';
-import { Item, ItemData } from '../../types';
-import BasicContainer from '../containers/BasicContainer';
-import ImageDisplay from '../ui/ImageDisplay';
+} from "../../context/useContext";
+import { Item, ItemData } from "../../types";
+import BasicContainer from "../containers/BasicContainer";
+import ImageDisplay from "../ui/ImageDisplay";
 
 // ─ Interfaces ───────────────────────────────────────────────────────────────────────────────────
 interface OrderCardProps {
@@ -29,7 +29,7 @@ interface OrderCardProps {
   largeDisplay: boolean;
   selectable: boolean;
   onImageClick?: (content: string | Item | null) => void;
-  imageLoading?: 'eager' | 'lazy';
+  imageLoading?: "eager" | "lazy";
 }
 
 /**
@@ -45,21 +45,21 @@ const OrderCard = memo(
     largeDisplay,
     selectable,
     onImageClick,
-    imageLoading = 'lazy',
+    imageLoading = "lazy",
   }: OrderCardProps): ReactElement | null => {
     const { openFullscreen } = useFullscreen();
     const { orders } = useOrders();
     const { orderDisplay, numberOfBoxes } = useOrderDisplay();
     const { selectedItems, handleSelect } = useOrderSelection();
 
-    const isItem = (obj: any): obj is Item => 'status' in obj;
+    const isItem = (obj: any): obj is Item => "status" in obj;
 
     const itemData: ItemData | undefined = isItem(item)
       ? findItemDataByID(orders, item.itemID)
       : (item as ItemData);
 
     const selected = itemData ? selectedItems.has(item.itemID) : false;
-    const selectionAriaLabel = selected ? 'DeSelect item' : 'Select item';
+    const selectionAriaLabel = selected ? "DeSelect item" : "Select item";
 
     let selectionIcon: ReactElement | null = null;
     if (selectable) {
@@ -73,14 +73,14 @@ const OrderCard = memo(
     const inBoxCardClass = useMemo(() => {
       const itemOrder = orderDisplay.find((display) => display.orderID === item.orderID);
       if (!itemOrder || itemOrder.box === null) {
-        return '';
+        return "";
       }
 
       // Check if this order is within the current grid display range
       const orderIndex = orderDisplay.findIndex((display) => display.orderID === item.orderID);
       const isInCurrentGrid = orderIndex >= 0 && orderIndex < numberOfBoxes;
 
-      return isInCurrentGrid ? 'bg-green-smoke-900' : '';
+      return isInCurrentGrid ? "bg-green-smoke-900" : "";
     }, [orderDisplay, item.orderID, numberOfBoxes]);
 
     const handleSelectionIconClick = useCallback(
@@ -95,7 +95,7 @@ const OrderCard = memo(
 
     const handleSelectionIconKeyDown = useCallback(
       (ev: KeyboardEvent<HTMLDivElement>) => {
-        if (ev.key === 'Enter' || ev.key === ' ') {
+        if (ev.key === "Enter" || ev.key === " ") {
           ev.preventDefault();
           handleSelectionIconClick(ev as any);
         }
@@ -110,8 +110,8 @@ const OrderCard = memo(
 
       if (largeDisplay) {
         return (
-          <div className={cn('flex min-w-0 flex-1 flex-col')}>
-            <span className={cn('text-silver-100 md:text-md mb-2 text-sm font-semibold text-wrap')}>
+          <div className={cn("flex min-w-0 flex-1 flex-col")}>
+            <span className={cn("text-silver-100 md:text-md mb-2 text-sm font-semibold text-wrap")}>
               {itemData.itemName}
             </span>
             {/**
@@ -126,7 +126,7 @@ const OrderCard = memo(
               </div>
             )}
               */}
-            <div className={cn('flex min-w-0 flex-row flex-wrap gap-2 sm:gap-3')}>
+            <div className={cn("flex min-w-0 flex-row flex-wrap gap-2 sm:gap-3")}>
               <Tags item={itemData} />
             </div>
           </div>
@@ -153,8 +153,8 @@ const OrderCard = memo(
           {selectable && (
             <div
               className={cn(
-                'absolute right-1.5 flex items-center justify-center',
-                'bg-black/50 backdrop-blur-sm transition-all hover:bg-black/80'
+                "absolute right-1.5 flex items-center justify-center",
+                "bg-black/50 backdrop-blur-sm transition-all hover:bg-black/80"
               )}
               onClick={handleSelectionIconClick}
               onKeyDown={handleSelectionIconKeyDown}
@@ -212,10 +212,10 @@ const OrderCard = memo(
     const cardClass = useMemo(
       () =>
         cn(
-          'relative flex flex-row gap-3 object-contain p-2 h-fit w-auto rounded-xl transition-all',
-          'bg-green-smoke-800/60 hover:bg-green-smoke-800/80 active:bg-green-smoke-900/80',
-          'hover:scale-101 cursor-pointer',
-          selectable && selected && 'brightness-90 opacity-70 ring-2 ring-green-950',
+          "relative flex flex-row gap-3 object-contain p-2 h-fit w-auto rounded-xl transition-all",
+          "bg-green-smoke-800/60 hover:bg-green-smoke-800/80 active:bg-green-smoke-900/80",
+          "hover:scale-101 cursor-pointer",
+          selectable && selected && "brightness-80 opacity-70 ring-2 ring-green-950",
           inBoxCardClass
         ),
       [selectable, selected, inBoxCardClass]
@@ -223,9 +223,9 @@ const OrderCard = memo(
 
     const isFoil = useMemo(
       () =>
-        (itemData?.itemPrinting?.toLowerCase().includes('foil') ||
-          itemData?.itemName.toLowerCase().includes('foil')) &&
-        'bg-gradient-to-r from-red-400 via-yellow-400 to-purple-400 hover:from-red-500 hover:via-yellow-500 hover:to-purple-500 transition-colors',
+        (itemData?.itemPrinting?.toLowerCase().includes("foil") ||
+          itemData?.itemName.toLowerCase().includes("foil")) &&
+        "bg-gradient-to-r from-red-400 via-yellow-400 to-purple-400 hover:from-red-500 hover:via-yellow-500 hover:to-purple-500 transition-colors",
       [itemData]
     );
 
@@ -240,9 +240,9 @@ const OrderCard = memo(
         onClick={handleCardClick}
         tabIndex={0}
         role="button"
-        aria-label={itemData.itemName || 'Order card'}
+        aria-label={itemData.itemName || "Order card"}
         onKeyDown={(ev) => {
-          if (ev.key === 'Enter' || ev.key === ' ') {
+          if (ev.key === "Enter" || ev.key === " ") {
             handleCardClick(ev);
           }
         }}
@@ -250,10 +250,10 @@ const OrderCard = memo(
         <div className="relative">
           <ImageDisplay
             imageUrl={itemData.imageUrl}
-            alt={itemData.itemName || 'Unnamed'}
+            alt={itemData.itemName || "Unnamed"}
             className={cn(
-              'inline-block h-auto max-h-22 w-auto min-w-14 cursor-pointer object-contain',
-              'transition-all hover:opacity-80 hover:brightness-40'
+              "inline-block h-auto max-h-22 w-auto min-w-14 cursor-pointer object-contain",
+              "transition-all hover:opacity-80 hover:brightness-40"
             )}
             onClick={handleImageClick}
             loading={imageLoading}
@@ -264,8 +264,8 @@ const OrderCard = memo(
           {itemData.itemQuantity !== 1 && (
             <div
               className={cn(
-                'absolute right-2 bottom-2 flex flex-row items-center justify-center',
-                'rounded-2xl bg-black/80 px-1 py-0.5'
+                "absolute right-2 bottom-2 flex flex-row items-center justify-center",
+                "rounded-2xl bg-black/80 px-1 py-0.5"
               )}
             >
               <span className="text-xs font-semibold text-white">{itemData.itemQuantity}</span>
@@ -277,7 +277,7 @@ const OrderCard = memo(
     );
   }
 );
-OrderCard.displayName = 'OrderCard';
+OrderCard.displayName = "OrderCard";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default OrderCard;

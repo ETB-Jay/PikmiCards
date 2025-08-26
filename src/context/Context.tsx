@@ -6,6 +6,7 @@ import type {
   FullscreenContextType,
   ConfirmContextType,
   LogoutContextType,
+  ConfirmAllContextType,
   StoreLocationContextType,
   AuthContextType,
 } from "./ContextInterfaces";
@@ -76,6 +77,13 @@ const LogoutContext = createContext<LogoutContextType>({
 });
 LogoutContext.displayName = "LogoutContext";
 
+/** ConfirmAllContextType manages the confirm all modal state */
+const ConfirmAllContext = createContext<ConfirmAllContextType>({
+  confirmAll: false,
+  setConfirmAll: () => {},
+});
+ConfirmAllContext.displayName = "ConfirmAllContext";
+
 /** LocationContextType manages the location state */
 const StoreLocationContext = createContext<StoreLocationContextType>({
   /** The current location being picked from */
@@ -99,6 +107,7 @@ export {
   FullscreenContext,
   ConfirmContext,
   LogoutContext,
+  ConfirmAllContext,
   StoreLocationContext,
   AuthContext,
 };

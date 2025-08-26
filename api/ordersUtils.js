@@ -14,8 +14,7 @@ async function getOrders(client) {
       {
         orders(first: 50, 
           after: ${cursor ? `"${cursor}"` : "null"},           
-          query: "created_at:>${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled", 
-          reverse: true) {
+          query: "created_at:>${new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled") {
           edges {
             cursor
             node {

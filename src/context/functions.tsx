@@ -72,7 +72,9 @@ const findItemDataByID = (
 
   for (const orderData of orders) {
     const found = orderData.items.find((item) => item.itemID === itemID);
-    if (found) { return found; }
+    if (found) {
+      return found;
+    }
   }
 
   return undefined;
@@ -100,31 +102,26 @@ function returnLarger(item1: Item, item2: Item): number {
   const rarityOrder = ["Common", "Uncommon", "Rare", "Mythic"];
   const rarity1 = item1.itemRarity || "";
   const rarity2 = item2.itemRarity || "";
-  
+
   if (rarity1 !== rarity2) {
     const index1 = rarityOrder.indexOf(rarity1);
     const index2 = rarityOrder.indexOf(rarity2);
-    
+
     // If both rarities are in the defined order, sort by that order
     if (index1 !== -1 && index2 !== -1) {
       return index1 - index2;
     }
-    
+
     // If only one is in the defined order, prioritize it
-    if (index1 !== -1) { return -1; }
-    if (index2 !== -1) { return 1; }
-    
+    if (index1 !== -1) {
+      return -1;
+    }
+    if (index2 !== -1) {
+      return 1;
+    }
+
     // If neither is in the defined order, sort alphabetically
     return rarity1.localeCompare(rarity2);
-  }
-
-  // Then compare by box
-  const box1 = item1.box;
-  const box2 = item2.box;
-  if (box1 !== box2) {
-    if (box1 == null && box2 != null) { return 1; }
-    if (box1 != null && box2 == null) { return -1; }
-    return box1! - box2!;
   }
 
   // Finally compare by itemName
@@ -136,7 +133,9 @@ function returnLarger(item1: Item, item2: Item): number {
 /** splitByLast gets the content after the last occurence of a delimeter */
 function getLast(str: string, delimiter: string) {
   const index = str.lastIndexOf(delimiter);
-  if (index === -1) { return str };
+  if (index === -1) {
+    return str;
+  }
   return str.substring(index + delimiter.length);
 }
 
@@ -148,5 +147,5 @@ export {
   findItemDataByID,
   cn,
   returnLarger,
-  getLast
+  getLast,
 };

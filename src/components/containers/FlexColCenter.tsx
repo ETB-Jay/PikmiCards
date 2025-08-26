@@ -9,16 +9,15 @@ import { ChildrenAndClassProps } from "../../interfaces";
  * @param children - The child components to render
  * @param className - Additional CSS classes
  */
-const FlexColCenter = memo(({ children, className }: ChildrenAndClassProps): ReactElement => (
-  <div
-    className={cn(
-      "relative flex flex-col h-full w-full items-center justify-center",
-      className)
-    }
-  >
-    {children}
-  </div>
-));
+const FlexColCenter = memo(
+  ({ children, className }: ChildrenAndClassProps): ReactElement => (
+    <div
+      className={cn("relative flex h-full w-full flex-col items-center justify-center", className)}
+    >
+      {children}
+    </div>
+  )
+);
 FlexColCenter.displayName = "FlexColCenter";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────

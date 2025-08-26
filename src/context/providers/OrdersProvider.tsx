@@ -53,7 +53,7 @@ const OrdersProvider = ({ children }: PropsWithChildren): ReactElement => {
             set: item.itemSet ?? "",
             box: null,
             itemBrand: item.itemBrand,
-            itemRarity: item.itemRarity
+            itemRarity: item.itemRarity,
           })),
         }))
         .filter(Boolean)

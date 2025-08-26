@@ -18,18 +18,20 @@ const CLEAR_BUTTON_TEXT = "Clear Items";
  */
 const ConfirmBar = memo((): ReactElement | null => {
   const { handleConfirm, handleClear, selectedItems } = useOrderSelection();
-  if (selectedItems.size === 0) { return null; }
+  if (selectedItems.size === 0) {
+    return null;
+  }
 
   const ConfirmButtonClass = cn(
     "w-fit cursor-pointer rounded-full px-3 text-xs text-white",
     "font-medium shadow ring-2 transition-all duration-150"
-  )
+  );
 
   return (
     <FlexRow
       className={cn(
         "z-30 justify-center gap-4 rounded-2xl rounded-b-none p-1",
-        "shadow-2xl backdrop-blur-md bg-green-smoke-800/90",
+        "bg-green-smoke-800/90 shadow-2xl backdrop-blur-md",
         "fixed bottom-0 left-0 transition-all duration-200"
       )}
     >
@@ -56,7 +58,7 @@ const ConfirmBar = memo((): ReactElement | null => {
         )}
         label={CLEAR_BUTTON_TEXT}
       />
-    </FlexRow >
+    </FlexRow>
   );
 });
 ConfirmBar.displayName = "ConfirmBar";

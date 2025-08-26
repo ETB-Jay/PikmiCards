@@ -11,9 +11,7 @@ const QueuePile = memo((): ReactElement => {
   const { orderDisplay } = useOrderDisplay();
 
   const items: Item[] = useMemo(
-    () => orderDisplay
-      .flatMap((order) => order.items)
-      .filter((item) => item.status === "queue"),
+    () => orderDisplay.flatMap((order) => order.items).filter((item) => item.status === "queue"),
     [orderDisplay]
   );
 

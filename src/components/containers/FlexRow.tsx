@@ -9,11 +9,13 @@ import { ChildrenAndClassProps } from "../../interfaces";
  * @param children - The child components to render
  * @param className - Additional CSS classes
  */
-const FlexRow = memo(({ children, className }: ChildrenAndClassProps): ReactElement => (
-  <div className={cn("flex w-full flex-row flex-wrap items-center gap-2", className)}>
-    {children}
-  </div>
-));
+const FlexRow = memo(
+  ({ children, className }: ChildrenAndClassProps): ReactElement => (
+    <div className={cn("flex w-full flex-row flex-wrap items-center gap-2", className)}>
+      {children}
+    </div>
+  )
+);
 FlexRow.displayName = "FlexRow";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────

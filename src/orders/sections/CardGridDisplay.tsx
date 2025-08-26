@@ -9,14 +9,16 @@ import {
   Button,
   ScrollContainer,
   OpenBoxIcon,
-  ClosedBoxIcon
+  ClosedBoxIcon,
+  CardPickedIcon,
 } from "../../components";
-import { useOrderDisplay } from "../../context/useContext";
+import { useOrderDisplay, useConfirmAll } from "../../context/useContext";
 import { Order } from "../../types";
 
 /** CardGridDisplay displays a grid of customer orders or an empty state. */
 const CardGridDisplay = memo((): ReactElement => {
   const { orderDisplay, numberOfBoxes, setNumberOfBoxes, setOrderDisplay } = useOrderDisplay();
+  const { setConfirmAll } = useConfirmAll();
   const [tempNumberOfBoxes, setTempNumberOfBoxes] = useState<number>(numberOfBoxes);
 
   // Sync tempNumberOfBoxes with numberOfBoxes when it changes
@@ -39,31 +41,37 @@ const CardGridDisplay = memo((): ReactElement => {
   }, []);
 
   const ConfirmNumberOfBoxes = useCallback(() => {
-    if (tempNumberOfBoxes <= 0 || tempNumberOfBoxes > orderDisplay.length) { return false; }
+    if (tempNumberOfBoxes <= 0 || tempNumberOfBoxes > orderDisplay.length) {
+      return false;
+    }
     setNumberOfBoxes(tempNumberOfBoxes);
-    
+
     // Reassign box numbers only to orders that will be displayed in the grid
     const reassignedOrders = reassignBoxNumbers(orderDisplay, tempNumberOfBoxes);
     setOrderDisplay(reassignedOrders);
   }, [
-    tempNumberOfBoxes, 
-    orderDisplay.length, 
-    setNumberOfBoxes, 
-    orderDisplay, 
-    reassignBoxNumbers, 
-    setOrderDisplay
-  ])
+    tempNumberOfBoxes,
+    orderDisplay.length,
+    setNumberOfBoxes,
+    orderDisplay,
+    reassignBoxNumbers,
+    setOrderDisplay,
+  ]);
 
   const numberOfBoxesError = useMemo(() => {
-    if (tempNumberOfBoxes <= 0) { return "Must be greater than 0!"; }
+    if (tempNumberOfBoxes <= 0) {
+      return "Must be greater than 0!";
+    }
     return "";
   }, [tempNumberOfBoxes, orderDisplay.length]);
 
-  if (orderDisplay.length === 0) { return <Empty text="No Orders Left" />; }
+  if (orderDisplay.length === 0) {
+    return <Empty text="No Orders Left" />;
+  }
 
   return (
     <>
-      <FlexRow className="flex-nowrap w-full mb-2">
+      <FlexRow className="w-full flex-nowrap p-2">
         <InputField
           icon={<OpenBoxIcon stroke="black" width={24} height={24} />}
           label="Number of Boxes"
@@ -78,16 +86,22 @@ const CardGridDisplay = memo((): ReactElement => {
         <Button
           onAction={ConfirmNumberOfBoxes}
           disabled={Boolean(numberOfBoxesError)}
-          icon={<ClosedBoxIcon stroke="black" width={24} height={24} />}
+          icon={<ClosedBoxIcon width={20} height={20} />}
           label="Apply"
         />
+        <Button
+          onAction={() => setConfirmAll(true)}
+          disabled={orderDisplay.every(
+            (order) => order.box === null || order.items.some((item) => item.status !== "inBox")
+          )}
+          icon={<CardPickedIcon width={20} height={20} />}
+          label="Confirm All"
+        />
       </FlexRow>
-      <ScrollContainer className="relative flex-row flex-wrap gap-2 p-2 max-h-96 overflow-y-auto">
-        {orderDisplay
-          .slice(0, numberOfBoxes)
-          .map((order: Order, idx: number) => (
-            <CustomerInfo key={order.orderID} order={order} index={idx + 1} />
-          ))}
+      <ScrollContainer className="relative max-h-100 flex-row flex-wrap gap-2 overflow-y-auto p-1">
+        {orderDisplay.slice(0, numberOfBoxes).map((order: Order, idx: number) => (
+          <CustomerInfo key={order.orderID} order={order} index={idx + 1} />
+        ))}
       </ScrollContainer>
     </>
   );

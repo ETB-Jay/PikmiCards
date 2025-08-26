@@ -113,12 +113,14 @@ interface ConfirmResponse {
  * @property boxMax - Maximum box number to filter by (null means no maximum)
  * @property game - The game/brand to filter by
  * @property set - The set name to filter by
+ * @property rarity - Set of rarities to filter by
  */
 interface Filters {
   boxMin: number | null;
   boxMax: number | null;
   game: string;
   set: string;
+  rarity: Set<string>;
 }
 
 /**
@@ -138,9 +140,9 @@ type OrderID = string;
 /** ItemID is a unique identifier for an Item (string, typically Shopify line item ID) */
 type ItemID = string;
 
-/** 
- * StoreLocations represents the location details for where 
- * an item or order is stored or fulfilled 
+/**
+ * StoreLocations represents the location details for where
+ * an item or order is stored or fulfilled
  */
 type StoreLocations = string;
 
@@ -165,5 +167,5 @@ export type {
   Status,
   User,
   Filters,
-  GridDimensions
+  GridDimensions,
 };

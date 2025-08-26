@@ -1,5 +1,5 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { useState, useCallback, useMemo, PropsWithChildren, ReactElement } from "react";
+import { useState, useCallback, useMemo, PropsWithChildren, ReactElement, useEffect } from "react";
 
 import { OrderDisplayContext, OrderSelectionContext } from "../Context";
 
@@ -9,14 +9,62 @@ const OrderDisplayProvider = ({ children }: PropsWithChildren): ReactElement => 
   const [orderDisplay, setOrderDisplay] = useState<Order[]>([]);
   const [numberOfBoxes, setNumberOfBoxes] = useState<number>(24);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [confirmedItemIDs, setConfirmedItemIDs] = useState<Set<string>>(new Set());
+
+  // Load selected items and confirmed item IDs from sessionStorage on mount
+  useEffect(() => {
+    // Load selected items from sessionStorage
+    const selected = sessionStorage.getItem("selected");
+    if (selected) {
+      setSelectedItems(new Set(JSON.parse(selected)));
+    }
+
+    // Load confirmed item IDs from sessionStorage
+    const confirmed = sessionStorage.getItem("confirmed");
+    if (confirmed) {
+      setConfirmedItemIDs(new Set(JSON.parse(confirmed)));
+    }
+  }, []);
+
+  // Apply confirmed status when order display changes
+  useEffect(() => {
+    if (orderDisplay.length > 0 && confirmedItemIDs.size > 0) {
+      const displayedOrderIDs = new Set(
+        orderDisplay.filter((order) => order.box !== null).map((order) => order.orderID)
+      );
+
+      const updatedOrderDisplay = orderDisplay.map((order) => {
+        const newItems = order.items.map((item) => {
+          if (confirmedItemIDs.has(item.itemID)) {
+            const newStatus: Status = displayedOrderIDs.has(order.orderID) ? "inBox" : "queue";
+            return { ...item, status: newStatus };
+          }
+          return item;
+        });
+
+        return { ...order, items: newItems };
+      });
+
+      // Only update if there are actual changes
+      const hasChanges = updatedOrderDisplay.some(
+        (order, index) => JSON.stringify(order.items) !== JSON.stringify(orderDisplay[index].items)
+      );
+
+      if (hasChanges) {
+        setOrderDisplay(updatedOrderDisplay);
+      }
+    }
+  }, [orderDisplay.length, confirmedItemIDs]);
 
   const handleSelect = useCallback((itemID: string) => {
     setSelectedItems((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(itemID)) {
         newSet.delete(itemID);
+        sessionStorage.setItem("selected", JSON.stringify(Array.from(newSet)));
       } else {
         newSet.add(itemID);
+        sessionStorage.setItem("selected", JSON.stringify(Array.from(newSet)));
       }
       return newSet;
     });
@@ -24,6 +72,7 @@ const OrderDisplayProvider = ({ children }: PropsWithChildren): ReactElement => 
 
   const handleClear = useCallback(() => {
     setSelectedItems(new Set());
+    sessionStorage.setItem("selected", JSON.stringify([]));
   }, []);
 
   const handleConfirm = useCallback(() => {
@@ -56,18 +105,40 @@ const OrderDisplayProvider = ({ children }: PropsWithChildren): ReactElement => 
       const hasOrderChanges = updatedOrderDisplay.some(
         (order, index) => order !== prevOrderDisplay[index]
       );
-      return hasOrderChanges ? updatedOrderDisplay : prevOrderDisplay;
+
+      const finalOrderDisplay = hasOrderChanges ? updatedOrderDisplay : prevOrderDisplay;
+
+      // Get all confirmed item IDs from the updated order display
+      const newConfirmedItemIDs = new Set<string>();
+      finalOrderDisplay.forEach((order) => {
+        order.items.forEach((item) => {
+          if (item.status === "inBox" || item.status === "queue") {
+            newConfirmedItemIDs.add(item.itemID);
+          }
+        });
+      });
+
+      // Update confirmed item IDs state and sessionStorage
+      setConfirmedItemIDs(newConfirmedItemIDs);
+      sessionStorage.setItem("confirmed", JSON.stringify(Array.from(newConfirmedItemIDs)));
+
+      return finalOrderDisplay;
     });
 
+    // Clear selected items and persist to sessionStorage
     setSelectedItems(new Set());
+    sessionStorage.setItem("selected", JSON.stringify([]));
   }, [selectedItems]);
 
-  const orderDisplayValue = useMemo(() => ({ 
-    orderDisplay, 
-    setOrderDisplay, 
-    numberOfBoxes, 
-    setNumberOfBoxes 
-  }), [orderDisplay, numberOfBoxes]);
+  const orderDisplayValue = useMemo(
+    () => ({
+      orderDisplay,
+      setOrderDisplay,
+      numberOfBoxes,
+      setNumberOfBoxes,
+    }),
+    [orderDisplay, numberOfBoxes]
+  );
   const orderSelectionValue = useMemo(
     () => ({ selectedItems, setSelectedItems, handleSelect, handleClear, handleConfirm }),
     [selectedItems, handleSelect, handleClear, handleConfirm]

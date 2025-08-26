@@ -1,5 +1,5 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { SVGProps, memo } from 'react';
+import { SVGProps, memo } from "react";
 
 const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -133,14 +133,7 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
       mask="url(#path-9-inside-3_23_2)"
     />
     <g filter="url(#filter5_d_23_2)">
-      <circle
-        cx="366"
-        cy="75"
-        r="10"
-        fill="white"
-        fillOpacity="0.97"
-        shapeRendering="crispEdges"
-      />
+      <circle cx="366" cy="75" r="10" fill="white" fillOpacity="0.97" shapeRendering="crispEdges" />
     </g>
     <g filter="url(#filter6_d_23_2)">
       <path
@@ -694,7 +687,7 @@ const PikmicardBannerIcon = memo((props: SVGProps<SVGSVGElement>) => (
     </defs>
   </svg>
 ));
-PikmicardBannerIcon.displayName = 'PikmicardBannerIcon';
+PikmicardBannerIcon.displayName = "PikmicardBannerIcon";
 
 // ─ Exports ──────────────────────────────────────────────────────────────────────────────────────
 export default PikmicardBannerIcon;
