@@ -13,7 +13,7 @@ async function getOrders(client) {
       const query = `
       {
         orders(first: 50, 
-          after: ${cursor ? `"${cursor}"` : "null"},           
+          after: ${cursor ? `"${cursor}"` : null},           
           query: "created_at:>${new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled") {
           edges {
             cursor
@@ -39,16 +39,15 @@ async function getOrders(client) {
                             id
                             name
                             quantity
+                            originalUnitPriceSet {
+                              shopMoney {
+                                amount
+                              }
+                            }
                             variant { title image { url } }
-                            product { featuredImage { url } 
+                            product { 
+                                featuredImage { url } 
                                 tags
-                                contextualPricing (context: {country: CA}) {
-                                    maxVariantPricing {
-                                        price {
-                                            amount
-                                        }
-                                    }
-                                } 
                             }
                           }
                         }
@@ -65,30 +64,40 @@ async function getOrders(client) {
 
       const response = await client.request(query, {});
       const ordersData = response.data?.orders;
-      if (!ordersData?.edges) { throw new Error("Invalid response from Shopify API"); }
+      if (!ordersData?.edges) {
+        throw new Error("Invalid response from Shopify API");
+      }
 
       for (const edge of ordersData.edges) {
         const order = edge.node;
-        if (!order) { continue; }
+        if (!order) {
+          continue;
+        }
 
         let pickedLocations = [];
         if (order.metafield?.value) {
           try {
-            pickedLocations = JSON.parse(order.metafield.value).map(
-              (picked) => picked.location
-            );
-          } catch { /* ignore parse errors */ }
+            pickedLocations = JSON.parse(order.metafield.value).map((picked) => picked.location);
+          } catch {
+            /* ignore parse errors */
+          }
         }
 
         for (const fulfillEdge of order.fulfillmentOrders?.edges || []) {
-          if (!fulfillEdge?.node) { continue; }
+          if (!fulfillEdge?.node) {
+            continue;
+          }
           const locationName = fulfillEdge.node?.assignedLocation?.location?.name;
-          if (pickedLocations.includes(locationName)) { continue; }
+          if (pickedLocations.includes(locationName)) {
+            continue;
+          }
 
           const items = [];
           for (const itemEdge of fulfillEdge.node?.lineItems?.edges || []) {
             const item = itemEdge.node?.lineItem;
-            if (!item) { continue; }
+            if (!item) {
+              continue;
+            }
             const tags = item?.product?.tags;
             items.push({
               itemID: item.id,
@@ -96,18 +105,22 @@ async function getOrders(client) {
               itemName: item.name,
               itemQuantity: item.quantity,
               itemLocation: locationName,
-              itemBrand: tags?.find((tag) => tag.startsWith("Brand_"))?.replace("Brand_", "") || null,
+              itemBrand:
+                tags?.find((tag) => tag.startsWith("Brand_"))?.replace("Brand_", "") || null,
               itemSet: tags?.find((tag) => tag.startsWith("Set_"))?.replace("Set_", "") || null,
-              itemRarity: tags?.find((tag) => tag.startsWith("Rarity_"))?.replace("Rarity_", "") || null,
+              itemRarity:
+                tags?.find((tag) => tag.startsWith("Rarity_"))?.replace("Rarity_", "") || null,
               itemPrinting: item.variant?.title === "Default Title" ? null : item.variant?.title,
-              price: item.product?.contextualPricing?.maxVariantPricing?.price?.amount || null,
+              price: item.originalUnitPriceSet?.shopMoney?.amount || null,
               imageUrl:
                 item.variant?.image?.url ||
                 item.product?.featuredImage?.url ||
                 "https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png",
             });
           }
-          if (items.length === 0) { continue; }
+          if (items.length === 0) {
+            continue;
+          }
 
           // Deduplicate by order number and location
           const orderKey = `${order.name}-${locationName}`;
@@ -126,7 +139,7 @@ async function getOrders(client) {
               phone: order.phone || "",
               requiresShipping: order.requiresShipping,
               orderNumber: order.name,
-              paid: order.displayFinancialStatus
+              paid: order.displayFinancialStatus,
             });
             seenOrderKeys.add(orderKey);
           }
@@ -134,7 +147,9 @@ async function getOrders(client) {
       }
 
       hasNextPage = ordersData.pageInfo.hasNextPage;
-      if (hasNextPage) { cursor = ordersData.edges[ordersData.edges.length - 1].cursor; }
+      if (hasNextPage) {
+        cursor = ordersData.edges[ordersData.edges.length - 1].cursor;
+      }
     }
     return orders;
   } catch (err) {
@@ -154,13 +169,19 @@ async function writeOrders(client, orderID, value) {
 
   let currentMetafield = [];
   try {
-    const metafieldResponse = await client.request(getMetafieldQuery, { variables: { id: orderID } });
+    const metafieldResponse = await client.request(getMetafieldQuery, {
+      variables: { id: orderID },
+    });
     const metafieldValue =
       metafieldResponse.data?.order?.metafield?.value ||
       metafieldResponse.order?.metafield?.value ||
       null;
-    if (metafieldValue) { currentMetafield = JSON.parse(metafieldValue); }
-  } catch { /* ignore parse errors */ }
+    if (metafieldValue) {
+      currentMetafield = JSON.parse(metafieldValue);
+    }
+  } catch {
+    /* ignore parse errors */
+  }
 
   const mutation = `
     mutation OrderUpdate($input: OrderInput!) {
@@ -179,13 +200,15 @@ async function writeOrders(client, orderID, value) {
   const variables = {
     input: {
       id: orderID,
-      metafields: [{
-        key: "picked",
-        namespace: "custom",
-        type: "json",
-        value: JSON.stringify([...currentMetafield, value])
-      }]
-    }
+      metafields: [
+        {
+          key: "picked",
+          namespace: "custom",
+          type: "json",
+          value: JSON.stringify([...currentMetafield, value]),
+        },
+      ],
+    },
   };
 
   const response = await client.request(mutation, { variables });
@@ -196,4 +219,4 @@ async function writeOrders(client, orderID, value) {
   return orderUpdate;
 }
 
-export { getOrders, writeOrders }; 
+export { getOrders, writeOrders };
