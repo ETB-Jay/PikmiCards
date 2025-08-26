@@ -114,19 +114,7 @@ const OrderCard = memo(
             <span className={cn("text-silver-100 md:text-md mb-2 text-sm font-semibold text-wrap")}>
               {itemData.itemName}
             </span>
-            {/**
-            {itemData.price && (
-              <div
-                className={cn(
-                  'absolute right-2 bottom-2 rounded-lg bg-green-700/90 px-1.5 py-0.5',
-                  'text-xs font-medium text-white'
-                )}
-              >
-                {`$${itemData.price}`}
-              </div>
-            )}
-              */}
-            <div className={cn("flex min-w-0 flex-row flex-wrap gap-2 sm:gap-3")}>
+            <div className={cn("flex min-w-0 flex-row flex-wrap gap-2 sm:gap-3 pr-10")}>
               <Tags item={itemData} />
             </div>
           </div>
@@ -138,18 +126,6 @@ const OrderCard = memo(
           <div className="absolute rounded-lg bg-black/80 px-1.5 py-0.5 text-xs text-white">
             {itemData.itemQuantity}
           </div>
-          {/**
-          {itemData.price && (
-            <div
-              className={cn(
-                'absolute top-1 left-1 rounded-lg bg-green-700/90 px-1.5 py-0.5',
-                'text-xs font-medium text-white'
-              )}
-            >
-              {`$${itemData.price}`}
-            </div>
-          )}
-          */}
           {selectable && (
             <div
               className={cn(
@@ -264,7 +240,7 @@ const OrderCard = memo(
           {itemData.itemQuantity !== 1 && (
             <div
               className={cn(
-                "absolute right-2 bottom-2 flex flex-row items-center justify-center",
+                "absolute right-1 bottom-1 flex flex-row items-center justify-center",
                 "rounded-2xl bg-black/80 px-1 py-0.5"
               )}
             >
@@ -272,6 +248,15 @@ const OrderCard = memo(
             </div>
           )}
         </div>
+        {itemData.price && (
+          <div
+            className={cn(
+              "absolute right-2 bottom-2 inline-flex items-center justify-center rounded-lg bg-green-700/80 px-1.5 py-0.5 text-[9px] font-semibold text-white"
+            )}
+          >
+            {`$${itemData.price}`}
+          </div>
+        )}
         {cardContent}
       </BasicContainer>
     );

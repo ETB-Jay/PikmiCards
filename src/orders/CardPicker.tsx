@@ -30,7 +30,7 @@ const CardPicker = memo((): ReactElement => {
       cn(
         "m-auto px-5 grid h-fit min-h-[76vh] w-full max-w-screen-2xl gap-2",
         "grid-cols-1",
-        "lg:grid-rows-[auto_1fr] lg:grid-cols-2",
+        "lg:grid-rows-[auto_1fr] lg:grid-cols-[1fr_max(500px,40%)]",
         "py-2"
       ),
     []

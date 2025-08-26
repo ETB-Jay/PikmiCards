@@ -21,6 +21,10 @@ interface OrderDisplayContextType {
   orderDisplay: Order[];
   /** Updates the displayed orders */
   setOrderDisplay: (orders: Order[]) => void;
+  /** The current number of boxes */
+  numberOfBoxes: number;
+  /** Updates the number of boxes */
+  setNumberOfBoxes: Dispatch<SetStateAction<number>>;
   /** Set of selected ItemIDs */
   selectedItems: Set<ItemID>;
   /** Updates the set of selected items */

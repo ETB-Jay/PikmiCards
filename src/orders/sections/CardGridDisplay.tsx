@@ -1,5 +1,5 @@
 // ─ Imports ──────────────────────────────────────────────────────────────────────────────────────
-import { memo, ReactElement, useCallback, useMemo, useState, useEffect } from "react";
+import { memo, ReactElement, useCallback, useState, useEffect } from "react";
 
 import {
   Empty,
@@ -17,7 +17,7 @@ import { Order } from "../../types";
 
 /** CardGridDisplay displays a grid of customer orders or an empty state. */
 const CardGridDisplay = memo((): ReactElement => {
-  const { orderDisplay, numberOfBoxes, setNumberOfBoxes, setOrderDisplay } = useOrderDisplay();
+  const { orderDisplay, numberOfBoxes, setOrderDisplay } = useOrderDisplay();
   const { setConfirmAll } = useConfirmAll();
   const [tempNumberOfBoxes, setTempNumberOfBoxes] = useState<number>(numberOfBoxes);
 
@@ -40,30 +40,19 @@ const CardGridDisplay = memo((): ReactElement => {
     });
   }, []);
 
-  const ConfirmNumberOfBoxes = useCallback(() => {
+  const handleNumberOfBoxesChange = useCallback((newNumberOfBoxes: number) => {
+    setTempNumberOfBoxes(newNumberOfBoxes);
+  }, []);
+
+  const confirmNumberOfBoxes = useCallback(() => {
     if (tempNumberOfBoxes <= 0 || tempNumberOfBoxes > orderDisplay.length) {
-      return false;
+      return;
     }
-    setNumberOfBoxes(tempNumberOfBoxes);
 
     // Reassign box numbers only to orders that will be displayed in the grid
     const reassignedOrders = reassignBoxNumbers(orderDisplay, tempNumberOfBoxes);
     setOrderDisplay(reassignedOrders);
-  }, [
-    tempNumberOfBoxes,
-    orderDisplay.length,
-    setNumberOfBoxes,
-    orderDisplay,
-    reassignBoxNumbers,
-    setOrderDisplay,
-  ]);
-
-  const numberOfBoxesError = useMemo(() => {
-    if (tempNumberOfBoxes <= 0) {
-      return "Must be greater than 0!";
-    }
-    return "";
-  }, [tempNumberOfBoxes, orderDisplay.length]);
+  }, [tempNumberOfBoxes, orderDisplay, reassignBoxNumbers, setOrderDisplay]);
 
   if (orderDisplay.length === 0) {
     return <Empty text="No Orders Left" />;
@@ -76,16 +65,16 @@ const CardGridDisplay = memo((): ReactElement => {
           icon={<OpenBoxIcon stroke="black" width={24} height={24} />}
           label="Number of Boxes"
           value={tempNumberOfBoxes}
-          onChange={(ev) => setTempNumberOfBoxes(Number(ev.target.value))}
-          err={numberOfBoxesError}
+          onChange={(ev) => handleNumberOfBoxesChange(Number(ev.target.value))}
+          err=""
           type="number"
           max={orderDisplay.length}
           min={1}
           autoComplete="off"
         />
         <Button
-          onAction={ConfirmNumberOfBoxes}
-          disabled={Boolean(numberOfBoxesError)}
+          onAction={confirmNumberOfBoxes}
+          disabled={tempNumberOfBoxes <= 0 || tempNumberOfBoxes > orderDisplay.length}
           icon={<ClosedBoxIcon width={20} height={20} />}
           label="Apply"
         />

@@ -11,15 +11,20 @@ import { FormEvent, memo, useCallback, useEffect, useMemo, useRef, useState } fr
 import Button from "./Button";
 import InputField from "./InputField";
 import SelectField from "./SelectField";
+import { useOrderDisplay } from "../../context/useContext";
 import BasicContainer from "../containers/BasicContainer";
 import ClosedBoxIcon from "../icons/ClosedBoxIcon";
 
 import type { Filters } from "../../types";
 
 const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
+  const { numberOfBoxes } = useOrderDisplay();
+  // eslint-disable-next-line no-console
+  console.log("Filter: numberOfBoxes received", { numberOfBoxes });
+
   const [temp, setTemp] = useState<Filters>({
-    boxMin: null,
-    boxMax: null,
+    boxMin: 1,
+    boxMax: numberOfBoxes,
     game: "",
     set: "",
     rarity: new Set<string>(),
@@ -126,6 +131,16 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
     onChange(clearedFilters);
   }, [onChange]);
 
+  // Update temp.boxMax when numberOfBoxes changes
+  useEffect(() => {
+    if (numberOfBoxes > 0) {
+      setTemp((prev) => ({
+        ...prev,
+        boxMax: numberOfBoxes,
+      }));
+    }
+  }, [numberOfBoxes]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
@@ -185,7 +200,7 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
                   autoComplete=""
                   err=""
                   min={1}
-                  max={24}
+                  max={temp.boxMax || numberOfBoxes}
                 />
                 <span className="text-xs text-gray-500">to</span>
                 <InputField
@@ -196,8 +211,8 @@ const Filter = memo(({ onChange }: { onChange: (e: Filters) => void }) => {
                   onChange={(ev) => handleBoxMaxChange(ev.target.value)}
                   autoComplete=""
                   err=""
-                  min={1}
-                  max={24}
+                  min={temp.boxMin || 1}
+                  max={numberOfBoxes}
                 />
               </div>
             </div>

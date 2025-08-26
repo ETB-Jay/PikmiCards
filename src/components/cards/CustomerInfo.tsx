@@ -71,7 +71,7 @@ const CustomerInfo = memo(({ order, index }: CustomerInfoProps): ReactElement | 
           <ClosedBoxIcon className={cn("inline-block h-4 w-4")} />
           {order.box || index}
         </TagPill>
-        <div className="hidden md:flex md:flex-row md:gap-2">
+        <div className="hidden xl:flex xl:flex-row xl:gap-2">
           <TagPill>
             <CardPickedIcon className={cn("inline-block h-4 w-4")} />
             {retrievedCount}

@@ -25,7 +25,7 @@ const OrdersProvider = ({ children }: PropsWithChildren): ReactElement => {
 
   const assignBoxes = useCallback((orders: Order[]): Order[] => {
     return orders.map((order, idx) => {
-      const boxNum = idx < 24 ? idx + 1 : null;
+      const boxNum = idx + 1;
       return {
         ...order,
         box: boxNum,

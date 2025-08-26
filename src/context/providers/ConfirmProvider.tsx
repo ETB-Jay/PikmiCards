@@ -7,7 +7,6 @@ import { ConfirmContext } from "../Context";
 import { useOrderDisplay } from "../useContext";
 
 // ─ Constants ────────────────────────────────────────────────────────────────────────────────────
-const NUMBER_BOXES = 24;
 
 const ConfirmProvider = ({ children }: PropsWithChildren): ReactElement => {
   const [confirm, setConfirm] = useState<Order | null>(null);
@@ -20,7 +19,7 @@ const ConfirmProvider = ({ children }: PropsWithChildren): ReactElement => {
     setConfirm(null);
   };
 
-  const { setOrderDisplay } = useOrderDisplay();
+  const { setOrderDisplay, numberOfBoxes } = useOrderDisplay();
 
   const reassignBoxNumbers = useCallback((orders: Order[]): Order[] => {
     return orders.map((order, index) => ({
@@ -45,8 +44,8 @@ const ConfirmProvider = ({ children }: PropsWithChildren): ReactElement => {
       const newOrderDisplay = [...orderDisplay];
 
       const confirmedOrder = (): Order[] => {
-        if (newOrderDisplay.length > 24) {
-          const swapIdx = NUMBER_BOXES;
+        if (newOrderDisplay.length > numberOfBoxes) {
+          const swapIdx = numberOfBoxes;
           const swappedOrder = { ...newOrderDisplay[swapIdx], box: removeIdx + 1 };
           swappedOrder.items = swappedOrder.items.map((item) => ({ ...item, box: removeIdx + 1 }));
           newOrderDisplay.splice(swapIdx, 1);
@@ -88,7 +87,7 @@ const ConfirmProvider = ({ children }: PropsWithChildren): ReactElement => {
 
       closeConfirm();
     },
-    [setOrderDisplay, reassignBoxNumbers]
+    [setOrderDisplay, reassignBoxNumbers, numberOfBoxes]
   );
 
   const value = useMemo(

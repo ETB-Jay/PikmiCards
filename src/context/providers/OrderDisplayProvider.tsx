@@ -7,19 +7,17 @@ import type { Order, Status } from "../../types";
 
 const OrderDisplayProvider = ({ children }: PropsWithChildren): ReactElement => {
   const [orderDisplay, setOrderDisplay] = useState<Order[]>([]);
-  const [numberOfBoxes, setNumberOfBoxes] = useState<number>(24);
+  const [numberOfBoxes, setNumberOfBoxes] = useState<number>(0);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [confirmedItemIDs, setConfirmedItemIDs] = useState<Set<string>>(new Set());
 
   // Load selected items and confirmed item IDs from sessionStorage on mount
   useEffect(() => {
-    // Load selected items from sessionStorage
     const selected = sessionStorage.getItem("selected");
     if (selected) {
       setSelectedItems(new Set(JSON.parse(selected)));
     }
 
-    // Load confirmed item IDs from sessionStorage
     const confirmed = sessionStorage.getItem("confirmed");
     if (confirmed) {
       setConfirmedItemIDs(new Set(JSON.parse(confirmed)));
@@ -54,7 +52,21 @@ const OrderDisplayProvider = ({ children }: PropsWithChildren): ReactElement => 
         setOrderDisplay(updatedOrderDisplay);
       }
     }
-  }, [orderDisplay.length, confirmedItemIDs]);
+  }, [orderDisplay, confirmedItemIDs]);
+
+  // Update numberOfBoxes when orderDisplay changes
+  useEffect(() => {
+    const boxedOrders = orderDisplay.filter((order) => order.box !== null);
+    const newNumberOfBoxes = boxedOrders.length;
+    // eslint-disable-next-line no-console
+    console.log("OrderDisplayProvider: Updating numberOfBoxes", {
+      totalOrders: orderDisplay.length,
+      boxedOrders: boxedOrders.length,
+      newNumberOfBoxes,
+      currentNumberOfBoxes: numberOfBoxes,
+    });
+    setNumberOfBoxes(newNumberOfBoxes);
+  }, [orderDisplay]);
 
   const handleSelect = useCallback((itemID: string) => {
     setSelectedItems((prev) => {
