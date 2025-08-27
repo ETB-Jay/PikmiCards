@@ -200,7 +200,8 @@ const OrderCard = memo(
     const isFoil = useMemo(
       () =>
         (itemData?.itemPrinting?.toLowerCase().includes("foil") ||
-          itemData?.itemName.toLowerCase().includes("foil")) &&
+          itemData?.itemName.toLowerCase().includes("foil") ||
+          itemData?.itemRarity?.toLowerCase().includes("super rare")) &&
         "bg-gradient-to-r from-red-400 via-yellow-400 to-purple-400 hover:from-red-500 hover:via-yellow-500 hover:to-purple-500 transition-colors",
       [itemData]
     );

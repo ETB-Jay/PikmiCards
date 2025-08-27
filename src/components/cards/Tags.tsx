@@ -54,7 +54,8 @@ const Tags = memo(({ item, className = "" }: TagsProps): ReactElement => {
     const rareClass = item.itemRarity === "Rare" && "from-yellow-900 to-yellow-500";
     const mythicClass = item.itemRarity === "Mythic" && "from-orange-900 to-orange-500";
     const foilClass =
-      item.itemPrinting?.toLowerCase().includes("foil") &&
+      (item.itemPrinting?.toLowerCase().includes("foil") ||
+        item.itemRarity?.toLowerCase().includes("super rare")) &&
       "from-red-500 via-emerald-500 to-purple-500";
 
     return cn(
