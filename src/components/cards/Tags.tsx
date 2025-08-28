@@ -53,9 +53,13 @@ const Tags = memo(({ item, className = "" }: TagsProps): ReactElement => {
     const uncommonClass = item.itemRarity === "Uncommon" && "from-gray-700 to-gray-500";
     const rareClass = item.itemRarity === "Rare" && "from-yellow-900 to-yellow-500";
     const mythicClass = item.itemRarity === "Mythic" && "from-orange-900 to-orange-500";
+    const superRareClass =
+      item.itemRarity === "Super Rare" && "from-red-500 via-emerald-500 to-purple-500";
+    const reverseFoilClass =
+      item.itemPrinting?.toLowerCase().includes("reverse") &&
+      "from-purple-900 via-emerald-900 to-red-900";
     const foilClass =
-      (item.itemPrinting?.toLowerCase().includes("foil") ||
-        item.itemRarity?.toLowerCase().includes("super rare")) &&
+      item.itemPrinting?.toLowerCase().includes("foil") &&
       "from-red-500 via-emerald-500 to-purple-500";
 
     return cn(
@@ -63,7 +67,9 @@ const Tags = memo(({ item, className = "" }: TagsProps): ReactElement => {
       type === "rarity" && uncommonClass,
       type === "rarity" && rareClass,
       type === "rarity" && mythicClass,
-      type === "printing" && foilClass
+      type === "rarity" && superRareClass,
+      type === "printing" && foilClass,
+      type === "printing" && reverseFoilClass
     );
   };
 

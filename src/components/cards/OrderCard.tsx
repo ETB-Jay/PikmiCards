@@ -114,7 +114,7 @@ const OrderCard = memo(
             <span className={cn("text-silver-100 md:text-md mb-2 text-sm font-semibold text-wrap")}>
               {itemData.itemName}
             </span>
-            <div className={cn("flex min-w-0 flex-row flex-wrap gap-2 sm:gap-3 pr-10")}>
+            <div className={cn("flex min-w-0 flex-row flex-wrap gap-2 pr-10 sm:gap-3")}>
               <Tags item={itemData} />
             </div>
           </div>
@@ -197,14 +197,19 @@ const OrderCard = memo(
       [selectable, selected, inBoxCardClass]
     );
 
-    const isFoil = useMemo(
-      () =>
-        (itemData?.itemPrinting?.toLowerCase().includes("foil") ||
-          itemData?.itemName.toLowerCase().includes("foil") ||
-          itemData?.itemRarity?.toLowerCase().includes("super rare")) &&
-        "bg-gradient-to-r from-red-400 via-yellow-400 to-purple-400 hover:from-red-500 hover:via-yellow-500 hover:to-purple-500 transition-colors",
-      [itemData]
-    );
+    const isFoil = useMemo(() => {
+      if (itemData?.itemPrinting?.toLowerCase().includes("reverse")) {
+        return "bg-gradient-to-r from-purple-900 via-emerald-900 to-red-900 hover:from-purple-800 hover:via-emerald-800 hover:to-red-800 transition-colors";
+      }
+      if (
+        itemData?.itemPrinting?.toLowerCase().includes("foil") ||
+        itemData?.itemName.toLowerCase().includes("foil") ||
+        itemData?.itemRarity?.toLowerCase().includes("super rare")
+      ) {
+        return "bg-gradient-to-r from-red-400 via-yellow-400 to-purple-400 hover:from-red-500 hover:via-yellow-500 hover:to-purple-500 transition-colors";
+      }
+      return "";
+    }, [itemData]);
 
     if (!itemData) {
       return null;

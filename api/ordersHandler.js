@@ -13,7 +13,12 @@ const {
 
 async function getOrdersHandler(req, res) {
   try {
-    if (!VITE_SHOPIFY_API_KEY || !VITE_SHOPIFY_API_SECRET || !VITE_SHOPIFY_STORE_DOMAIN || !VITE_SHOPIFY_ACCESS_TOKEN) {
+    if (
+      !VITE_SHOPIFY_API_KEY ||
+      !VITE_SHOPIFY_API_SECRET ||
+      !VITE_SHOPIFY_STORE_DOMAIN ||
+      !VITE_SHOPIFY_ACCESS_TOKEN
+    ) {
       res.status(500).json({ error: "Missing required Shopify environment variables." });
       return;
     }
@@ -39,12 +44,8 @@ async function getOrdersHandler(req, res) {
 
     const orders = await getOrders(client);
     res.status(200).json(orders);
-  } catch (error) {
-    if (error.response?.body?.errors) {
-      res.status(400).json({ error: error.response.body.errors });
-      return;
-    }
-    res.status(500).json({ error: "Failed to fetch orders" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 }
 
@@ -55,14 +56,13 @@ async function writeOrdersHandler(req, res) {
     return;
   }
 
-  if (!VITE_SHOPIFY_API_KEY || !VITE_SHOPIFY_API_SECRET || !VITE_SHOPIFY_STORE_DOMAIN || !VITE_SHOPIFY_ACCESS_TOKEN) {
+  if (
+    !VITE_SHOPIFY_API_KEY ||
+    !VITE_SHOPIFY_API_SECRET ||
+    !VITE_SHOPIFY_STORE_DOMAIN ||
+    !VITE_SHOPIFY_ACCESS_TOKEN
+  ) {
     res.status(500).json({ error: "Missing required Shopify environment variables." });
-    return;
-  }
-
-  const { orderID, value } = req.body;
-  if (!orderID || value === undefined) {
-    res.status(400).json({ error: "Missing orderID or value in request body" });
     return;
   }
 
@@ -84,13 +84,32 @@ async function writeOrdersHandler(req, res) {
   });
 
   const client = new shopify.clients.Graphql({ session });
+  const { orderID, value } = req.body;
 
   try {
-    const result = await writeOrders(client, orderID, value);
-    res.status(200).json(result);
+    // Handle both single and batched updates
+    if (Array.isArray(req.body)) {
+      // Batched updates
+      const results = [];
+      for (const update of req.body) {
+        if (!update.orderID || update.value === undefined) {
+          return res.status(400).json({ error: "Missing orderID or value in batched request" });
+        }
+        const result = await writeOrders(client, update.orderID, update.value);
+        results.push(result);
+      }
+      res.status(200).json(results);
+    } else {
+      // Single update (backward compatibility)
+      if (!orderID || value === undefined) {
+        return res.status(400).json({ error: "Missing orderID or value in request body" });
+      }
+      const result = await writeOrders(client, orderID, value);
+      res.status(200).json(result);
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 }
 
-export { getOrdersHandler, writeOrdersHandler }; 
+export { getOrdersHandler, writeOrdersHandler };

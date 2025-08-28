@@ -55,21 +55,22 @@ const ConfirmAllModal = (): ReactElement => {
               (order) => order.box !== null && order.items.every((item) => item.status === "inBox")
             );
 
-            // Confirm all orders via API
-            for (const order of ordersToConfirm) {
-              await fetch("/api/orders/write", {
-                method: "POST",
-                // eslint-disable-next-line @typescript-eslint/naming-convention
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  orderID: order.orderID,
-                  value: {
-                    employee,
-                    location: storeLocation,
-                  },
-                }),
-              });
-            }
+            // Confirm all orders via API - batch the metafield updates
+            const metafieldUpdates = ordersToConfirm.map((order) => ({
+              orderID: order.orderID,
+              value: {
+                employee,
+                location: storeLocation,
+              },
+            }));
+
+            // Send all updates in a single request
+            await fetch("/api/orders/write", {
+              method: "POST",
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(metafieldUpdates),
+            });
 
             // Remove confirmed orders from display and reassign box numbers
             const remainingOrders = orderDisplay.filter(

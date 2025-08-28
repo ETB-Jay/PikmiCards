@@ -36,7 +36,12 @@ export default async function handler(req, res) {
 
   try {
     // Check for required environment variables
-    if (!VITE_SHOPIFY_API_KEY || !VITE_SHOPIFY_API_SECRET || !VITE_SHOPIFY_STORE_DOMAIN || !VITE_SHOPIFY_ACCESS_TOKEN) {
+    if (
+      !VITE_SHOPIFY_API_KEY ||
+      !VITE_SHOPIFY_API_SECRET ||
+      !VITE_SHOPIFY_STORE_DOMAIN ||
+      !VITE_SHOPIFY_ACCESS_TOKEN
+    ) {
       throw new Error("Missing required Shopify environment variables");
     }
 
@@ -60,14 +65,27 @@ export default async function handler(req, res) {
     const client = new shopify.clients.Graphql({ session });
     const { orderID, value } = req.body;
 
-    if (!orderID || value === undefined) {
-      return res.status(400).json({ error: "Missing orderID or value in request body" });
+    // Handle both single and batched updates
+    if (Array.isArray(req.body)) {
+      // Batched updates
+      const results = [];
+      for (const update of req.body) {
+        if (!update.orderID || update.value === undefined) {
+          return res.status(400).json({ error: "Missing orderID or value in batched request" });
+        }
+        const result = await writeOrders(client, update.orderID, update.value);
+        results.push(result);
+      }
+      res.status(200).json(results);
+    } else {
+      // Single update (backward compatibility)
+      if (!orderID || value === undefined) {
+        return res.status(400).json({ error: "Missing orderID or value in request body" });
+      }
+      const result = await writeOrders(client, orderID, value);
+      res.status(200).json(result);
     }
-
-    const result = await writeOrders(client, orderID, value);
-    res.status(200).json(result);
   } catch (err) {
-    console.error("Error in orders/write:", err);
     res.status(500).json({ error: err.message });
   }
 }

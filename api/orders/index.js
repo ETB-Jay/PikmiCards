@@ -36,7 +36,12 @@ export default async function handler(req, res) {
 
   try {
     // Check for required environment variables
-    if (!VITE_SHOPIFY_API_KEY || !VITE_SHOPIFY_API_SECRET || !VITE_SHOPIFY_STORE_DOMAIN || !VITE_SHOPIFY_ACCESS_TOKEN) {
+    if (
+      !VITE_SHOPIFY_API_KEY ||
+      !VITE_SHOPIFY_API_SECRET ||
+      !VITE_SHOPIFY_STORE_DOMAIN ||
+      !VITE_SHOPIFY_ACCESS_TOKEN
+    ) {
       throw new Error("Missing required Shopify environment variables");
     }
 
@@ -60,12 +65,7 @@ export default async function handler(req, res) {
     const client = new shopify.clients.Graphql({ session });
     const orders = await getOrders(client);
     res.status(200).json(orders);
-  } catch (error) {
-    console.error("Error in orders:", error);
-    if (error.response?.body?.errors) {
-      res.status(400).json({ error: error.response.body.errors });
-      return;
-    }
-    res.status(500).json({ error: "Failed to fetch orders" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 }

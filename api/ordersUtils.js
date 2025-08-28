@@ -28,7 +28,7 @@ async function getOrders(client) {
               customer {displayName}
               shippingLines(first: 1) {edges {node {title}}}
               metafield(namespace: "custom", key: "picked") { value }
-              fulfillmentOrders(first: 2) {
+              fulfillmentOrders(first: 4) {
                 edges {
                   node {
                     assignedLocation {location {name}}
@@ -39,6 +39,11 @@ async function getOrders(client) {
                             id
                             name
                             quantity
+                            unfulfilledOriginalTotalSet {
+                                presentmentMoney {
+                                    amount
+                                }
+                            }
                             originalUnitPriceSet {
                               shopMoney {
                                 amount
@@ -98,6 +103,7 @@ async function getOrders(client) {
             if (!item) {
               continue;
             }
+
             const tags = item?.product?.tags;
             items.push({
               itemID: item.id,
