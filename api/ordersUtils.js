@@ -14,8 +14,7 @@ async function getOrders(client) {
       {
         orders(first: 50, 
           after: ${cursor ? `"${cursor}"` : null},           
-          query: "created_at:>${new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled AND 
-          (financial_status:paid OR financial_status:pending OR financial_status:authorized OR financial_status:partially_paid)") {
+          query: "created_at:>${new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString()} AND fulfillment_status:unfulfilled AND (financial_status:paid OR financial_status:pending OR financial_status:authorized OR financial_status:partially_paid)") {
           edges {
             cursor
             node {
